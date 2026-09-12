@@ -9,3 +9,6 @@ ui_suite_uikit.settings:
     navbar_sticky:
       type: boolean
       label: "Sticky navbar"
+    htmx_navigation:
+      type: boolean
+      label: "HTMX navigation"

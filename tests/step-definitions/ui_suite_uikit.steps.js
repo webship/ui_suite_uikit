@@ -85,6 +85,76 @@ When(/^I set the "([^"]*)" attribute of the document to "([^"]*)"$/, async funct
 });
 
 /**
+ * Example: Then the HTMX library should be loaded
+ */
+Then(/^the HTMX library should be loaded$/, async function () {
+  await this.page.waitForFunction(() => typeof window.htmx === 'object' && typeof window.Drupal?.uiSuiteUikit?.isExcludedFromHtmx === 'function', null, { timeout: 15000 });
+});
+
+/**
+ * Marks the current document, to detect full page reloads.
+ *
+ * Example: When I mark the current page
+ */
+When(/^I mark the current page$/, async function () {
+  await this.page.evaluate(() => {
+    window.__uiSuiteUikitMarker = 'not-reloaded';
+  });
+});
+
+/**
+ * Example: Then the page should not have been reloaded
+ */
+Then(/^the page should not have been reloaded$/, async function () {
+  await this.page.waitForLoadState('domcontentloaded');
+  const marker = await this.page.evaluate(() => window.__uiSuiteUikitMarker);
+  assert.strictEqual(marker, 'not-reloaded', 'The page was fully reloaded instead of being swapped by HTMX.');
+});
+
+/**
+ * Example: Then the URL "/admin/content" should be excluded from the HTMX navigation
+ */
+Then(/^the URL "([^"]*)" should (not )?be excluded from the HTMX navigation$/, async function (url, not) {
+  await this.page.waitForFunction(() => typeof window.Drupal?.uiSuiteUikit?.isExcludedFromHtmx === 'function', null, { timeout: 15000 });
+  const excluded = await this.page.evaluate((path) => window.Drupal.uiSuiteUikit.isExcludedFromHtmx(path), url);
+  assert.strictEqual(excluded, !not, `"${url}" exclusion is ${excluded}.`);
+});
+
+/**
+ * Sets a UI Skins CSS variable of the theme from the CSS variables form.
+ *
+ * Example: When I set the UI Skins CSS variable "Primary background" of the UIkit theme to "#ff3300"
+ */
+When(/^I set the UI Skins CSS variable "([^"]*)" of the UIkit theme to "([^"]*)"$/, async function (variable, value) {
+  await this.page.goto(`${this.launchUrl}/admin/appearance/css-variables/ui_suite_uikit`);
+  const input = this.page.locator(`input[name$="[${variable}][values_container][0][value]"]`).first();
+  await input.waitFor({ state: 'attached', timeout: 15000 });
+  // The variables are grouped in collapsed details and vertical tabs: set the
+  // value of the color input directly.
+  await input.evaluate((element, color) => {
+    element.value = color;
+    element.dispatchEvent(new Event('input', { bubbles: true }));
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  }, value);
+  await this.page.locator('#edit-submit, input[type="submit"][value="Save configuration"]').first().click();
+  await this.page.waitForLoadState('load');
+  drush('cache:rebuild');
+});
+
+/**
+ * Selects a UI Skins theme (color mode) in the theme settings.
+ *
+ * Example: When I select the UI Skins theme "Dark" for the UIkit theme
+ */
+When(/^I select the UI Skins theme "([^"]*)" for the UIkit theme$/, async function (label) {
+  await this.page.goto(`${this.launchUrl}/admin/appearance/settings/ui_suite_uikit`);
+  await this.page.locator('select[name="theme"]').selectOption({ label });
+  await this.page.getByRole('button', { name: 'Save configuration' }).click();
+  await this.page.waitForLoadState('load');
+  drush('cache:rebuild');
+});
+
+/**
  * Visits the library page of every component.
  *
  * Example: Then every UIkit component page of the library should render without errors

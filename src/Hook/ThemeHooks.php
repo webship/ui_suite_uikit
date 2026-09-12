@@ -91,6 +91,12 @@ class ThemeHooks {
       '#title' => $this->t('Sticky navbar'),
       '#default_value' => $this->themeSettingsProvider->getSetting('navbar_sticky', 'ui_suite_uikit') ?? TRUE,
     ];
+    $form['ui_suite_uikit']['htmx_navigation'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('HTMX navigation'),
+      '#description' => $this->t('Links are loaded with HTMX: only the page content is swapped, without full page reloads. Forms, administration pages and files keep the normal navigation.'),
+      '#default_value' => $this->themeSettingsProvider->getSetting('htmx_navigation', 'ui_suite_uikit') ?? TRUE,
+    ];
     $form['#submit'][] = [static::class, 'themeSettingsSubmit'];
   }
 
@@ -156,6 +162,42 @@ class ThemeHooks {
         continue;
       }
       $this->prepareRegionElements($child, $region, $depth + 1);
+    }
+  }
+
+  /**
+   * Tells if the HTMX navigation is enabled.
+   */
+  protected function htmxNavigation(): bool {
+    return (bool) ($this->themeSettingsProvider->getSetting('htmx_navigation', 'ui_suite_uikit') ?? TRUE);
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for 'off_canvas_page_wrapper'.
+   */
+  #[Hook('preprocess_off_canvas_page_wrapper')]
+  public function preprocessOffCanvasPageWrapper(array &$variables): void {
+    $variables['htmx_navigation'] = $this->htmxNavigation();
+    $variables['#cache']['tags'][] = 'config:ui_suite_uikit.settings';
+    if ($variables['htmx_navigation']) {
+      $variables['#attached']['library'][] = 'ui_suite_uikit/htmx';
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for 'form'.
+   *
+   * Forms keep their normal submission (form tokens, Drupal AJAX), except the
+   * GET forms (search, exposed filters) which are boosted by HTMX.
+   */
+  #[Hook('preprocess_form')]
+  public function preprocessForm(array &$variables): void {
+    if (!$this->htmxNavigation()) {
+      return;
+    }
+    $method = strtolower((string) ($variables['element']['#method'] ?? 'post'));
+    if ($method !== 'get') {
+      $variables['attributes']['hx-boost'] = 'false';
     }
   }
 

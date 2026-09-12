@@ -9,3 +9,4 @@ favicon:
   use_default: true
 uikit_source: cdn
 navbar_sticky: true
+htmx_navigation: true
