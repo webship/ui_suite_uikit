@@ -1,0 +1,28 @@
+# Generate a theme from UI Suite UIkit:
+#   php core/scripts/dr generate-theme my_theme --starterkit ui_suite_uikit
+# Core renames ui_suite_uikit, UI Suite UIkit, uiSuiteUikit and UiSuiteUikit;
+# src/StarterKit.php renames ui-suite-uikit and writes the README.
+# Paths are globs relative to the theme root; folders need "/**".
+ignore:
+  - '/.gitlab-ci.yml'
+  - '/.playwright-mcp/**'
+  - '/AGENTS.md'
+  - '/README.md'
+  - '/composer.json'
+  - '/cucumber.js'
+  - '/docs/**'
+  - '/node_modules/**'
+  - '/package-lock.json'
+  - '/package.json'
+  - '/playwright.config.ts'
+  - '/screenshots/**'
+  - '/scripts/**'
+  - '/src/StarterKit.php'
+  - '/tests/**'
+  - '/tsconfig.json'
+  - '/ui_suite_uikit.starterkit.yml'
+no_edit:
+  - '/starterkit.md'
+no_rename: []
+info:
+  version: 1.0.0

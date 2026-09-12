@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\ui_suite_uikit\Hook;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Template\Attribute;
 use Drupal\ui_patterns\Plugin\UiPatterns\PropType\LinksPropType;
@@ -75,7 +76,7 @@ class PreprocessHooks {
    * form already sets a button type.
    */
   #[Hook('form_alter')]
-  public function formAlter(array &$form): void {
+  public function formAlter(array &$form, FormStateInterface $form_state, string $form_id): void {
     if (isset($form['actions']['submit']) && \is_array($form['actions']['submit']) && empty($form['actions']['submit']['#button_type'])) {
       $form['actions']['submit']['#button_type'] = 'primary';
     }

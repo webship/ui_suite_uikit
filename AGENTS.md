@@ -17,6 +17,10 @@ Display Builder. Part of the Webship Workspace (`~/workspace/products`): DDEV on
   site.
 - `assets/js/htmx-navigation.js`, `templates/layout/off-canvas-page-wrapper.html.twig`: HTMX navigation.
 - `docs/uikit-sdc-mapping.md`: UIkit ↔ SDC ↔ Penpot ↔ other themes mapping.
+- `webvmi/CONTENT_TYPE_NAME/`: Display Builder templates of the Web View Modes Inventory (`drupal/webvmi`, like
+  `drupal/vmi` with Display Builder instead of Canvas) view modes, with the theme components. Validated by
+  `tests/src/Kernel/WebvmiTemplatesTest.php`: keep component ids, variants, props, enum values and slots in sync
+  with the components.
 
 ## Component rules (enforced by sdc_devel and the tests)
 

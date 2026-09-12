@@ -15,6 +15,7 @@
     "suggest": {
         "drupal/display_builder": "Build entity displays, page layouts and views with the theme components.",
         "drupal/ui_skins": "Exposes the UIkit design tokens (CSS variables) and color modes.",
-        "drupal/ui_examples": "Allows to write example pages in YML format."
+        "drupal/ui_examples": "Allows to write example pages in YML format.",
+        "drupal/webvmi": "Card view modes laid out with Display Builder and the theme components."
     }
 }

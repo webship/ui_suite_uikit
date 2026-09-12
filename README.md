@@ -20,6 +20,8 @@ Recommended:
 - [Display Builder](https://www.drupal.org/project/display_builder): build page layouts, entity displays and views with the components
 - [UI Skins](https://www.drupal.org/project/ui_skins): UIkit design tokens (CSS variables) and the dark color mode
 - [UI Examples](https://www.drupal.org/project/ui_examples)
+- [Web View Modes Inventory](https://www.drupal.org/project/webvmi): card view modes laid out with the theme
+  components
 
 The [UI Suite Base](https://www.drupal.org/project/ui_suite_base) recipe installs the whole stack.
 
@@ -83,6 +85,27 @@ Browse them in the component library: *Appearance > UI libraries* (`/admin/appea
 - Components linked by an ID (Button or Navbar toggle → Modal or Offcanvas) use the *Toggle target* prop.
 - UIkit JavaScript initializes the components added to the page at any time, so previews and AJAX updates
   work without Drupal behaviors.
+
+### Web View Modes Inventory
+
+The theme lays out the view modes of [Web View Modes Inventory](https://www.drupal.org/project/webvmi) with its
+components, in Display Builder. When one of these view modes is enabled for a content type (or with
+`drush webvmi:apply <content type>`), its display is built from the template in `webvmi/CONTENT_TYPE_NAME`:
+
+| View modes | Layout |
+|---|---|
+| Card | Card: image on top, h3 title, trimmed body |
+| Impressed card: xlarge, large, medium, small, xsmall | Card: image on top, title, trimmed body, date in the footer |
+| Featured card: xlarge, large, medium, small, xsmall | Card: image on the left, title, trimmed body, date in the footer |
+| Text card: large, medium, small | Card with a hover effect: title, trimmed body, date in the footer |
+| Overlay card: xlarge, large, medium | Overlay (dark, at the bottom, on hover for medium): heading, trimmed body |
+| Hero card | Cover (large, light content at the bottom left): medium heading, trimmed body |
+| Full | Article: date in the meta, image and body |
+
+The sizes change the card padding (large to small), the heading level (h2 to h5), the image style (wide, large,
+medium) and the trim length. The templates use `CONTENT_TYPE_NAME`, `MEDIA_FIELD_NAME` and `DESCRIPTION_FIELD_NAME`
+placeholders: the fields a content type does not have are removed. Themes generated from UI Suite UIkit use these
+templates with their own components.
 
 ## Styles, design tokens and color modes
 

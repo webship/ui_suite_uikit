@@ -66,9 +66,9 @@ class ThemeHooks {
    * Implements hook_form_FORM_ID_alter() for 'system_theme_settings'.
    */
   #[Hook('form_system_theme_settings_alter')]
-  public function formSystemThemeSettingsAlter(array &$form, FormStateInterface $form_state, ?string $form_id = NULL): void {
+  public function formSystemThemeSettingsAlter(array &$form, FormStateInterface $form_state, string $form_id = ''): void {
     // Work-around for a core bug affecting admin themes. See issue #943212.
-    if (isset($form_id)) {
+    if ($form_id !== '') {
       return;
     }
 

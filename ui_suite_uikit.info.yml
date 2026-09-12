@@ -3,6 +3,8 @@ type: theme
 description: "A site-builder friendly UIkit theme, using the UI Suite modules and ready for Display Builder."
 core_version_requirement: ^11.4 || ^12
 base theme: false
+# Themes can be generated from this theme: php core/scripts/drupal generate-theme my_theme --starterkit ui_suite_uikit
+starterkit: true
 logo: logo.svg
 dependencies:
   - ui_patterns:ui_patterns
