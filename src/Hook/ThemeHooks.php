@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\ui_suite_uikit\Hook;
 
 use Drupal\block\BlockInterface;
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeSettingsProvider;
@@ -154,6 +156,21 @@ class ThemeHooks {
         continue;
       }
       $this->prepareRegionElements($child, $region, $depth + 1);
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for 'page_title'.
+   *
+   * Display Builder page layouts cast the title markup (for example the
+   * <span> of the node title field) to a plain string, which would be
+   * escaped: restore it as filtered markup.
+   */
+  #[Hook('preprocess_page_title')]
+  public function preprocessPageTitle(array &$variables): void {
+    $title = $variables['title'] ?? NULL;
+    if (\is_string($title) && \str_contains($title, '<')) {
+      $variables['title'] = Markup::create(Xss::filter($title, ['span', 'em', 'strong', 'i', 'b', 'small', 'sup', 'sub']));
     }
   }
 
