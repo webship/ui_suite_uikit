@@ -27,6 +27,7 @@ final class ComponentValidatorTest extends SdcDevelComponentKernelTestBase {
     'ui_styles',
     'ui_icons',
     'ui_icons_patterns',
+    'ui_skins',
   ];
 
   /**

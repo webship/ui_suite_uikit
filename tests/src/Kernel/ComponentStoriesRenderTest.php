@@ -29,6 +29,7 @@ final class ComponentStoriesRenderTest extends KernelTestBase {
     'ui_styles',
     'ui_icons',
     'ui_icons_patterns',
+    'ui_skins',
   ];
 
   /**

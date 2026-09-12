@@ -24,6 +24,7 @@ final class WebvmiTemplatesTest extends KernelTestBase {
   protected static $modules = [
     'system',
     'ui_patterns',
+    'ui_skins',
     'ui_styles',
     'ui_icons',
     'ui_icons_patterns',

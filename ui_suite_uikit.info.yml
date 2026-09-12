@@ -8,6 +8,7 @@ starterkit: true
 logo: logo.svg
 dependencies:
   - ui_patterns:ui_patterns
+  - ui_skins:ui_skins
   - ui_styles:ui_styles
   - ui_icons:ui_icons_patterns
 
