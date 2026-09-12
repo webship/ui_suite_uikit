@@ -1,0 +1,12 @@
+name: Breadcrumb
+description: "Create a breadcrumb navigation to indicate the current page's location."
+group: Navigation
+links:
+  - "https://getuikit.com/docs/breadcrumb"
+props:
+  type: object
+  properties:
+    items:
+      title: Items
+      description: "The last item without URL is the current page."
+      $ref: "ui-patterns://links"

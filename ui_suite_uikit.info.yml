@@ -1,0 +1,32 @@
+name: "UI Suite UIkit"
+type: theme
+description: "A site-builder friendly UIkit theme, using the UI Suite modules and ready for Display Builder."
+core_version_requirement: ^11.4 || ^12
+base theme: false
+logo: logo.svg
+dependencies:
+  - ui_patterns:ui_patterns
+  - ui_styles:ui_styles
+  - ui_icons:ui_icons_patterns
+
+regions:
+  navbar_left: "Navbar left"
+  navbar_center: "Navbar center"
+  navbar_right: "Navbar right"
+  offcanvas: "Offcanvas"
+  header: "Header"
+  highlighted: "Highlighted"
+  help: "Help"
+  content: "Content"
+  sidebar_first: "Sidebar first"
+  sidebar_second: "Sidebar second"
+  footer: "Footer"
+  page_top: "Page top"
+  page_bottom: "Page bottom"
+
+libraries:
+  - ui_suite_uikit/uikit
+  - ui_suite_uikit/base
+
+ckeditor5-stylesheets:
+  - assets/css/ckeditor5.css

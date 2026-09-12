@@ -1,0 +1,26 @@
+# UIkit framework. Loaded from the jsDelivr CDN by default; switch to a local
+# copy in web/libraries/uikit from the theme settings (see README.md).
+# The asset paths are rewritten in ui_suite_uikit_library_info_alter().
+uikit:
+  remote: https://getuikit.com/
+  version: 3.25.22
+  license:
+    name: MIT
+    url: https://github.com/uikit/uikit/blob/develop/LICENSE.md
+    gpl-compatible: true
+  css:
+    base:
+      https://cdn.jsdelivr.net/npm/uikit@3.25.22/dist/css/uikit.min.css: { type: external, minified: true }
+  js:
+    https://cdn.jsdelivr.net/npm/uikit@3.25.22/dist/js/uikit.min.js: { type: external, minified: true }
+    https://cdn.jsdelivr.net/npm/uikit@3.25.22/dist/js/uikit-icons.min.js: { type: external, minified: true }
+
+# Theme glue: design tokens (CSS custom properties consumed by UI Skins) and
+# Drupal specific adjustments.
+base:
+  css:
+    theme:
+      assets/css/tokens.css: {}
+      assets/css/drupal.css: {}
+  dependencies:
+    - ui_suite_uikit/uikit

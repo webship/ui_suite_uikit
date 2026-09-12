@@ -1,0 +1,11 @@
+{#
+/**
+ * @file
+ * Theme override for a local task link.
+ *
+ * Available variables:
+ * - link: A rendered link element.
+ * - is_active: Whether the task item is an active tab.
+ */
+#}
+<li{{ attributes.addClass(is_active ? 'uk-active') }}>{{ link }}</li>

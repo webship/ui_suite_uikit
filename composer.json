@@ -1,0 +1,20 @@
+{
+    "name": "drupal/ui_suite_uikit",
+    "description": "A site-builder friendly UIkit theme, using the UI Suite modules.",
+    "license": "GPL-2.0-or-later",
+    "type": "drupal-theme",
+    "homepage": "https://www.drupal.org/project/ui_suite_uikit",
+    "require": {
+        "drupal/ui_patterns": "^2.0.21",
+        "drupal/ui_styles": "^1.22",
+        "drupal/ui_icons": "^2.0"
+    },
+    "require-dev": {
+        "drupal/sdc_devel": "^1.0.3"
+    },
+    "suggest": {
+        "drupal/display_builder": "Build entity displays, page layouts and views with the theme components.",
+        "drupal/ui_skins": "Exposes the UIkit design tokens (CSS variables) and color modes.",
+        "drupal/ui_examples": "Allows to write example pages in YML format."
+    }
+}

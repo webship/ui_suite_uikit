@@ -1,0 +1,8 @@
+.DS_Store
+node_modules
+package-lock.json
+.playwright-mcp
+screenshots
+tests/reports/*
+!tests/reports/README.md
+tests/videos

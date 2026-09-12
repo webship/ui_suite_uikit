@@ -1,0 +1,15 @@
+{% if items %}
+<nav{{ attributes.setAttribute('aria-label', 'Breadcrumb'|t) }}>
+  <ul class="uk-breadcrumb">
+    {% for item in items %}
+      {% if item.url %}
+        <li><a href="{{ item.url }}"{{ item.link_attributes }}>{{ item.title }}</a></li>
+      {% elseif loop.last %}
+        <li><span aria-current="page">{{ item.title }}</span></li>
+      {% else %}
+        <li class="uk-disabled"><a>{{ item.title }}</a></li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</nav>
+{% endif %}

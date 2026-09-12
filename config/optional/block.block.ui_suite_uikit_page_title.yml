@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  theme:
+    - ui_suite_uikit
+id: ui_suite_uikit_page_title
+theme: ui_suite_uikit
+region: content
+weight: -20
+provider: null
+plugin: 'page_title_block'
+settings:
+  id: 'page_title_block'
+  label: 'Page title'
+  label_display: '0'
+  provider: core
+visibility: {  }

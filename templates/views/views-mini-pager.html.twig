@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Theme override for the views mini-pager, with the UIkit Pagination component.
+ *
+ * Available variables:
+ * - items: List of pager items, normalized as links.
+ *
+ * @see \Drupal\ui_suite_uikit\Hook\PreprocessHooks::preprocessViewsMiniPager()
+ */
+#}
+{% if items %}
+  {{ include('ui_suite_uikit:pagination', {
+    items: items,
+    alignment: 'center',
+  }, with_context: false) }}
+{% endif %}

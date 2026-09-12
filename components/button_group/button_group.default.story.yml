@@ -1,0 +1,15 @@
+name: Default
+slots:
+  buttons:
+    - type: component
+      component: "ui_suite_uikit:button"
+      slots:
+        label: "Button"
+    - type: component
+      component: "ui_suite_uikit:button"
+      slots:
+        label: "Button"
+    - type: component
+      component: "ui_suite_uikit:button"
+      slots:
+        label: "Button"

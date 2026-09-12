@@ -1,0 +1,179 @@
+# UIkit design tokens, consumed by assets/css/tokens.css (generated from the
+# UIkit CSS by scripts/build-tokens.mjs). Default values are the UIkit ones.
+
+################################################################################
+# Text colors.
+################################################################################
+
+uk-global-color:
+  category: "Text colors"
+  label: "Text color"
+  type: "color"
+  default_values:
+    ":root": "#666666"
+
+uk-global-emphasis-color:
+  category: "Text colors"
+  label: "Emphasis color (headings, active items)"
+  type: "color"
+  default_values:
+    ":root": "#333333"
+
+uk-global-muted-color:
+  category: "Text colors"
+  label: "Muted color"
+  type: "color"
+  default_values:
+    ":root": "#999999"
+
+uk-global-inverse-color:
+  category: "Text colors"
+  label: "Inverse color (text on colored backgrounds)"
+  type: "color"
+  default_values:
+    ":root": "#ffffff"
+
+uk-global-link-color:
+  category: "Text colors"
+  label: "Link color"
+  type: "color"
+  default_values:
+    ":root": "#1e87f0"
+
+uk-global-link-hover-color:
+  category: "Text colors"
+  label: "Link hover color"
+  type: "color"
+  default_values:
+    ":root": "#0f6ecd"
+
+################################################################################
+# Backgrounds.
+################################################################################
+
+uk-global-background:
+  category: "Backgrounds"
+  label: "Background"
+  type: "color"
+  default_values:
+    ":root": "#ffffff"
+
+uk-global-muted-background:
+  category: "Backgrounds"
+  label: "Muted background"
+  type: "color"
+  default_values:
+    ":root": "#f8f8f8"
+
+uk-global-muted-background-hover:
+  category: "Backgrounds"
+  label: "Muted background (hover)"
+  type: "color"
+  default_values:
+    ":root": "#ebebeb"
+
+uk-global-primary-background:
+  category: "Backgrounds"
+  label: "Primary background"
+  type: "color"
+  default_values:
+    ":root": "#1e87f0"
+
+uk-global-primary-background-hover:
+  category: "Backgrounds"
+  label: "Primary background (hover)"
+  type: "color"
+  default_values:
+    ":root": "#0e6dcd"
+
+uk-global-secondary-background:
+  category: "Backgrounds"
+  label: "Secondary background"
+  type: "color"
+  default_values:
+    ":root": "#222222"
+
+uk-global-secondary-background-hover:
+  category: "Backgrounds"
+  label: "Secondary background (hover)"
+  type: "color"
+  default_values:
+    ":root": "#151515"
+
+uk-global-success-background:
+  category: "Backgrounds"
+  label: "Success background"
+  type: "color"
+  default_values:
+    ":root": "#32d296"
+
+uk-global-warning-background:
+  category: "Backgrounds"
+  label: "Warning background"
+  type: "color"
+  default_values:
+    ":root": "#faa05a"
+
+uk-global-danger-background:
+  category: "Backgrounds"
+  label: "Danger background"
+  type: "color"
+  default_values:
+    ":root": "#f0506e"
+
+uk-global-danger-background-hover:
+  category: "Backgrounds"
+  label: "Danger background (hover)"
+  type: "color"
+  default_values:
+    ":root": "#ee395b"
+
+uk-global-border:
+  category: "Backgrounds"
+  label: "Border color"
+  type: "color"
+  default_values:
+    ":root": "#e5e5e5"
+
+################################################################################
+# Alerts.
+################################################################################
+
+uk-alert-primary-background:
+  category: "Alerts"
+  label: "Primary alert background"
+  type: "color"
+  default_values:
+    ":root": "#d8eafc"
+
+uk-alert-success-background:
+  category: "Alerts"
+  label: "Success alert background"
+  type: "color"
+  default_values:
+    ":root": "#edfbf6"
+
+uk-alert-warning-background:
+  category: "Alerts"
+  label: "Warning alert background"
+  type: "color"
+  default_values:
+    ":root": "#fff6ee"
+
+uk-alert-danger-background:
+  category: "Alerts"
+  label: "Danger alert background"
+  type: "color"
+  default_values:
+    ":root": "#fef4f6"
+
+################################################################################
+# Typography.
+################################################################################
+
+uk-global-font-family:
+  category: "Typography"
+  label: "Font family"
+  type: "textfield"
+  default_values:
+    ":root": ""

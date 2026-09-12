@@ -1,0 +1,163 @@
+/**
+ * @file
+ * Custom webship-js step definitions for the UI Suite UIkit theme.
+ */
+
+const assert = require('node:assert');
+const { execSync } = require('node:child_process');
+const { existsSync, readdirSync, readFileSync } = require('node:fs');
+const { homedir } = require('node:os');
+const path = require('node:path');
+const { Given, When, Then } = require('@cucumber/cucumber');
+
+const THEME_ROOT = path.resolve(__dirname, '..', '..');
+const PROJECT_DIR = process.env.DRUPAL_PROJECT_DIR || path.join(homedir(), 'workspace/test/uikittest');
+const DRUSH = process.env.DRUSH || 'ddev drush';
+
+/**
+ * Runs a Drush command on the test site and returns its output.
+ */
+function drush(command) {
+  return execSync(`${DRUSH} ${command}`, { cwd: PROJECT_DIR, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+}
+
+/**
+ * Lists the UIkit components with their first variant.
+ */
+function uikitComponents() {
+  const dir = path.join(THEME_ROOT, 'components');
+  return readdirSync(dir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && existsSync(path.join(dir, entry.name, `${entry.name}.component.yml`)))
+    .map((entry) => {
+      const yaml = readFileSync(path.join(dir, entry.name, `${entry.name}.component.yml`), 'utf8');
+      const block = yaml.match(/^variants:\n((?:[ ]{2,}.*\n)+)/m);
+      const variants = block ? [...block[1].matchAll(/^ {2}([a-z0-9_]+):\s*$/gm)].map((match) => match[1]) : [];
+      return { id: entry.name, variant: variants[0] || 'default' };
+    });
+}
+
+/**
+ * Logs in as user 1 with a one-time login link, without the login form.
+ *
+ * Example: Given I am logged in as the Drupal administrator
+ */
+Given(/^I am logged in as the Drupal administrator$/, async function () {
+  const link = drush('user:login --no-browser').split('\n').pop();
+  await this.page.goto(`${this.launchUrl}${new URL(link).pathname}`);
+  await this.page.waitForURL((url) => /\/user\/\d+/.test(url.pathname));
+});
+
+/**
+ * Example: When the Drupal caches are rebuilt
+ */
+When(/^the Drupal caches are rebuilt$/, { timeout: 180000 }, function () {
+  drush('cache:rebuild');
+});
+
+/**
+ * Example: Then the computed style "background-color" of ".uk-navbar-container" should be "rgb(248, 248, 248)"
+ */
+Then(/^the computed style "([^"]*)" of "([^"]*)" should (be|contain) "([^"]*)"$/, async function (property, selector, operator, expected) {
+  const locator = this.page.locator(selector).first();
+  await locator.waitFor({ state: 'attached', timeout: 15000 });
+  const actual = await locator.evaluate((element, name) => getComputedStyle(element).getPropertyValue(name), property);
+  if (operator === 'be') {
+    assert.strictEqual(actual.trim(), expected, `Computed "${property}" of "${selector}" is "${actual}".`);
+  }
+  else {
+    assert.ok(actual.includes(expected), `Computed "${property}" of "${selector}" is "${actual}".`);
+  }
+});
+
+/**
+ * Example: Then the UIkit JavaScript version should be "3.25.22"
+ */
+Then(/^the UIkit JavaScript version should be "([^"]*)"$/, async function (expected) {
+  await this.page.waitForFunction(() => typeof window.UIkit === 'function', null, { timeout: 15000 });
+  assert.strictEqual(await this.page.evaluate(() => window.UIkit.version), expected);
+});
+
+/**
+ * Example: When I set the "data-theme" attribute of the document to "dark"
+ */
+When(/^I set the "([^"]*)" attribute of the document to "([^"]*)"$/, async function (name, value) {
+  await this.page.evaluate(([attribute, attributeValue]) => document.documentElement.setAttribute(attribute, attributeValue), [name, value]);
+});
+
+/**
+ * Visits the library page of every component.
+ *
+ * Example: Then every UIkit component page of the library should render without errors
+ */
+Then(/^every UIkit component page of the library should render without errors$/, { timeout: 600000 }, async function () {
+  const failures = [];
+  const errors = [];
+  const onError = (error) => errors.push(error.message);
+  this.page.on('pageerror', onError);
+  const components = uikitComponents();
+  assert.ok(components.length > 50, `Only ${components.length} components found.`);
+  for (const { id } of components) {
+    errors.length = 0;
+    const response = await this.page.goto(`${this.launchUrl}/admin/appearance/ui/components/ui_suite_uikit/${id}`);
+    const body = await this.page.locator('body').innerText();
+    if (response.status() !== 200) {
+      failures.push(`${id}: HTTP ${response.status()}`);
+    }
+    else if (/error has occurred|Twig\\Error|Exception:/i.test(body)) {
+      failures.push(`${id}: error message on the page`);
+    }
+    else if (errors.length) {
+      failures.push(`${id}: ${errors.join(', ')}`);
+    }
+  }
+  this.page.off('pageerror', onError);
+  assert.deepStrictEqual(failures, []);
+});
+
+/**
+ * Requests the Display Builder preview of every component.
+ *
+ * Example: Then every UIkit component should have a Display Builder preview
+ */
+Then(/^every UIkit component should have a Display Builder preview$/, { timeout: 300000 }, async function () {
+  const failures = [];
+  for (const { id, variant } of uikitComponents()) {
+    const response = await this.page.request.get(`${this.launchUrl}/api/display-builder/component/ui_suite_uikit:${id}/preview/${variant}`);
+    const html = await response.text();
+    if (response.status() !== 200 || !html.includes(`data-component-id="ui_suite_uikit:${id}"`)) {
+      failures.push(`${id} (${variant}): HTTP ${response.status()}`);
+    }
+  }
+  assert.deepStrictEqual(failures, []);
+});
+
+/**
+ * Deletes the default page layout if it exists.
+ *
+ * Display Builder keeps its page template in the runtime theme registry after
+ * the deletion, so the caches are rebuilt too.
+ *
+ * Example: Given there is no default page layout
+ */
+Given(/^there is no default page layout$/, { timeout: 180000 }, async function () {
+  // Check with a request first: a 404 page would be reported as a JavaScript
+  // (console) error by the webship-js error tracking.
+  const url = `${this.launchUrl}/admin/structure/page-layout/default/delete`;
+  const exists = await this.page.request.get(url);
+  if (exists.status() === 200) {
+    await this.page.goto(url);
+    await this.page.getByRole('button', { name: 'Delete' }).click();
+    await this.page.waitForLoadState('load');
+  }
+  drush('cache:rebuild');
+});
+
+/**
+ * Example: When I create the default page layout from the current site
+ */
+When(/^I create the default page layout from the current site$/, async function () {
+  await this.page.goto(`${this.launchUrl}/admin/structure/page-layout/add-default`);
+  await this.page.locator('input[name="starting_point"][value="theme"]').check();
+  await this.page.getByRole('button', { name: 'Save' }).click();
+  await this.page.waitForLoadState('load');
+});

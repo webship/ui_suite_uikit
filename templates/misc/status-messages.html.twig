@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Theme override for status messages, with the UIkit Alert component.
+ *
+ * Available variables:
+ * - message_list: List of messages to be displayed, grouped by type.
+ * - status_headings: List of all status types.
+ * - attributes: HTML attributes for the element.
+ */
+#}
+<div data-drupal-messages>
+  {% for type, messages in message_list %}
+    {% set variants = {
+      'status': 'success',
+      'warning': 'warning',
+      'error': 'danger',
+    } %}
+    {% for message in messages %}
+      {#
+        Attributes are not passed: with multiple message types, the classes of
+        the previous type would leak into the next alerts.
+      #}
+      {{ include('ui_suite_uikit:alert', {
+        variant: variants[type]|default('primary'),
+        message: message,
+        close: true,
+      }, with_context: false) }}
+    {% endfor %}
+  {% endfor %}
+</div>

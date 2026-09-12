@@ -1,0 +1,30 @@
+{% set heading_level = heading_level|default(4) %}
+{% set attributes = attributes.addClass([
+  'uk-comment',
+  primary ? 'uk-comment-primary',
+]) %}
+<article{{ attributes.setAttribute('role', 'comment') }}>
+  <header class="uk-comment-header">
+    <div class="uk-grid uk-grid-medium uk-flex-middle" uk-grid>
+      {% if avatar %}
+        <div class="uk-width-auto">
+          <div class="uk-comment-avatar">{{ avatar }}</div>
+        </div>
+      {% endif %}
+      <div class="uk-width-expand">
+        {% if title %}
+          <h{{ heading_level }} class="uk-comment-title uk-margin-remove">{{ title }}</h{{ heading_level }}>
+        {% endif %}
+        {% if meta %}
+          <div class="uk-comment-meta uk-margin-remove-top">{{ meta }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+  <div class="uk-comment-body">
+    {{ content }}
+  </div>
+  {% if actions %}
+    <footer class="uk-margin-small-top">{{ actions }}</footer>
+  {% endif %}
+</article>

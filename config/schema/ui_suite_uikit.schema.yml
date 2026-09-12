@@ -1,0 +1,11 @@
+# Schema for the configuration files of the UI Suite UIkit theme.
+ui_suite_uikit.settings:
+  type: theme_settings
+  label: "UI Suite UIkit settings"
+  mapping:
+    uikit_source:
+      type: string
+      label: "UIkit library source"
+    navbar_sticky:
+      type: boolean
+      label: "Sticky navbar"

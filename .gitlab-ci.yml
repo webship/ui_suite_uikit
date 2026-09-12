@@ -1,0 +1,18 @@
+# https://git.drupalcode.org/project/gitlab_templates/
+include:
+  - project: $_GITLAB_TEMPLATES_REPO
+    ref: $_GITLAB_TEMPLATES_REF
+    file:
+      - "/includes/include.drupalci.main.yml"
+      - "/includes/include.drupalci.variables.yml"
+      - "/includes/include.drupalci.workflows.yml"
+
+variables:
+  # Display Builder and the OOP theme hooks need Drupal 11.4.
+  DRUPAL_CORE: "11.4.x-dev"
+  IGNORE_PROJECT_DRUPAL_CORE_VERSION: "1"
+  # assets/css/tokens.css is generated from the UIkit CSS.
+  SKIP_STYLELINT: "1"
+  SKIP_CSPELL: "1"
+  SKIP_ESLINT: "1"
+  _PHPUNIT_CONCURRENT: "0"

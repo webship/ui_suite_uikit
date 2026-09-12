@@ -1,0 +1,39 @@
+name: Comment
+description: "Create a comment, with an avatar, a title, meta data and content."
+group: "Data display"
+links:
+  - "https://getuikit.com/docs/comment"
+slots:
+  avatar:
+    title: Avatar
+  title:
+    title: Title
+  meta:
+    title: Meta
+  content:
+    title: Content
+  actions:
+    title: Actions
+    description: "Reply, edit and delete links."
+props:
+  type: object
+  properties:
+    heading_level:
+      title: "Heading level"
+      type: integer
+      enum:
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+      "meta:enum":
+        2: h2
+        3: h3
+        4: "h4 (Default)"
+        5: h5
+        6: h6
+    primary:
+      title: Highlighted
+      description: "Highlight the comment, for example the author's own."
+      type: boolean

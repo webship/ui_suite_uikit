@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  theme:
+    - ui_suite_uikit
+id: ui_suite_uikit_secondary_local_tasks
+theme: ui_suite_uikit
+region: content
+weight: -14
+provider: null
+plugin: 'local_tasks_block'
+settings:
+  id: 'local_tasks_block'
+  label: 'Secondary tabs'
+  label_display: '0'
+  provider: core
+  primary: false
+  secondary: true
+visibility: {  }

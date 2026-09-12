@@ -1,0 +1,22 @@
+{
+  "name": "ui_suite_uikit",
+  "private": true,
+  "description": "Tooling for the UI Suite UIkit Drupal theme.",
+  "license": "GPL-2.0-or-later",
+  "engines": {
+    "node": ">= 20.0"
+  },
+  "devDependencies": {
+    "uikit": "3.25.22",
+    "webship-js": "2.0.5"
+  },
+  "scripts": {
+    "build:tokens": "node scripts/build-tokens.mjs",
+    "build:icons": "rm -f icons/uikit/*.svg && cp node_modules/uikit/src/images/icons/*.svg icons/uikit/",
+    "test": "cucumber-js --config cucumber.js",
+    "test:chromium": "BROWSER=chromium cucumber-js --config cucumber.js",
+    "test:firefox": "BROWSER=firefox cucumber-js --config cucumber.js",
+    "test:webkit": "BROWSER=webkit cucumber-js --config cucumber.js",
+    "generate-reports": "generate-reports"
+  }
+}

@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - ui_suite_uikit
+id: ui_suite_uikit_help
+theme: ui_suite_uikit
+region: help
+weight: 0
+provider: null
+plugin: 'help_block'
+settings:
+  id: 'help_block'
+  label: 'Help'
+  label_display: '0'
+  provider: help
+visibility: {  }
