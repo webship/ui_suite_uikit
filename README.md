@@ -105,6 +105,24 @@ The 162 UIkit icons are shipped in `icons/uikit` and declared as the `uikit` ico
 
 - UIkit library source: CDN or local.
 - Sticky navbar.
+- HTMX navigation (enabled by default).
+
+## HTMX navigation
+
+With the HTMX navigation, the links of the page are boosted by [HTMX](https://htmx.org) through Drupal core's
+`core/drupal.htmx` library: only the page wrapper is swapped, without full page reloads. Drupal core loads
+the new CSS and JavaScript of the target page, merges `drupalSettings` and attaches the behaviors; UIkit
+initializes the swapped components by itself.
+
+- Forms (except GET forms like search), administration pages, files, contextual and dialog links keep the
+  normal navigation.
+- The open UIkit offcanvas, modals and dropdowns are closed before the swap.
+- The focus moves to the main content and the new page title is announced to screen readers.
+
+## Mapping with the UIkit design system
+
+[docs/uikit-sdc-mapping.md](docs/uikit-sdc-mapping.md) maps every UIkit component to its SDC component, to
+the Penpot design system and to the equivalent components of other UI Suite themes.
 
 ## Development
 
@@ -125,9 +143,14 @@ drush sdc-devel:validate ui_suite_uikit
 # PHPUnit kernel tests: SDC Devel validation, and the rendering of every component and story.
 SIMPLETEST_DB=mysql://db:db@db/db vendor/bin/phpunit -c web/core web/themes/contrib/ui_suite_uikit/tests/src/Kernel
 
-# End to end tests (Playwright) against a site running the theme.
-DRUPAL_BASE_URL=https://example.ddev.site DRUPAL_PROJECT_DIR=/path/to/project npm run test:e2e
+# Functional tests (webship-js: Cucumber + Playwright) against a site running the theme.
+LAUNCH_URL=https://example.ddev.site DRUPAL_PROJECT_DIR=/path/to/project npm test
 ```
+
+The webship-js features cover the front end rendering, the offcanvas menu, forms and local tasks, color
+modes, HTMX navigation, theme settings, UI Skins design tokens, every component page of the library, the
+interactive components and Display Builder (component previews, builder, page layouts). Enable the Twig
+debug (`drush theme:dev on`) to see the SDC component of every piece of markup in the HTML comments.
 
 ## Maintainers
 
