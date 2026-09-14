@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Theme override for a feed icon.
+ *
+ * The link always has a text: views without a title, like the front page view,
+ * give the feed an empty title.
+ *
+ * Available variables:
+ * - url: An internal system path or a fully qualified external URL of the feed.
+ * - title: Title of the feed for describing the feed on the subscribe link.
+ * - attributes: Remaining HTML attributes for the feed link.
+ *   - title: A descriptive title of the feed link.
+ *   - class: HTML classes to be applied to the feed link.
+ */
+#}
+<a href="{{ url }}"{{ attributes.addClass('feed-icon') }}>
+  {% if title|render|striptags|trim is not empty %}
+    {{ 'Subscribe to @title'|t({'@title': title}) }}
+  {% else %}
+    {{ 'Subscribe to the RSS feed'|t }}
+  {% endif %}
+</a>
