@@ -137,10 +137,14 @@ With the HTMX navigation, the links of the page are boosted by [HTMX](https://ht
 the new CSS and JavaScript of the target page, merges `drupalSettings` and attaches the behaviors; UIkit
 initializes the swapped components by itself.
 
-- Forms (except GET forms like search), administration pages, files, contextual and dialog links keep the
-  normal navigation.
-- The open UIkit offcanvas, modals and dropdowns are closed before the swap.
-- The focus moves to the main content and the new page title is announced to screen readers.
+There is no custom JavaScript: the rest is rendered on the server by `src/Hook/HtmxNavigationHooks.php`.
+
+- Forms (except GET forms like search), administration, edit and delete pages, files, contextual and dialog
+  links are rendered with `hx-boost="false"` and keep the normal navigation.
+- UIkit closes the open offcanvas and dropdowns when HTMX swaps them; the links of modals keep the normal
+  navigation.
+- On boosted requests the main content anchor gets `autofocus`, which HTMX focuses after the swap, and the
+  new page title is announced in a polite live region updated with `hx-select-oob`.
 
 ## Mapping with the UIkit design system
 

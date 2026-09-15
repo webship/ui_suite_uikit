@@ -35,6 +35,7 @@ class ThemeHooks {
   public function __construct(
     protected ThemeSettingsProvider $themeSettingsProvider,
     protected EntityTypeManagerInterface $entityTypeManager,
+    protected HtmxNavigationHooks $htmxNavigationHooks,
   ) {}
 
   /**
@@ -66,9 +67,11 @@ class ThemeHooks {
    * Implements hook_form_FORM_ID_alter() for 'system_theme_settings'.
    */
   #[Hook('form_system_theme_settings_alter')]
-  public function formSystemThemeSettingsAlter(array &$form, FormStateInterface $form_state, string $form_id = ''): void {
-    // Work-around for a core bug affecting admin themes. See issue #943212.
-    if ($form_id !== '') {
+  public function formSystemThemeSettingsAlter(array &$form, FormStateInterface $form_state): void {
+    // The theme settings form calls theme alters directly, without a form ID,
+    // and the form alter runs again when this theme is also the active theme:
+    // add the settings only once. See issue #943212.
+    if (isset($form['ui_suite_uikit'])) {
       return;
     }
 
@@ -179,25 +182,9 @@ class ThemeHooks {
   public function preprocessOffCanvasPageWrapper(array &$variables): void {
     $variables['htmx_navigation'] = $this->htmxNavigation();
     $variables['#cache']['tags'][] = 'config:ui_suite_uikit.settings';
+    $this->htmxNavigationHooks->preprocessOffCanvasPageWrapper($variables);
     if ($variables['htmx_navigation']) {
       $variables['#attached']['library'][] = 'ui_suite_uikit/htmx';
-    }
-  }
-
-  /**
-   * Implements hook_preprocess_HOOK() for 'form'.
-   *
-   * Forms keep their normal submission (form tokens, Drupal AJAX), except the
-   * GET forms (search, exposed filters) which are boosted by HTMX.
-   */
-  #[Hook('preprocess_form')]
-  public function preprocessForm(array &$variables): void {
-    if (!$this->htmxNavigation()) {
-      return;
-    }
-    $method = strtolower((string) ($variables['element']['#method'] ?? 'post'));
-    if ($method !== 'get') {
-      $variables['attributes']['hx-boost'] = 'false';
     }
   }
 
@@ -257,6 +244,7 @@ class ThemeHooks {
   public function preprocessMenu(array &$variables): void {
     $variables['uikit_region'] = $variables['attributes']['data-uikit-region'] ?? NULL;
     unset($variables['attributes']['data-uikit-region']);
+    $this->htmxNavigationHooks->preprocessMenu($variables);
   }
 
   /**
@@ -267,6 +255,7 @@ class ThemeHooks {
     $variables['link']['#options']['attributes']['class'][] = 'uk-button';
     $variables['link']['#options']['attributes']['class'][] = 'uk-button-primary';
     $variables['link']['#options']['attributes']['class'][] = 'uk-button-small';
+    $this->htmxNavigationHooks->preprocessMenuLocalAction($variables);
   }
 
 }
