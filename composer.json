@@ -5,7 +5,7 @@
     "type": "drupal-theme",
     "homepage": "https://www.drupal.org/project/ui_suite_uikit",
     "require": {
-        "drupal/ui_icons": "^2.0",
+        "drupal/ui_icons": "^1.1 || ^2.0",
         "drupal/ui_patterns": "^2.0.21",
         "drupal/ui_skins": "^1.2",
         "drupal/ui_styles": "^1.22"
