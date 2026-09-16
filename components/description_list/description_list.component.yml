@@ -11,5 +11,6 @@ variants:
 slots:
   items:
     title: Items
+    description: "The terms and their descriptions."
     expected:
       - "ui_suite_uikit:description_list_item"

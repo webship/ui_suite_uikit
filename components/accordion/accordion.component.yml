@@ -6,6 +6,7 @@ links:
 slots:
   items:
     title: Items
+    description: "The accordion items."
     expected:
       - "ui_suite_uikit:accordion_item"
 props:
