@@ -2,6 +2,13 @@
     "name": "drupal/ui_suite_uikit",
     "description": "A site-builder friendly UIkit theme, using the UI Suite modules: UI Patterns, UI Skins, UI Styles and UI Icons.",
     "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Webship",
+            "homepage": "https://webship.co",
+            "role": "Maintainer"
+        }
+    ],
     "type": "drupal-theme",
     "homepage": "https://www.drupal.org/project/ui_suite_uikit",
     "require": {
