@@ -12,6 +12,7 @@
     "type": "drupal-theme",
     "homepage": "https://www.drupal.org/project/ui_suite_uikit",
     "require": {
+        "drupal/core": "^11.4 || ^12",
         "drupal/ui_icons": "^1.1 || ^2.0",
         "drupal/ui_patterns": "^2.0.21",
         "drupal/ui_skins": "^1.2",
