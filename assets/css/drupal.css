@@ -194,3 +194,41 @@ footer a:not(.uk-button):not(.uk-icon-link):not(.uk-icon-button):not(.uk-logo):n
   color: inherit;
   text-decoration: underline;
 }
+
+/**
+ * Link, emphasis and code colours.
+ *
+ * UIkit's link blue is 3.6:1 on white, and it prints emphasis and inline
+ * code in the danger colour at about 3.3:1, all below the WCAG AA minimum.
+ */
+:root {
+  --uk-global-link-color: #1268b3;
+  --uk-global-link-hover-color: #0c4f8a;
+  --uk-global-primary-background: #1268b3;
+  --uk-global-primary-background-hover: #0c4f8a;
+  --uk-global-danger-background: #c2183c;
+  --uk-global-danger-background-hover: #a3122f;
+  --uk-global-success-background: #13795a;
+  --uk-global-warning-background: #8a5a12;
+  --uk-global-inverse-color: #fff;
+}
+
+/* The muted text on a coloured section keeps the inverse colour. */
+.uk-light .uk-text-muted,
+.uk-section-primary:not(.uk-preserve-color) .uk-text-muted,
+.uk-card-primary:not(.uk-preserve-color) .uk-text-muted,
+.uk-card-primary:not(.uk-preserve-color) p,
+.uk-card-secondary:not(.uk-preserve-color) p {
+  color: rgb(255 255 255 / 86%);
+}
+
+em,
+.uk-text-emphasis {
+  color: inherit;
+}
+
+body code,
+body .uk-text-danger,
+body kbd {
+  color: #a3243f;
+}
