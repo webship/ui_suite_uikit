@@ -152,12 +152,12 @@
 /**
  * Links inside running text.
  *
- * Colour alone does not distinguish them, so body links carry an underline.
+ * Colour alone does not distinguish them, so the links of the content and
+ * the footer carry an underline. Buttons, icons, the logo and the menus
+ * keep their own styling.
  */
-p a:not(.uk-button):not(.uk-icon-link),
-li a:not(.uk-button):not(.uk-icon-link),
-td a:not(.uk-button):not(.uk-icon-link),
-dd a:not(.uk-button):not(.uk-icon-link) {
+main a:not(.uk-button):not(.uk-icon-link):not(.uk-icon-button):not(.uk-logo):not(.uk-totop):not([class*="uk-nav"]),
+footer a:not(.uk-button):not(.uk-icon-link):not(.uk-icon-button):not(.uk-logo):not(.uk-totop) {
   text-decoration: underline;
 }
 
