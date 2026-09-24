@@ -3,11 +3,21 @@
  * Drupal specific adjustments for UIkit.
  */
 
+/**
+ * Muted text and navigation links.
+ *
+ * UIkit's own muted colour (#999) gives 2.7:1 on the muted background, below
+ * the WCAG AA minimum, so the theme raises it for both colour modes.
+ */
+:root {
+  --uk-global-muted-color: #707070;
+}
+
 /* Dark color mode (UI Skins theme "dark"): redefine the UIkit design tokens. */
 [data-theme="dark"] {
   --uk-global-color: rgba(255, 255, 255, 0.7);
   --uk-global-emphasis-color: #fff;
-  --uk-global-muted-color: rgba(255, 255, 255, 0.5);
+  --uk-global-muted-color: rgba(255, 255, 255, 0.72);
   --uk-global-inverse-color: #fff;
   --uk-global-link-color: #6db3f8;
   --uk-global-link-hover-color: #a3cffb;
@@ -138,3 +148,16 @@
 .uk-switcher > :empty {
   min-height: 1px;
 }
+
+/**
+ * Links inside running text.
+ *
+ * Colour alone does not distinguish them, so body links carry an underline.
+ */
+p a:not(.uk-button):not(.uk-icon-link),
+li a:not(.uk-button):not(.uk-icon-link),
+td a:not(.uk-button):not(.uk-icon-link),
+dd a:not(.uk-button):not(.uk-icon-link) {
+  text-decoration: underline;
+}
+

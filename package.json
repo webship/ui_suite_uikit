@@ -9,7 +9,7 @@
   "devDependencies": {
     "@cucumber/cucumber": "~12.9.0",
     "uikit": "3.25.22",
-    "webship-js": "2.0.5"
+    "webship-js": "^2.0.6"
   },
   "resolutions": {
     "@cucumber/cucumber": "~12.9.0"
