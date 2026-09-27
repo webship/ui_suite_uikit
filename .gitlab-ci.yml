@@ -9,7 +9,7 @@ include:
 
 variables:
   # Display Builder and the OOP theme hooks need Drupal 11.4.
-  DRUPAL_CORE: "11.4.x-dev"
+  DRUPAL_CORE: "11.4.8"
   # For now, build and test with PHP 8.4.
   _TARGET_PHP: "8.4"
   IGNORE_PROJECT_DRUPAL_CORE_VERSION: "1"
@@ -18,3 +18,9 @@ variables:
   SKIP_CSPELL: "1"
   SKIP_ESLINT: "1"
   _PHPUNIT_CONCURRENT: "0"
+
+# Drupal 11.4.8 carries the fix for the Twig 3.30 escape TypeError
+# (https://www.drupal.org/i/3625969), which 11.4.6 does not.
+composer:
+  variables:
+    DRUPAL_CORE: "11.4.8"
