@@ -2,7 +2,8 @@ name: "(Description list item)"
 description: "Internal: to be used in the 'Description list' component."
 group: "Data display"
 links:
-  - "https://getuikit.com/docs/description-list"
+  - url: "https://getuikit.com/docs/description-list"
+    title: "UIkit Description list documentation"
 slots:
   term:
     title: Term

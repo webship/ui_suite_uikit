@@ -2,7 +2,8 @@ name: Slideshow
 description: "Create a responsive slideshow with images and videos, made of Slideshow items."
 group: Media
 links:
-  - "https://getuikit.com/docs/slideshow"
+  - url: "https://getuikit.com/docs/slideshow"
+    title: "UIkit Slideshow documentation"
 slots:
   items:
     title: Slides
@@ -56,3 +57,6 @@ props:
     dotnav:
       title: "Dot navigation"
       type: boolean
+libraryOverrides:
+  dependencies:
+    - ui_suite_uikit/autoplay

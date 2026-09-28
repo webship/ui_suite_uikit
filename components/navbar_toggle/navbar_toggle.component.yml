@@ -2,7 +2,8 @@ name: "Navbar toggle"
 description: "Hamburger icon toggling an Offcanvas or a Modal, typically on small screens."
 group: Navigation
 links:
-  - "https://getuikit.com/docs/navbar#toggle"
+  - url: "https://getuikit.com/docs/navbar#toggle"
+    title: "UIkit Navbar documentation: toggle"
 props:
   type: object
   properties:

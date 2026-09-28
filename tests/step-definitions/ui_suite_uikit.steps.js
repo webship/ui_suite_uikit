@@ -8,7 +8,7 @@ const { execSync } = require('node:child_process');
 const { existsSync, readdirSync, readFileSync } = require('node:fs');
 const { homedir } = require('node:os');
 const path = require('node:path');
-const { Given, When, Then } = require('@cucumber/cucumber');
+const { AfterAll, Given, When, Then } = require('@cucumber/cucumber');
 
 const THEME_ROOT = path.resolve(__dirname, '..', '..');
 const PROJECT_DIR = process.env.DRUPAL_PROJECT_DIR || path.join(homedir(), 'workspace/test/uikittest');
@@ -19,6 +19,26 @@ const DRUSH = process.env.DRUSH || 'ddev drush';
  */
 function drush(command) {
   return execSync(`${DRUSH} ${command}`, { cwd: PROJECT_DIR, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+}
+
+/**
+ * Waits for the CSS transitions and animations running in the page.
+ *
+ * The colors of links and buttons change with a transition: a check run
+ * right after a color mode change would read the colors half way.
+ *
+ * @param {import('playwright').Page} page
+ *   The page.
+ */
+async function waitForTransitions(page) {
+  await page.evaluate(() => Promise.race([
+    Promise.allSettled(document.getAnimations()
+      .filter((animation) => animation instanceof window.CSSTransition)
+      .map((animation) => animation.finished)),
+    new Promise((resolve) => {
+      setTimeout(resolve, 3000);
+    }),
+  ]));
 }
 
 /**
@@ -78,10 +98,13 @@ Then(/^the UIkit JavaScript version should be "([^"]*)"$/, async function (expec
 });
 
 /**
+ * Sets an attribute of the html element, and waits for the transitions.
+ *
  * Example: When I set the "data-theme" attribute of the document to "dark"
  */
 When(/^I set the "([^"]*)" attribute of the document to "([^"]*)"$/, async function (name, value) {
   await this.page.evaluate(([attribute, attributeValue]) => document.documentElement.setAttribute(attribute, attributeValue), [name, value]);
+  await waitForTransitions(this.page);
 });
 
 /**
@@ -226,6 +249,19 @@ When(/^I set the UI Skins CSS variable "([^"]*)" of the UIkit theme to "([^"]*)"
 });
 
 /**
+ * Skips the scenario when the theme settings do not offer the color modes.
+ *
+ * UI Skins lists the color modes of the theme and of the modules: another
+ * theme declaring color modes with the same machine names hides them.
+ *
+ * Example: Given the theme settings of the UIkit theme offer the UI Skins color modes
+ */
+Given(/^the theme settings of the UIkit theme offer the UI Skins color modes$/, async function () {
+  await this.page.goto(`${this.launchUrl}/admin/appearance/settings/ui_suite_uikit`);
+  return await this.page.locator('select[name="theme"]').count() ? undefined : 'skipped';
+});
+
+/**
  * Selects a UI Skins theme (color mode) in the theme settings.
  *
  * Example: When I select the UI Skins theme "Dark" for the UIkit theme
@@ -285,15 +321,43 @@ Then(/^every UIkit component should have a Display Builder preview$/, { timeout:
   assert.deepStrictEqual(failures, []);
 });
 
+// The default page layout of the site before the first deletion, as JSON:
+// null until then, an empty string when the site had none.
+let sitePageLayout = null;
+
+/**
+ * Puts the default page layout of the site back, when a test deleted it.
+ *
+ * The page layout is created again with the values it had, and its Display
+ * Builder instance is removed: Display Builder builds it again from them.
+ */
+function restoreSitePageLayout() {
+  if (!sitePageLayout) {
+    return;
+  }
+  const values = Buffer.from(sitePageLayout).toString('base64');
+  drush(`php:eval '$storage = \\Drupal::entityTypeManager()->getStorage("page_layout"); $storage->load("default")?->delete(); \\Drupal::entityTypeManager()->getStorage("display_builder_instance")->load("page_layout__default")?->delete(); $storage->create(json_decode(base64_decode("${values}"), TRUE))->save();'`);
+  drush('cache:rebuild');
+  sitePageLayout = null;
+}
+
 /**
  * Deletes the default page layout if it exists.
  *
  * Display Builder keeps its page template in the runtime theme registry after
- * the deletion, so the caches are rebuilt too.
+ * the deletion, so the caches are rebuilt too. The page layout the site had
+ * is kept, and put back by "the default page layout of the site is restored"
+ * or at the end of the run.
  *
  * Example: Given there is no default page layout
  */
 Given(/^there is no default page layout$/, { timeout: 180000 }, async function () {
+  if (sitePageLayout === null) {
+    sitePageLayout = drush('php:eval \'echo json_encode(\\Drupal::entityTypeManager()->hasDefinition("page_layout") ? \\Drupal::entityTypeManager()->getStorage("page_layout")->load("default")?->toArray() : NULL);\'');
+    if (sitePageLayout === 'null') {
+      sitePageLayout = '';
+    }
+  }
   // Check with a request first: a 404 page would be reported as a JavaScript
   // (console) error by the webship-js error tracking.
   const url = `${this.launchUrl}/admin/structure/page-layout/default/delete`;
@@ -314,4 +378,17 @@ When(/^I create the default page layout from the current site$/, async function 
   await this.page.locator('input[name="starting_point"][value="theme"]').check();
   await this.page.getByRole('button', { name: 'Save' }).click();
   await this.page.waitForLoadState('load');
+});
+
+/**
+ * Puts back the default page layout the site had before the tests.
+ *
+ * Example: Then the default page layout of the site is restored
+ */
+Then(/^the default page layout of the site is restored$/, { timeout: 180000 }, function () {
+  restoreSitePageLayout();
+});
+
+AfterAll({ timeout: 180000 }, function () {
+  restoreSitePageLayout();
 });

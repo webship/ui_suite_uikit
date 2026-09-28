@@ -9,8 +9,15 @@
   <div class="uk-position-cover uk-cover-media">
     {{ media }}
   </div>
+  {% set overlay_default = 'none' %}
+  {% if inverse == 'light' %}
+    {% set overlay_default = 'primary' %}
+  {% elseif inverse == 'dark' %}
+    {% set overlay_default = 'default' %}
+  {% endif %}
+  {% set overlay = overlay|default(overlay_default) %}
   {% if content %}
-    <div class="uk-position-{{ content_position|default('center') }} uk-position-medium{{ inverse ? ' uk-' ~ inverse }}">
+    <div class="uk-position-{{ content_position|default('center') }} uk-position-medium{{ inverse ? ' uk-' ~ inverse }}{{ overlay != 'none' ? ' uk-overlay uk-overlay-' ~ overlay }}">
       {{ content }}
     </div>
   {% endif %}

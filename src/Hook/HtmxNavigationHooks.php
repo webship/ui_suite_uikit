@@ -479,11 +479,10 @@ class HtmxNavigationHooks implements TrustedCallbackInterface {
   }
 
   /**
-   * Implements hook_preprocess_HOOK() for 'field'.
+   * Preprocess for 'field', called from PreprocessHooks.
    *
-   * Link fields rendered in placeholders.
+   * Link fields rendered in placeholders. A theme implements each hook once.
    */
-  #[Hook('preprocess_field')]
   public function preprocessField(array &$variables): void {
     if (!$this->enabled() || empty($variables['items'])) {
       return;

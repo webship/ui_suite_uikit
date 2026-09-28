@@ -1,6 +1,6 @@
 name: "Link, sizes and icon"
 slots:
-  label: "Download"
+  label: "Download UIkit"
 props:
   url: "https://getuikit.com/download"
   size: large

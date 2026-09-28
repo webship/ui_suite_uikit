@@ -2,7 +2,8 @@ name: Placeholder
 description: "Create an empty space with a dashed border, typically for drag and drop zones."
 group: Layout
 links:
-  - "https://getuikit.com/docs/placeholder"
+  - url: "https://getuikit.com/docs/placeholder"
+    title: "UIkit Placeholder documentation"
 slots:
   content:
     title: Content

@@ -2,7 +2,8 @@ name: "To top"
 description: "Create an icon to scroll back to the top of the page."
 group: Navigation
 links:
-  - "https://getuikit.com/docs/totop"
+  - url: "https://getuikit.com/docs/totop"
+    title: "UIkit Totop documentation"
 props:
   type: object
   properties:

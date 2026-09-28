@@ -32,4 +32,7 @@
   {% if dotnav %}
     <ul class="uk-slider-nav uk-dotnav uk-flex-center uk-margin"></ul>
   {% endif %}
+  {% if autoplay %}
+    <button type="button" class="uk-button uk-button-default uk-button-small uk-margin-small-top" data-ui-suite-uikit-autoplay aria-pressed="false">{{ 'Pause the slides'|t }}</button>
+  {% endif %}
 </div>

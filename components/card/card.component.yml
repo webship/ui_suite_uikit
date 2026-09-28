@@ -2,7 +2,8 @@ name: Card
 description: "Create layout boxes with different styles."
 group: "Data display"
 links:
-  - "https://getuikit.com/docs/card"
+  - url: "https://getuikit.com/docs/card"
+    title: "UIkit Card documentation"
 variants:
   default:
     title: Default

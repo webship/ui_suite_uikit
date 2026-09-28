@@ -2,7 +2,8 @@ name: "(Switcher tab)"
 description: "Internal: to be used in the 'Tabs' slot of the 'Switcher' component."
 group: Interactive
 links:
-  - "https://getuikit.com/docs/switcher"
+  - url: "https://getuikit.com/docs/switcher"
+    title: "UIkit Switcher documentation"
 slots:
   label:
     title: Label

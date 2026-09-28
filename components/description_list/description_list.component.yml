@@ -2,7 +2,8 @@ name: "Description list"
 description: "Create nicely looking description lists: terms and their descriptions."
 group: "Data display"
 links:
-  - "https://getuikit.com/docs/description-list"
+  - url: "https://getuikit.com/docs/description-list"
+    title: "UIkit Description list documentation"
 variants:
   default:
     title: Default

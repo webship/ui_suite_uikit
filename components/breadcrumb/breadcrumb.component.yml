@@ -2,7 +2,8 @@ name: Breadcrumb
 description: "Create a breadcrumb navigation to indicate the current page's location."
 group: Navigation
 links:
-  - "https://getuikit.com/docs/breadcrumb"
+  - url: "https://getuikit.com/docs/breadcrumb"
+    title: "UIkit Breadcrumb documentation"
 props:
   type: object
   properties:

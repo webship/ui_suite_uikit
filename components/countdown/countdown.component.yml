@@ -2,7 +2,8 @@ name: Countdown
 description: "Create a countdown timer to a given date."
 group: "Data display"
 links:
-  - "https://getuikit.com/docs/countdown"
+  - url: "https://getuikit.com/docs/countdown"
+    title: "UIkit Countdown documentation"
 props:
   type: object
   properties:

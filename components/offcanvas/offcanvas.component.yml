@@ -2,7 +2,8 @@ name: Offcanvas
 description: "Create an off-canvas sidebar that slides in, opened with a Button or Navbar toggle using the same ID as target."
 group: Interactive
 links:
-  - "https://getuikit.com/docs/offcanvas"
+  - url: "https://getuikit.com/docs/offcanvas"
+    title: "UIkit Offcanvas documentation"
 slots:
   content:
     title: Content

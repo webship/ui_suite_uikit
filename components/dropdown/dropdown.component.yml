@@ -2,7 +2,8 @@ name: Dropdown
 description: "Toggle a dropdown panel below the toggle (usually a button)."
 group: Interactive
 links:
-  - "https://getuikit.com/docs/dropdown"
+  - url: "https://getuikit.com/docs/dropdown"
+    title: "UIkit Dropdown documentation"
 slots:
   toggle:
     title: Toggle

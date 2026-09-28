@@ -2,7 +2,8 @@ name: Label
 description: "Indicate important notes and highlight parts of your content."
 group: Elements
 links:
-  - "https://getuikit.com/docs/label"
+  - url: "https://getuikit.com/docs/label"
+    title: "UIkit Label documentation"
 variants:
   default:
     title: Default

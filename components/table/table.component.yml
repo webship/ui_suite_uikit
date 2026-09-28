@@ -2,7 +2,8 @@ name: Table
 description: "Create nicely looking tables, which come in different styles."
 group: "Data display"
 links:
-  - "https://getuikit.com/docs/table"
+  - url: "https://getuikit.com/docs/table"
+    title: "UIkit Table documentation"
 variants:
   default:
     title: Default

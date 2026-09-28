@@ -2,7 +2,8 @@ name: Comment
 description: "Create a comment, with an avatar, a title, meta data and content."
 group: "Data display"
 links:
-  - "https://getuikit.com/docs/comment"
+  - url: "https://getuikit.com/docs/comment"
+    title: "UIkit Comment documentation"
 slots:
   avatar:
     title: Avatar

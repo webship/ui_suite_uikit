@@ -173,6 +173,23 @@ class PreprocessHooks {
   }
 
   /**
+   * Implements hook_preprocess_HOOK() for 'field'.
+   *
+   * The items printed as a single link get a class giving them a 44px target
+   * (WCAG 2.5.5), see assets/css/accessibility.css.
+   */
+  #[Hook('preprocess_field')]
+  public function preprocessField(array &$variables): void {
+    foreach ($variables['items'] ?? [] as &$item) {
+      if (($item['content']['#type'] ?? NULL) === 'link' && ($item['attributes'] ?? NULL) instanceof Attribute) {
+        $item['attributes']->addClass('ui-suite-uikit-field-link');
+      }
+    }
+    unset($item);
+    $this->htmxNavigationHooks->preprocessField($variables);
+  }
+
+  /**
    * Implements hook_preprocess_HOOK() for 'table'.
    */
   #[Hook('preprocess_table')]

@@ -2,7 +2,8 @@ name: Article
 description: "Create articles within your page, with a title, meta data, a lead and content."
 group: "Data display"
 links:
-  - "https://getuikit.com/docs/article"
+  - url: "https://getuikit.com/docs/article"
+    title: "UIkit Article documentation"
 slots:
   title:
     title: Title

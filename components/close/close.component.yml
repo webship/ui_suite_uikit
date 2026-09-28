@@ -2,7 +2,8 @@ name: Close
 description: "Create a close icon button, typically used for alerts, modals and offcanvas."
 group: Elements
 links:
-  - "https://getuikit.com/docs/close"
+  - url: "https://getuikit.com/docs/close"
+    title: "UIkit Close documentation"
 props:
   type: object
   properties:

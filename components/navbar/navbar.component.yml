@@ -2,7 +2,8 @@ name: Navbar
 description: "Create a navigation bar that can be used for your main site navigation."
 group: Navigation
 links:
-  - "https://getuikit.com/docs/navbar"
+  - url: "https://getuikit.com/docs/navbar"
+    title: "UIkit Navbar documentation"
 slots:
   left:
     title: Left

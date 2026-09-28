@@ -2,7 +2,8 @@ name: Subnav
 description: "Create a sub navigation, for secondary links, filters or local tasks."
 group: Navigation
 links:
-  - "https://getuikit.com/docs/subnav"
+  - url: "https://getuikit.com/docs/subnav"
+    title: "UIkit Subnav documentation"
 variants:
   default:
     title: Default

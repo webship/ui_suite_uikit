@@ -2,7 +2,8 @@ name: "(Accordion item)"
 description: "Internal: to be used in the 'Accordion' component."
 group: Interactive
 links:
-  - "https://getuikit.com/docs/accordion"
+  - url: "https://getuikit.com/docs/accordion"
+    title: "UIkit Accordion documentation"
 slots:
   title:
     title: Title

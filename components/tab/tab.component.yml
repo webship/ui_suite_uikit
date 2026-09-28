@@ -2,7 +2,8 @@ name: Tab
 description: "Tabbed navigation links, for example the local tasks. For tabs with panels, use the Switcher component."
 group: Navigation
 links:
-  - "https://getuikit.com/docs/tab"
+  - url: "https://getuikit.com/docs/tab"
+    title: "UIkit Tab documentation"
 props:
   type: object
   properties:

@@ -2,7 +2,8 @@ name: Blockquote
 description: "A quotation, with an optional footer for the author and the source."
 group: Elements
 links:
-  - "https://getuikit.com/docs/base#blockquotes"
+  - url: "https://getuikit.com/docs/base#blockquotes"
+    title: "UIkit Base documentation: blockquotes"
 slots:
   content:
     title: Quote

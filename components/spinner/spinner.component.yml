@@ -2,7 +2,8 @@ name: Spinner
 description: "Create an animated loading spinner."
 group: Feedback
 links:
-  - "https://getuikit.com/docs/spinner"
+  - url: "https://getuikit.com/docs/spinner"
+    title: "UIkit Spinner documentation"
 props:
   type: object
   properties:

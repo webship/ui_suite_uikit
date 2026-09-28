@@ -17,7 +17,7 @@ slots:
     type: component
     component: "ui_suite_uikit:button"
     slots:
-      label: "Read more"
+      label: "Read the card story"
     props:
       variant: text
       url: "#"

@@ -2,7 +2,8 @@ name: "Navbar nav"
 description: "Menu links of the navbar, with dropdowns for the sub items."
 group: Navigation
 links:
-  - "https://getuikit.com/docs/navbar"
+  - url: "https://getuikit.com/docs/navbar"
+    title: "UIkit Navbar documentation"
 props:
   type: object
   properties:

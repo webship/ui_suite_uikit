@@ -1,5 +1,5 @@
 name: Default
 slots:
-  label: "Link"
+  label: "Visit the UIkit website"
 props:
   url: "https://getuikit.com"

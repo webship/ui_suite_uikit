@@ -2,7 +2,8 @@ name: Alert
 description: "Display success, warning and error messages."
 group: Feedback
 links:
-  - "https://getuikit.com/docs/alert"
+  - url: "https://getuikit.com/docs/alert"
+    title: "UIkit Alert documentation"
 variants:
   default:
     title: Default

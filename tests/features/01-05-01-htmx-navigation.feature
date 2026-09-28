@@ -18,7 +18,8 @@ Feature: HTMX navigation
       And there should be no JavaScript errors
 
   Scenario: The main content gets the focus and the new page title is announced
-    Given I am an anonymous user
+    Given the "/user/login" page is rendered by the UIkit theme
+      And I am an anonymous user
      When I go to the homepage
       And I mark the current page
       And I click on the element ".uk-navbar-right .uk-navbar-nav a"
@@ -34,7 +35,8 @@ Feature: HTMX navigation
      Then "form#user-login-form" should have attribute "hx-boost" with value "false"
 
   Scenario: The UIkit components work after an HTMX navigation
-    Given I am an anonymous user
+    Given the "/user/login" page is rendered by the UIkit theme
+      And I am an anonymous user
       And I set the viewport to the "xs" breakpoint
      When I go to "/user/login"
       And I mark the current page
@@ -42,19 +44,20 @@ Feature: HTMX navigation
      Then I wait until the URL contains "/"
       And the page should not have been reloaded
      When I click on the element ".uk-navbar-toggle"
-     Then "#ui-suite-uikit-offcanvas .uk-offcanvas-bar" should be visible within 5 seconds
+     Then ".uk-offcanvas.uk-open .uk-offcanvas-bar" should be visible within 5 seconds
 
   Scenario: The offcanvas menu is closed after an HTMX navigation
     Given I am an anonymous user
       And I set the viewport to the "xs" breakpoint
-     When I go to "/user/login"
+     When I go to "/ui-suite-uikit-test-page-not-found"
       And I mark the current page
       And I click on the element ".uk-navbar-toggle"
-     Then "#ui-suite-uikit-offcanvas .uk-nav-primary" should be visible within 5 seconds
-     When I click on the element "#ui-suite-uikit-offcanvas .uk-nav-primary a"
-     Then "#edit-name" should not be attached within 10 seconds
+     Then ".uk-offcanvas.uk-open .uk-nav-primary > li > a" should be visible within 5 seconds
+     When I click on the element ":nth-match(.uk-offcanvas.uk-open .uk-nav-primary > li > a, 1)"
+     Then ".uk-offcanvas.uk-open" should not be attached within 5 seconds
+      And I wait 1 second
+      And the url should not match "ui-suite-uikit-test-page-not-found"
       And the page should not have been reloaded
-      And "#ui-suite-uikit-offcanvas .uk-offcanvas-bar" should be hidden within 5 seconds
 
   Scenario: The links HTMX must not handle keep the normal navigation
     Given I am logged in as the Drupal administrator

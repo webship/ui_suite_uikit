@@ -2,7 +2,8 @@ name: "(Slideshow item)"
 description: "Internal: to be used in the 'Slideshow' component."
 group: Media
 links:
-  - "https://getuikit.com/docs/slideshow"
+  - url: "https://getuikit.com/docs/slideshow"
+    title: "UIkit Slideshow documentation"
 variants:
   primary:
     title: "Dark caption (Default)"

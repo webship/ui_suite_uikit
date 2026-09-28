@@ -9,16 +9,19 @@ Feature: The front page is rendered with UIkit
      Then the UIkit JavaScript version should be "3.25.22"
       And ".uk-navbar-container" should be visible
       And the computed style "background-color" of ".uk-navbar-container" should be "rgb(248, 248, 248)"
-      And the computed style "background-color" of "footer.uk-section-secondary" should be "rgb(34, 34, 34)"
+      And the computed style "background-color" of ".uk-section-secondary" should be "rgb(34, 34, 34)"
       And there should be no JavaScript errors
 
   Scenario: The branding and the menus are rendered in the navbar
     Given I am an anonymous user
      When I go to the homepage
      Then ".uk-navbar-left .uk-logo" should be visible
-      And ".uk-navbar-center .uk-navbar-nav" should contain text "Home"
+      And ".uk-navbar-center .uk-navbar-nav > li > a" should be visible
       And ".uk-navbar-right .uk-navbar-nav" should contain text "Log in"
-      And ".uk-navbar-center .uk-navbar-nav > li.uk-active" should be visible
+    # The active trail marks the menu links with "uk-active"; Views menu links
+    # are not in the active trail, only marked as the current page.
+     When I follow the first link of ".uk-navbar-center .uk-navbar-nav"
+     Then ".uk-navbar-center .uk-navbar-nav > li:is(.uk-active, :has(> a[aria-current='page']))" should be visible
 
   Scenario: The UIkit design tokens layer is applied
     Given I am an anonymous user

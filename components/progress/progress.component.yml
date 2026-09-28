@@ -2,7 +2,8 @@ name: Progress
 description: "Define a progress bar that can be used to visualize the progression of a task."
 group: Feedback
 links:
-  - "https://getuikit.com/docs/progress"
+  - url: "https://getuikit.com/docs/progress"
+    title: "UIkit Progress documentation"
 props:
   type: object
   properties:

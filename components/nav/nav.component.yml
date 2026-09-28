@@ -2,7 +2,8 @@ name: Nav
 description: "Vertical navigation, for sidebars, offcanvas and dropdowns. Links without URL are headers."
 group: Navigation
 links:
-  - "https://getuikit.com/docs/nav"
+  - url: "https://getuikit.com/docs/nav"
+    title: "UIkit Nav documentation"
 variants:
   default:
     title: Default

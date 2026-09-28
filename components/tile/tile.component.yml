@@ -2,7 +2,8 @@ name: Tile
 description: "Create tiles that can be arranged in a grid, with different background colors."
 group: Layout
 links:
-  - "https://getuikit.com/docs/tile"
+  - url: "https://getuikit.com/docs/tile"
+    title: "UIkit Tile documentation"
 variants:
   default:
     title: Default

@@ -2,7 +2,8 @@ name: Tooltip
 description: "Easily create a nice looking tooltip around any content."
 group: Feedback
 links:
-  - "https://getuikit.com/docs/tooltip"
+  - url: "https://getuikit.com/docs/tooltip"
+    title: "UIkit Tooltip documentation"
 slots:
   content:
     title: Content

@@ -2,7 +2,8 @@ name: Cover
 description: "Hero area: an image or a video covering its container, with content on top."
 group: Media
 links:
-  - "https://getuikit.com/docs/cover"
+  - url: "https://getuikit.com/docs/cover"
+    title: "UIkit Cover documentation"
 slots:
   media:
     title: "Image or video"
@@ -58,3 +59,15 @@ props:
       "meta:enum":
         light: "Light (for dark media)"
         dark: "Dark (for light media)"
+    overlay:
+      title: "Content background"
+      description: "A background behind the content, so its text keeps a 7:1 contrast whatever the media (WCAG 1.4.6). Follows the content color when not set."
+      type: string
+      enum:
+        - primary
+        - default
+        - none
+      "meta:enum":
+        primary: "Dark (Default with light content)"
+        default: "Light (Default with dark content)"
+        none: "None: the media must give the contrast"

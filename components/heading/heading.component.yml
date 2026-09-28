@@ -2,7 +2,8 @@ name: Heading
 description: "Define different styles for headings."
 group: Elements
 links:
-  - "https://getuikit.com/docs/heading"
+  - url: "https://getuikit.com/docs/heading"
+    title: "UIkit Heading documentation"
 variants:
   default:
     title: Default

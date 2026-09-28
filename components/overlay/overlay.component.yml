@@ -2,7 +2,8 @@ name: Overlay
 description: "Create an image overlay, which comes in different styles and positions."
 group: Media
 links:
-  - "https://getuikit.com/docs/overlay"
+  - url: "https://getuikit.com/docs/overlay"
+    title: "UIkit Overlay documentation"
 variants:
   default:
     title: "Light"

@@ -2,7 +2,8 @@ name: Badge
 description: "Easily create nice looking notification badges."
 group: Elements
 links:
-  - "https://getuikit.com/docs/badge"
+  - url: "https://getuikit.com/docs/badge"
+    title: "UIkit Badge documentation"
 slots:
   label:
     title: Label

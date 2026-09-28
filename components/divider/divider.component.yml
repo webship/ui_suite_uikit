@@ -2,7 +2,8 @@ name: Divider
 description: "Separate content and create visual dividers."
 group: Elements
 links:
-  - "https://getuikit.com/docs/divider"
+  - url: "https://getuikit.com/docs/divider"
+    title: "UIkit Divider documentation"
 variants:
   default:
     title: Default

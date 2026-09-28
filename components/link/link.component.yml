@@ -2,7 +2,8 @@ name: Link
 description: "Define different styles for links."
 group: Elements
 links:
-  - "https://getuikit.com/docs/link"
+  - url: "https://getuikit.com/docs/link"
+    title: "UIkit Link documentation"
 variants:
   default:
     title: Default

@@ -2,7 +2,8 @@ name: Lightbox
 description: "Open every Lightbox item inside this component in a responsive lightbox gallery."
 group: Media
 links:
-  - "https://getuikit.com/docs/lightbox"
+  - url: "https://getuikit.com/docs/lightbox"
+    title: "UIkit Lightbox documentation"
 slots:
   items:
     title: Items

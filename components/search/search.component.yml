@@ -2,7 +2,8 @@ name: Search
 description: "A search form, in different styles, for example inside the navbar."
 group: Forms
 links:
-  - "https://getuikit.com/docs/search"
+  - url: "https://getuikit.com/docs/search"
+    title: "UIkit Search documentation"
 variants:
   default:
     title: Default

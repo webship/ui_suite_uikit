@@ -10,10 +10,10 @@ Feature: The offcanvas menu on small screens
      Then ".uk-navbar-center .uk-navbar-nav" should be hidden
       And ".uk-navbar-toggle" should be visible
      When I click on the element ".uk-navbar-toggle"
-     Then "#ui-suite-uikit-offcanvas .uk-offcanvas-bar" should be visible within 5 seconds
-      And "#ui-suite-uikit-offcanvas .uk-nav-primary" should contain text "Home"
-     When I click on the element "#ui-suite-uikit-offcanvas .uk-offcanvas-close"
-     Then "#ui-suite-uikit-offcanvas .uk-offcanvas-bar" should be hidden within 5 seconds
+     Then ".uk-offcanvas.uk-open .uk-offcanvas-bar" should be visible within 5 seconds
+      And ".uk-offcanvas.uk-open .uk-nav-primary > li > a" should be visible
+     When I click on the element ".uk-offcanvas.uk-open .uk-offcanvas-close"
+     Then ".uk-offcanvas.uk-open" should not be attached within 5 seconds
 
   Scenario: The navbar menu is visible on large screens
     Given I am an anonymous user

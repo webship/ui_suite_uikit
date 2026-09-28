@@ -2,7 +2,8 @@ name: Container
 description: "Align and center your page content."
 group: Layout
 links:
-  - "https://getuikit.com/docs/container"
+  - url: "https://getuikit.com/docs/container"
+    title: "UIkit Container documentation"
 slots:
   content:
     title: Content

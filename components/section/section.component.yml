@@ -2,7 +2,8 @@ name: Section
 description: "Create horizontal layout sections with different background colors and styles."
 group: Layout
 links:
-  - "https://getuikit.com/docs/section"
+  - url: "https://getuikit.com/docs/section"
+    title: "UIkit Section documentation"
 variants:
   default:
     title: Default

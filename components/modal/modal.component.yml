@@ -2,7 +2,8 @@ name: Modal
 description: "Create modal dialogs, opened with a Button component using the same ID as toggle target."
 group: Interactive
 links:
-  - "https://getuikit.com/docs/modal"
+  - url: "https://getuikit.com/docs/modal"
+    title: "UIkit Modal documentation"
 variants:
   default:
     title: Default

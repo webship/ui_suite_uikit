@@ -115,9 +115,59 @@ templates with their own components.
 - `ui_suite_uikit.ui_skins.css_variables.yml`: the UIkit global colors and font family as CSS variables,
   editable in *Appearance > CSS variables* and in the Display Builder *Design tokens* panel.
 - `assets/css/tokens.css` is generated from the UIkit CSS (`npm run build:tokens`): every declaration using a
-  UIkit global color falls back to the UIkit value, so the rendering is identical to UIkit until a variable is
-  set.
+  UIkit global color falls back to the UIkit value. `assets/css/drupal.css` sets the values of the theme, for
+  the light mode on `:root` and for the dark mode on `:root[data-theme="dark"]`.
+- Text printed in the primary, success, warning or danger colour uses `--uk-global-{primary,success,warning,danger}-color`,
+  which falls back to the background of the same name. The form controls use `--uk-form-border-color`, the
+  inverse areas (`.uk-light`) `--uk-inverse-color` and `--uk-inverse-muted-color`.
 - `ui_suite_uikit.ui_skins.themes.yml`: *Light* and *Dark* color modes (`data-theme` attribute on `html`).
+  The CSS variables form has a `:root[data-theme="dark"]` scope for the dark values.
+
+## Accessibility
+
+The theme targets WCAG 2.2 AAA where a theme can meet it, in both color modes:
+
+- Contrast (1.4.6): 7:1 for text, 4.5:1 for large text, hover and focus states included. Non-text contrast
+  (1.4.11): 3:1 for the borders of the form controls, the checked state, the active tab, the progress value
+  and the slider dots.
+- Use of colour (1.4.1): the current item of the navbar, subnav and nav menus is also underlined.
+- Focus (2.4.7, 2.4.13): a solid 2px ring 2px away from the element, in the emphasis colour (the inverse
+  colour on dark areas). With the sticky navbar, the page scrolls the focused element below it (2.4.11).
+- Target size (2.5.5): buttons, inputs, navigation links, pagination, breadcrumb, close buttons, the back to
+  top link, the navbar toggle, icon buttons, the slider dots, the skip link, the feed link, the teaser titles and the links standing alone in a
+  field are at least 44 by 44 pixels. The offcanvas and modal content keeps clear of the close button.
+- Visual presentation (1.4.8): lines of at most about 80 characters (`max-width: 65ch`), line height of 1.5,
+  no justified text. Reflow (1.4.10): no horizontal scrolling at 320px.
+- Motion (2.3.3, 2.2.2): with *reduce motion*, transitions and animations end at once, and the autoplaying
+  sliders and slideshows start paused. They have a *Pause the slides* button.
+- Cover: a background behind the content (`overlay` prop) keeps the text readable whatever the image.
+
+`assets/css/accessibility.css` holds these rules. When you change a colour in *CSS variables*, check it against
+every background it sits on, in both color modes.
+
+The webship-js feature `tests/features/05-02-01-wcag-aaa.feature` checks them: an axe-core WCAG 2.2 AAA audit of
+the pages and of every component of the library in both color modes, the focus ring of every element the keyboard
+reaches, the 44 by 44 pixel targets, the animations with *reduce motion*, the reflow at 320 pixels and the line
+height and length of the text.
+
+A theme can not decide everything. Check these on each site, they depend on the content and the configuration:
+
+- [ ] 1.2.6, 1.2.8, 1.2.9: sign language, media alternatives and live audio alternatives for the media.
+- [ ] 1.4.9: no images of text, other than logos.
+- [ ] 2.1.3: every feature works with the keyboard, without exception (custom widgets, maps, embeds).
+- [ ] 2.2.3, 2.2.4, 2.2.5, 2.2.6: no time limits, interruptions can be postponed, data is kept when a
+  session expires, users are warned about timeouts.
+- [ ] 2.3.2: nothing flashes more than three times a second.
+- [ ] 2.4.8: the breadcrumb block is placed, so visitors know where they are.
+- [ ] 2.4.9, 2.4.10: link texts make sense alone (no repeated "Read more" or "Project page" pointing to
+  different places), and the sections of the content have headings.
+- [ ] 2.5.6: no restriction of the input method.
+- [ ] 3.1.3, 3.1.4, 3.1.5, 3.1.6: unusual words, abbreviations, reading level and pronunciation.
+- [ ] 3.2.5: changes of context happen only on request (no automatic redirects or pop-ups).
+- [ ] 3.2.6, 3.3.5: help (contact link, help text) is at the same place on every page.
+- [ ] 3.3.6: submissions can be checked, corrected or reversed (all forms).
+- [ ] 3.3.9: login without a cognitive test (password managers and paste allowed, no CAPTCHA puzzles).
+- [ ] Error messages next to the fields: enable the core *Inline Form Errors* module.
 
 ## Icons
 
@@ -176,8 +226,19 @@ LAUNCH_URL=https://example.ddev.site DRUPAL_PROJECT_DIR=/path/to/project npm tes
 
 The webship-js features cover the front end rendering, the offcanvas menu, forms and local tasks, color
 modes, HTMX navigation, theme settings, UI Skins design tokens, every component page of the library, the
-interactive components and Display Builder (component previews, builder, page layouts). Enable the Twig
-debug (`drush theme:dev on`) to see the SDC component of every piece of markup in the HTML comments.
+interactive components, Display Builder (component previews, builder, page layouts) and accessibility (WCAG 2.2
+AA and AAA, `@a11y` and `@aaa` tags). Enable the Twig debug (`drush theme:dev on`) to see the SDC component of
+every piece of markup in the HTML comments.
+
+The suite runs on any site using the theme as the default theme:
+
+- The scenarios about a page another theme renders (like the login pages with the administration theme) and
+  the scenarios needing a module the site does not have (Webform, Display Builder page layouts, UI Patterns
+  Library) are skipped.
+- The UI Skins scenarios end with the default primary colour and the *Light* color mode selected, and the
+  Display Builder scenarios put back the default page layout of the site. The contact webform scenarios store
+  submissions.
+- Run only the accessibility checks with `npm test -- --tags @aaa`.
 
 ## Maintainers
 

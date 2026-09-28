@@ -2,7 +2,8 @@ name: "(Table cell)"
 description: "Internal: to be used in the 'Table row' component."
 group: "Data display"
 links:
-  - "https://getuikit.com/docs/table"
+  - url: "https://getuikit.com/docs/table"
+    title: "UIkit Table documentation"
 slots:
   content:
     title: Content

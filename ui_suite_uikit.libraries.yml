@@ -33,5 +33,15 @@ base:
     theme:
       assets/css/tokens.css: {}
       assets/css/drupal.css: {}
+      assets/css/accessibility.css: {}
   dependencies:
+    - ui_suite_uikit/uikit
+
+# Pause control of the autoplaying sliders and slideshows (WCAG 2.2.2).
+autoplay:
+  js:
+    assets/js/autoplay.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
     - ui_suite_uikit/uikit

@@ -2,7 +2,8 @@ name: "Button group"
 description: "Group buttons next to each other."
 group: Elements
 links:
-  - "https://getuikit.com/docs/button#button-group"
+  - url: "https://getuikit.com/docs/button#button-group"
+    title: "UIkit Button documentation: button group"
 slots:
   buttons:
     title: Buttons

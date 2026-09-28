@@ -1,0 +1,484 @@
+/**
+ * @file
+ * WCAG 2.2 AAA adjustments of the UIkit components.
+ *
+ * UIkit's own CSS is loaded as is (from the CDN or web/libraries/uikit), the
+ * colours come from the tokens (assets/css/drupal.css). This file changes
+ * what the tokens can not: the focus ring, the target sizes, the text
+ * layout, the motion and a few colours UIkit does not take from a token.
+ * See the "Accessibility" section of README.md.
+ */
+
+/**
+ * Focus appearance (2.4.7, 2.4.11, 2.4.13).
+ *
+ * A solid 2px ring, 2px away from the element: it only touches the page
+ * background, whatever the fill of the element. On inverse areas (.uk-light,
+ * coloured sections, cards, the offcanvas) UIkit prints it in the inverse
+ * colour.
+ */
+:focus-visible {
+  outline: 2px solid var(--uk-global-emphasis-color, #333);
+  outline-offset: 2px;
+}
+
+/* Form controls only change their border on focus in UIkit. */
+.uk-input:focus-visible,
+.uk-select:focus-visible,
+.uk-textarea:focus-visible,
+.uk-checkbox:focus-visible,
+.uk-radio:focus-visible,
+.uk-range:focus-visible,
+.uk-search-input:focus-visible,
+.uk-form-danger:focus-visible {
+  outline: 2px solid var(--uk-global-emphasis-color, #333);
+  outline-offset: 2px;
+}
+
+.uk-light .uk-input:focus-visible,
+.uk-light .uk-select:focus-visible,
+.uk-light .uk-textarea:focus-visible,
+.uk-light .uk-checkbox:focus-visible,
+.uk-light .uk-radio:focus-visible,
+.uk-light .uk-search-input:focus-visible,
+.uk-section-primary:not(.uk-preserve-color) .uk-input:focus-visible,
+.uk-section-secondary:not(.uk-preserve-color) .uk-input:focus-visible,
+.uk-offcanvas-bar .uk-input:focus-visible,
+.uk-offcanvas-bar .uk-search-input:focus-visible {
+  outline-color: var(--uk-global-inverse-color, #fff);
+}
+
+/* A sticky navbar must not hide the focused element (2.4.11, 2.4.12). */
+html:has([uk-sticky] > .uk-navbar-container) {
+  scroll-padding-top: 100px;
+}
+
+/**
+ * Non-text contrast (1.4.11).
+ *
+ * The borders of the form controls and of the default button use their own
+ * token, 3:1 against the page. The error state uses the danger text colour,
+ * which stays readable in the dark colour mode.
+ */
+.uk-button-default {
+  border-color: var(--uk-form-border-color, #767676);
+}
+
+.uk-button-default:hover,
+.uk-button-default:active,
+.uk-button-default.uk-active {
+  border-color: var(--uk-global-emphasis-color, #333);
+}
+
+.uk-input.uk-form-danger,
+.uk-select.uk-form-danger,
+.uk-textarea.uk-form-danger,
+.uk-checkbox.uk-form-danger,
+.uk-radio.uk-form-danger,
+.uk-input.uk-form-danger:focus,
+.uk-select.uk-form-danger:focus,
+.uk-textarea.uk-form-danger:focus {
+  border-color: var(--uk-global-danger-color, var(--uk-global-danger-background, #a71534));
+}
+
+.uk-form-danger,
+.uk-form-danger:focus {
+  color: inherit;
+}
+
+/* The focused control keeps a border readable in both colour modes. */
+.uk-input:focus,
+.uk-select:focus,
+.uk-textarea:focus,
+.uk-search-input:focus {
+  border-color: var(--uk-global-primary-color, var(--uk-global-primary-background, #0f5695));
+}
+
+/* Checked boxes keep the primary fill behind the white mark. */
+.uk-checkbox:checked,
+.uk-checkbox:indeterminate,
+.uk-radio:checked {
+  border-color: var(--uk-global-primary-color, var(--uk-global-primary-background, #0f5695));
+}
+
+.uk-tab > .uk-active > a {
+  border-color: var(--uk-global-primary-color, var(--uk-global-primary-background, #0f5695));
+}
+
+.uk-progress::-webkit-progress-value {
+  background-color: var(--uk-global-primary-color, var(--uk-global-primary-background, #0f5695));
+}
+
+.uk-progress::-moz-progress-bar {
+  background-color: var(--uk-global-primary-color, var(--uk-global-primary-background, #0f5695));
+}
+
+.uk-progress::-webkit-progress-bar,
+.uk-progress {
+  border: 1px solid var(--uk-form-border-color, #767676);
+}
+
+/* Icons printed at a reduced opacity or in a translucent grey. */
+.uk-alert-close,
+.uk-alert-close:hover,
+.uk-alert-close:focus {
+  opacity: 1;
+  color: inherit;
+}
+
+.uk-slidenav {
+  color: var(--uk-global-emphasis-color, #333);
+}
+
+.uk-slidenav:hover,
+.uk-slidenav:focus {
+  color: var(--uk-global-color, #444);
+}
+
+/* The previous and next arrows placed over the slides (images or cards) get
+   their own dark background, and a white ring with a dark edge. */
+.uk-slidenav[class*="uk-position-center"],
+.uk-slidenav[class*="uk-position-center"]:hover,
+.uk-slidenav[class*="uk-position-center"]:focus {
+  color: #fff;
+  background: rgb(34, 34, 34, 0.9);
+}
+
+.uk-slidenav[class*="uk-position-center"]:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 0;
+  box-shadow: 0 0 0 4px #222;
+}
+
+/* Slider and slideshow navigation: a 44px target around a 12px dot. */
+.uk-dotnav {
+  margin-left: 0;
+}
+
+.uk-dotnav > * {
+  padding-left: 0;
+}
+
+/* The dot is drawn by ::before: the link itself never gets a fill, even in
+   the inverse (.uk-light) and hover states of UIkit. */
+.uk-dotnav > * > * {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border: 0 !important;
+  border-radius: 0;
+  background: none !important;
+}
+
+.uk-dotnav > * > *::before {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  box-sizing: border-box;
+  width: 12px;
+  height: 12px;
+  content: "";
+  border: 1px solid var(--uk-form-border-color, #767676);
+  border-radius: 50%;
+}
+
+.uk-dotnav > * > :hover::before,
+.uk-dotnav > * > :focus::before {
+  border-color: var(--uk-global-emphasis-color, #333);
+}
+
+.uk-dotnav > .uk-active > *::before {
+  border-color: var(--uk-global-emphasis-color, #333);
+  background-color: var(--uk-global-emphasis-color, #333);
+}
+
+.uk-light .uk-dotnav > * > *::before,
+.uk-offcanvas-bar .uk-dotnav > * > *::before {
+  border-color: var(--uk-inverse-form-border-color, rgb(255, 255, 255, 0.6));
+}
+
+.uk-light .uk-dotnav > .uk-active > *::before,
+.uk-light .uk-dotnav > * > :hover::before,
+.uk-light .uk-dotnav > * > :focus::before {
+  border-color: var(--uk-global-inverse-color, #fff);
+  background-color: var(--uk-global-inverse-color, #fff);
+}
+
+/**
+ * Use of colour (1.4.1).
+ *
+ * With the text colours at 7:1, the muted and the emphasis colours are close:
+ * the current item of a menu is also underlined.
+ */
+.uk-navbar-nav > li.uk-active > a,
+.uk-subnav:not(.uk-subnav-pill) > .uk-active > a,
+.uk-nav > li.uk-active > a {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+/**
+ * Contrast of UIkit surfaces not taken from a token (1.4.3, 1.4.6).
+ */
+.uk-tooltip {
+  color: var(--uk-global-background, #fff);
+  background: var(--uk-global-emphasis-color, #333);
+}
+
+.uk-overlay-primary {
+  color: var(--uk-inverse-color, #fff);
+  background: rgb(34, 34, 34, 0.9);
+}
+
+.uk-overlay-default {
+  background: color-mix(in srgb, var(--uk-global-background, #fff) 90%, transparent);
+}
+
+/* Muted text inside primary areas stays white: 85% white is 5.9:1 there. */
+.uk-section-primary,
+.uk-tile-primary,
+.uk-card-primary,
+.uk-overlay-primary,
+.uk-background-primary {
+  --uk-inverse-muted-color: #fff;
+}
+
+/**
+ * Target size (2.5.5): 44 by 44 pixels.
+ *
+ * Buttons and inputs grow from 40px to 44px, the small variants to 44px too.
+ * Navigation links keep their look with a taller box. Icon-only controls
+ * get a 44px box around the icon.
+ */
+.uk-button {
+  min-height: 44px;
+}
+
+.uk-button-default,
+.uk-button-primary,
+.uk-button-secondary,
+.uk-button-danger,
+.uk-button-small {
+  line-height: 42px;
+}
+
+.uk-button-large {
+  line-height: 53px;
+}
+
+.uk-button-text,
+.uk-button-link {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  line-height: 24px;
+}
+
+.uk-button-text::before {
+  bottom: 10px;
+}
+
+/* Chained :not() keeps the specificity of the UIkit rules. */
+/* stylelint-disable selector-not-notation */
+.uk-input,
+.uk-select:not([multiple]):not([size]),
+.uk-form-small:not(textarea):not([multiple]):not([size]),
+.uk-search-default .uk-search-input,
+.uk-search-navbar .uk-search-input {
+  height: 44px;
+}
+/* stylelint-enable selector-not-notation */
+
+.uk-subnav > * > :first-child,
+.uk-tab > * > a,
+.uk-nav li > a,
+.uk-iconnav > * > a,
+.uk-thumbnav > * > * {
+  min-height: 44px;
+}
+
+.uk-subnav > * > :first-child,
+.uk-iconnav > * > a,
+.uk-navbar-nav > li > a {
+  justify-content: center;
+  min-width: 44px;
+}
+
+.uk-pagination > * > * {
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.uk-breadcrumb {
+  align-items: center;
+}
+
+.uk-breadcrumb > * > * {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.uk-accordion-title {
+  box-sizing: border-box;
+  min-height: 44px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.uk-navbar-toggle {
+  min-width: 44px;
+}
+
+.uk-totop,
+.uk-close,
+.uk-slidenav,
+.uk-search-toggle,
+.uk-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.uk-icon-button {
+  width: 44px;
+  height: 44px;
+}
+
+.uk-alert-close {
+  top: 5px;
+  right: 5px;
+}
+
+.uk-alert:has(> .uk-alert-close) {
+  padding-right: 54px;
+}
+
+.uk-offcanvas-close,
+.uk-modal-close-default {
+  top: 0;
+  right: 0;
+  padding: 0;
+}
+
+/* The content starts below or beside the 44px close button: the two targets
+   and their focus rings do not overlap. */
+.uk-offcanvas-bar:has(> .uk-offcanvas-close) {
+  padding-top: 54px;
+}
+
+.uk-modal-dialog > .uk-modal-close-default + :is(.uk-modal-header, .uk-modal-body) {
+  padding-right: 54px;
+}
+
+/* The skip link: a 44px target, its focus ring inside the viewport. */
+.visually-hidden.focusable:focus {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 4px;
+  padding: 0 12px;
+}
+
+/* Links standing alone: link fields, entity references, node links, the
+   feed link and the titles of the teasers. */
+.ui-suite-uikit-field-link > a,
+ul.links > li > a,
+a.feed-icon,
+:where(h1, h2, h3, h4, h5, h6) > a[rel="bookmark"] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* Checkboxes and radios: the label is part of the target. */
+.form-type-checkbox,
+.form-type-radio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 44px;
+  column-gap: 8px;
+}
+
+.form-type-checkbox > label,
+.form-type-radio > label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.form-type-checkbox > .description,
+.form-type-radio > .description {
+  flex-basis: 100%;
+}
+
+/**
+ * Visual presentation (1.4.8).
+ *
+ * Lines of at most 80 characters (65ch with these fonts), a line height of
+ * at least 1.5 and no justified text. :where() keeps the selectors weak, so
+ * any rule of a sub-theme or a component wins.
+ */
+:where(p, dd, blockquote, figcaption, .uk-text-lead, .description),
+:where(ul, ol):not([class]) > li {
+  max-width: 65ch;
+}
+
+.uk-alert {
+  max-width: calc(65ch + 70px);
+}
+
+.uk-article-meta,
+.uk-comment-meta,
+.uk-text-meta,
+.uk-legend,
+.uk-notification-message,
+.form-item .description {
+  line-height: 1.5;
+}
+
+.uk-text-justify {
+  text-align: left;
+}
+
+/**
+ * Animation from interactions (2.3.3).
+ *
+ * With reduced motion, transitions and animations end at once, the inline
+ * transitions UIkit sets from JavaScript (offcanvas, accordion, switcher)
+ * included.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/**
+ * Forced colours (Windows high contrast): alerts and error fields keep an
+ * edge when backgrounds are removed.
+ */
+@media (forced-colors: active) {
+  .uk-alert {
+    border: 1px solid CanvasText;
+  }
+
+  .uk-form-danger {
+    border-width: 3px;
+    border-style: double;
+  }
+}

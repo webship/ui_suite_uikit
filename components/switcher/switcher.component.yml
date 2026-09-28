@@ -2,8 +2,10 @@ name: Switcher
 description: "Tabs, pills or subnav toggling panels of content. Put Switcher tabs and Switcher panels in the same order."
 group: Interactive
 links:
-  - "https://getuikit.com/docs/switcher"
-  - "https://getuikit.com/docs/tab"
+  - url: "https://getuikit.com/docs/switcher"
+    title: "UIkit Switcher documentation"
+  - url: "https://getuikit.com/docs/tab"
+    title: "UIkit Tab documentation"
 variants:
   tab:
     title: "Tab (Default)"

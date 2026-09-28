@@ -2,7 +2,8 @@ name: Slider
 description: "Create a responsive carousel slider: each item of the slot is a slide."
 group: Media
 links:
-  - "https://getuikit.com/docs/slider"
+  - url: "https://getuikit.com/docs/slider"
+    title: "UIkit Slider documentation"
 slots:
   items:
     title: Items
@@ -86,3 +87,6 @@ props:
       "meta:enum":
         light: "Light (for dark slides)"
         dark: "Dark (for light slides)"
+libraryOverrides:
+  dependencies:
+    - ui_suite_uikit/autoplay

@@ -2,7 +2,8 @@ name: List
 description: "Easily create nicely looking lists, in different styles."
 group: "Data display"
 links:
-  - "https://getuikit.com/docs/list"
+  - url: "https://getuikit.com/docs/list"
+    title: "UIkit List documentation"
 variants:
   default:
     title: Default

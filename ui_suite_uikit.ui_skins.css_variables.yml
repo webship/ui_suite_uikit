@@ -1,5 +1,9 @@
 # UIkit design tokens, consumed by assets/css/tokens.css (generated from the
-# UIkit CSS by scripts/build-tokens.mjs). Default values are the UIkit ones.
+# UIkit CSS by scripts/build-tokens.mjs). Default values are the ones the theme
+# applies (assets/css/drupal.css), chosen for WCAG 2.2 AAA: 7:1 for text,
+# 3:1 for the borders of the form controls. The ':root[data-theme="dark"]'
+# scope is the dark color mode. Check a new value against every background it
+# sits on, see the "Accessibility" section of README.md.
 
 ################################################################################
 # Text colors.
@@ -10,7 +14,7 @@ uk-global-color:
   label: "Text color"
   type: "color"
   default_values:
-    ":root": "#666666"
+    ":root": "#444444"
 
 uk-global-emphasis-color:
   category: "Text colors"
@@ -18,13 +22,14 @@ uk-global-emphasis-color:
   type: "color"
   default_values:
     ":root": "#333333"
+    ':root[data-theme="dark"]': "#ffffff"
 
 uk-global-muted-color:
   category: "Text colors"
   label: "Muted color"
   type: "color"
   default_values:
-    ":root": "#999999"
+    ":root": "#545454"
 
 uk-global-inverse-color:
   category: "Text colors"
@@ -38,14 +43,48 @@ uk-global-link-color:
   label: "Link color"
   type: "color"
   default_values:
-    ":root": "#1e87f0"
+    ":root": "#0f5695"
+    ':root[data-theme="dark"]': "#85c0f9"
 
 uk-global-link-hover-color:
   category: "Text colors"
   label: "Link hover color"
   type: "color"
   default_values:
-    ":root": "#0f6ecd"
+    ":root": "#093f6e"
+    ':root[data-theme="dark"]': "#b5d8fc"
+
+uk-global-primary-color:
+  category: "Text colors"
+  label: "Primary text color (unset: the primary background)"
+  type: "color"
+  default_values:
+    ":root": "#0f5695"
+    ':root[data-theme="dark"]': "#85c0f9"
+
+uk-global-success-color:
+  category: "Text colors"
+  label: "Success text color (unset: the success background)"
+  type: "color"
+  default_values:
+    ":root": "#0f6047"
+    ':root[data-theme="dark"]': "#35d398"
+
+uk-global-warning-color:
+  category: "Text colors"
+  label: "Warning text color (unset: the warning background)"
+  type: "color"
+  default_values:
+    ":root": "#754c0f"
+    ':root[data-theme="dark"]': "#faa969"
+
+uk-global-danger-color:
+  category: "Text colors"
+  label: "Danger text color (unset: the danger background)"
+  type: "color"
+  default_values:
+    ":root": "#a71534"
+    ':root[data-theme="dark"]': "#f7a5b4"
 
 ################################################################################
 # Backgrounds.
@@ -57,6 +96,7 @@ uk-global-background:
   type: "color"
   default_values:
     ":root": "#ffffff"
+    ':root[data-theme="dark"]': "#171717"
 
 uk-global-muted-background:
   category: "Backgrounds"
@@ -64,6 +104,7 @@ uk-global-muted-background:
   type: "color"
   default_values:
     ":root": "#f8f8f8"
+    ':root[data-theme="dark"]': "#242424"
 
 uk-global-muted-background-hover:
   category: "Backgrounds"
@@ -71,20 +112,21 @@ uk-global-muted-background-hover:
   type: "color"
   default_values:
     ":root": "#ebebeb"
+    ':root[data-theme="dark"]': "#2e2e2e"
 
 uk-global-primary-background:
   category: "Backgrounds"
   label: "Primary background"
   type: "color"
   default_values:
-    ":root": "#1e87f0"
+    ":root": "#0f5695"
 
 uk-global-primary-background-hover:
   category: "Backgrounds"
   label: "Primary background (hover)"
   type: "color"
   default_values:
-    ":root": "#0e6dcd"
+    ":root": "#093f6e"
 
 uk-global-secondary-background:
   category: "Backgrounds"
@@ -92,6 +134,7 @@ uk-global-secondary-background:
   type: "color"
   default_values:
     ":root": "#222222"
+    ':root[data-theme="dark"]': "#000000"
 
 uk-global-secondary-background-hover:
   category: "Backgrounds"
@@ -99,34 +142,35 @@ uk-global-secondary-background-hover:
   type: "color"
   default_values:
     ":root": "#151515"
+    ':root[data-theme="dark"]': "#0a0a0a"
 
 uk-global-success-background:
   category: "Backgrounds"
   label: "Success background"
   type: "color"
   default_values:
-    ":root": "#32d296"
+    ":root": "#0f6047"
 
 uk-global-warning-background:
   category: "Backgrounds"
   label: "Warning background"
   type: "color"
   default_values:
-    ":root": "#faa05a"
+    ":root": "#754c0f"
 
 uk-global-danger-background:
   category: "Backgrounds"
   label: "Danger background"
   type: "color"
   default_values:
-    ":root": "#f0506e"
+    ":root": "#a71534"
 
 uk-global-danger-background-hover:
   category: "Backgrounds"
   label: "Danger background (hover)"
   type: "color"
   default_values:
-    ":root": "#ee395b"
+    ":root": "#861029"
 
 uk-global-border:
   category: "Backgrounds"
@@ -134,6 +178,14 @@ uk-global-border:
   type: "color"
   default_values:
     ":root": "#e5e5e5"
+
+uk-form-border-color:
+  category: "Backgrounds"
+  label: "Form control border color"
+  type: "color"
+  default_values:
+    ":root": "#767676"
+    ':root[data-theme="dark"]': "#787878"
 
 ################################################################################
 # Alerts.
@@ -145,6 +197,7 @@ uk-alert-primary-background:
   type: "color"
   default_values:
     ":root": "#d8eafc"
+    ':root[data-theme="dark"]': "#16324f"
 
 uk-alert-success-background:
   category: "Alerts"
@@ -152,6 +205,7 @@ uk-alert-success-background:
   type: "color"
   default_values:
     ":root": "#edfbf6"
+    ':root[data-theme="dark"]': "#103b2b"
 
 uk-alert-warning-background:
   category: "Alerts"
@@ -159,6 +213,7 @@ uk-alert-warning-background:
   type: "color"
   default_values:
     ":root": "#fff6ee"
+    ':root[data-theme="dark"]': "#4a2f19"
 
 uk-alert-danger-background:
   category: "Alerts"
@@ -166,6 +221,7 @@ uk-alert-danger-background:
   type: "color"
   default_values:
     ":root": "#fef4f6"
+    ':root[data-theme="dark"]': "#4a1a24"
 
 ################################################################################
 # Typography.

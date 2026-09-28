@@ -2,7 +2,8 @@ name: Pagination
 description: "Create a pagination to navigate through pages. The item without URL is the current page."
 group: Navigation
 links:
-  - "https://getuikit.com/docs/pagination"
+  - url: "https://getuikit.com/docs/pagination"
+    title: "UIkit Pagination documentation"
 props:
   type: object
   properties:

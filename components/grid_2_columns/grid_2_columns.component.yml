@@ -4,8 +4,10 @@ group: Layout
 icon_map:
   - [column_1, column_2]
 links:
-  - "https://getuikit.com/docs/grid"
-  - "https://getuikit.com/docs/width"
+  - url: "https://getuikit.com/docs/grid"
+    title: "UIkit Grid documentation"
+  - url: "https://getuikit.com/docs/width"
+    title: "UIkit Width documentation"
 variants:
   default:
     title: "50% / 50%"

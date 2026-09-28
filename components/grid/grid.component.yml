@@ -2,8 +2,10 @@ name: Grid
 description: "Create a fully responsive, fluid and nestable grid layout: each item of the slot is a cell."
 group: Layout
 links:
-  - "https://getuikit.com/docs/grid"
-  - "https://getuikit.com/docs/width"
+  - url: "https://getuikit.com/docs/grid"
+    title: "UIkit Grid documentation"
+  - url: "https://getuikit.com/docs/width"
+    title: "UIkit Width documentation"
 slots:
   items:
     title: Items

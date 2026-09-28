@@ -71,6 +71,28 @@ const surfaceColors = {
 
 const linkSelector = /(^|[\s,>+~(])(a|\.uk-link)(?=$|[\s,:.[>+~)])/;
 
+// Form controls: their border is a non-text indicator (WCAG 1.4.11), so it
+// gets its own token instead of the decorative global border.
+const formControlSelector =
+  /\.uk-(input|select|textarea|checkbox|radio|search-input|search-default|search-navbar|search-medium|search-large)\b/;
+
+// Background colors also printed as text (.uk-text-primary, .uk-form-danger).
+// A color works either as a background behind white text or as text on the
+// page background, rarely as both, so text gets its own token falling back
+// to the background one: sites that only customized the background keep it.
+const textOfBackground = {
+  'global-primary-background': 'global-primary-color',
+  'global-success-background': 'global-success-color',
+  'global-warning-background': 'global-warning-color',
+  'global-danger-background': 'global-danger-color',
+};
+
+// Translucent white used by UIkit for the text of inverse (.uk-light) areas.
+const inverseText = {
+  0.7: 'inverse-color',
+  0.5: 'inverse-muted-color',
+};
+
 /**
  * Splits a string on a separator, ignoring separators in quotes/parentheses.
  */
@@ -149,8 +171,26 @@ function tokenize(selector, property, value) {
     tokens.set('global-font-family', value);
     return `var(--uk-global-font-family, ${value})`;
   }
-  const isText = property === 'color' || property === '-webkit-text-fill-color';
-  result = value.replace(/#[0-9a-fA-F]{3,6}\b/g, (hex) => {
+  const isText = ['color', '-webkit-text-fill-color', 'outline-color'].includes(
+    property,
+  );
+  const isBorder = property.startsWith('border');
+  const isFormControl = formControlSelector.test(selector);
+  result = value.replace(/rgba\(255, 255, 255, (0\.\d+)\)/g, (rgba, alpha) => {
+    let token = isText ? inverseText[alpha] : null;
+    if (!token && isBorder && isFormControl && alpha === '0.2') {
+      token = 'inverse-form-border-color';
+    }
+    if (!token) {
+      return rgba;
+    }
+    changed = true;
+    if (!tokens.has(token)) {
+      tokens.set(token, rgba);
+    }
+    return `var(--uk-${token}, ${rgba})`;
+  });
+  result = result.replace(/#[0-9a-fA-F]{3,6}\b/g, (hex) => {
     const literal = hex.toLowerCase();
     let token = isText ? textColors[literal] : surfaceColors[literal];
     if (isText && literal === '#1e87f0' && linkSelector.test(selector)) {
@@ -162,6 +202,19 @@ function tokenize(selector, property, value) {
     changed = true;
     if (!tokens.has(token)) {
       tokens.set(token, literal);
+    }
+    if (isText && textOfBackground[token]) {
+      const text = textOfBackground[token];
+      if (!tokens.has(text)) {
+        tokens.set(text, `var(--uk-${token})`);
+      }
+      return `var(--uk-${text}, var(--uk-${token}, ${hex}))`;
+    }
+    if (token === 'global-border' && isBorder && isFormControl) {
+      if (!tokens.has('form-border-color')) {
+        tokens.set('form-border-color', 'var(--uk-global-border)');
+      }
+      return `var(--uk-form-border-color, var(--uk-${token}, ${hex}))`;
     }
     return `var(--uk-${token}, ${hex})`;
   });

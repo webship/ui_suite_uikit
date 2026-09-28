@@ -2,7 +2,8 @@ name: "Navbar item"
 description: "Wrap any content (text, button, search form) to align it inside the navbar."
 group: Navigation
 links:
-  - "https://getuikit.com/docs/navbar#item"
+  - url: "https://getuikit.com/docs/navbar#item"
+    title: "UIkit Navbar documentation: item"
 slots:
   content:
     title: Content
