@@ -81,3 +81,17 @@ function ui_suite_uikit_post_update_ui_skins_token_values(): void {
 
   $config->set('third_party_settings.ui_skins.css_variables', $variables)->save();
 }
+
+/**
+ * Pick the font of the theme on the existing sites.
+ *
+ * The theme serves its own fonts. "Font" in the theme settings goes back to
+ * the fonts of the operating system.
+ */
+function ui_suite_uikit_post_update_font_family(): void {
+  $config = \Drupal::configFactory()->getEditable('ui_suite_uikit.settings');
+  if ($config->isNew() || $config->get('font_family') !== NULL) {
+    return;
+  }
+  $config->set('font_family', ThemeHooks::FONT_FAMILY)->save();
+}

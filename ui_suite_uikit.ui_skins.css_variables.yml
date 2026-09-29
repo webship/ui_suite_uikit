@@ -397,10 +397,26 @@ ui-suite-uikit-control-height:
 ui-suite-uikit-global-font-family:
   category: "Typography"
   label: "Font family"
-  description: "The font of the text. A CSS font family list that ends with a generic family, like: Georgia, serif. Empty: the fonts of the operating system."
+  description: "The font of the text and the interface. A CSS font family list that ends with a generic family, like: Georgia, serif. The default is the font picked in the theme settings: Atkinson Hyperlegible Next, served by the theme, or the fonts of the operating system. A font that the theme does not serve must be on the device of the visitor."
   type: "textfield"
   default_values:
-    ":root": ""
+    ":root": "var(--uk-font-family-sans)"
+
+ui-suite-uikit-heading-font-family:
+  category: "Typography"
+  label: "Heading font family"
+  description: "The font of the headings and the titles. A CSS font family list that ends with a generic family. The default is the font of the text."
+  type: "textfield"
+  default_values:
+    ":root": "var(--uk-global-font-family)"
+
+ui-suite-uikit-code-font-family:
+  category: "Typography"
+  label: "Code font family"
+  description: "The font of the code and the preformatted text. A CSS font family list that ends with monospace. The default is Atkinson Hyperlegible Mono, served by the theme, or the code font of the operating system."
+  type: "textfield"
+  default_values:
+    ":root": "var(--uk-font-family-mono)"
 
 ui-suite-uikit-global-font-size:
   category: "Typography"
@@ -417,6 +433,14 @@ ui-suite-uikit-global-line-height:
   type: "textfield"
   default_values:
     ":root": "1.5"
+
+ui-suite-uikit-measure:
+  category: "Typography"
+  label: "Line length"
+  description: "The widest a paragraph, a list item or a description gets. A length in em, from 20em to 36em: 32em holds about 72 characters of the font of the theme. WCAG 1.4.8 asks for 80 characters or fewer."
+  type: "textfield"
+  default_values:
+    ":root": "32em"
 
 ################################################################################
 # Spacing.

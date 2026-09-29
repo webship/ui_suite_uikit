@@ -32,4 +32,5 @@ libraries:
   - ui_suite_uikit/base
 
 ckeditor5-stylesheets:
+  - assets/css/fonts.css
   - assets/css/ckeditor5.css

@@ -27,6 +27,8 @@ ignore:
   # older settings to update.
   - '/ui_suite_uikit.post_update.php'
 no_edit:
+  # The font files are binary: they are copied as they are.
+  - '/assets/fonts/**'
   - '/starterkit.md'
 no_rename: []
 info:

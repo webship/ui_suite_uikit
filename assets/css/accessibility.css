@@ -424,17 +424,19 @@ a.feed-icon,
 /**
  * Visual presentation (1.4.8).
  *
- * Lines of at most 80 characters (65ch with these fonts), a line height of
- * at least 1.5 and no justified text. :where() keeps the selectors weak, so
- * any rule of a sub-theme or a component wins.
+ * Lines of at most 80 characters, a line height of at least 1.5 and no
+ * justified text. The line length is a design token, in em: 32em holds about
+ * 72 characters of the font of the theme, and "ch" is the width of a zero,
+ * wider than the average letter. :where() keeps the selectors weak, so any
+ * rule of a sub-theme or a component wins.
  */
 :where(p, dd, blockquote, figcaption, .uk-text-lead, .description),
 :where(ul, ol):not([class]) > li {
-  max-width: 65ch;
+  max-width: var(--uk-measure, 32em);
 }
 
 .uk-alert {
-  max-width: calc(65ch + 70px);
+  max-width: calc(var(--uk-measure, 32em) + 70px);
 }
 
 .uk-article-meta,

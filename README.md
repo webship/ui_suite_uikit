@@ -150,6 +150,30 @@ templates with their own components.
   picks one, and stores it for UI Skins too: UI Skins does not show a second control for it.
   The CSS variables form has a `:root[data-theme="dark"]` scope for the dark values.
 
+## Fonts
+
+The theme serves its own fonts, with no request to another site:
+
+| Use | Font | Files |
+|---|---|---|
+| Text, interface and headings | [Atkinson Hyperlegible Next](https://github.com/googlefonts/atkinson-hyperlegible-next) 2.001 (commit `7925f50f649b`) | `assets/fonts/atkinson-hyperlegible-next` |
+| Code | [Atkinson Hyperlegible Mono](https://github.com/googlefonts/atkinson-hyperlegible-next-mono) 2.001 (commit `154d50362016`) | `assets/fonts/atkinson-hyperlegible-mono` |
+| Arabic script | [Noto Sans Arabic](https://github.com/notofonts/arabic) 2.013 | `assets/fonts/noto-sans-arabic` |
+
+All three are under the SIL Open Font License 1.1; the license of each family sits next to its files. The
+Atkinson fonts are made by the Braille Institute so that letters and figures are easy to tell apart (I, l,
+1 and O, 0). The files are variable-weight woff2 subsets (Latin and Latin Extended, Arabic): a browser
+downloads a file only when the page prints a character of its range, so an English page downloads 34 kB,
+and the fallback fonts are tuned to the same metrics, so the page does not move when the font arrives.
+
+- `assets/css/fonts.css` declares the fonts and the two stacks, `--uk-font-family-sans` and
+  `--uk-font-family-mono`. The *Font* theme setting picks the fonts of the theme (the default) or the
+  fonts of the operating system, printed as `data-font` on `html`.
+- The font family, the heading font, the code font and the line length (`32em`, about 72 characters) are
+  design tokens of UI Skins, see above. A font family saved there replaces the font of the theme; a font the
+  theme does not serve must be on the device of the visitor.
+- The file of the text is preloaded, and CKEditor 5 uses the same fonts.
+
 ## Accessibility
 
 The theme targets WCAG 2.2 AAA where a theme can meet it, in both color modes:
@@ -163,8 +187,8 @@ The theme targets WCAG 2.2 AAA where a theme can meet it, in both color modes:
 - Target size (2.5.5): buttons, inputs, navigation links, pagination, breadcrumb, close buttons, the back to
   top link, the navbar toggle, icon buttons, the slider dots, the skip link, the feed link, the teaser titles and the links standing alone in a
   field are at least 44 by 44 pixels. The offcanvas and modal content keeps clear of the close button.
-- Visual presentation (1.4.8): lines of at most about 80 characters (`max-width: 65ch`), line height of 1.5,
-  no justified text. Reflow (1.4.10): no horizontal scrolling at 320px.
+- Visual presentation (1.4.8): lines of at most 80 characters (`max-width: 32em`, the *Line length* token),
+  line height of 1.5, no justified text. Reflow (1.4.10): no horizontal scrolling at 320px.
 - Motion (2.3.3, 2.2.2): with *reduce motion*, transitions and animations end at once, and the autoplaying
   sliders and slideshows start paused. They have a *Pause the slides* button.
 - Cover: a background behind the content (`overlay` prop) keeps the text readable whatever the image.
@@ -213,6 +237,7 @@ is kept, so content and layouts saved with it keep their icons.
 - Color mode: light (the default), dark, or follow the operating system, as in UIkit Admin. The setting prints
   `data-theme` on `html`; with *Follow the operating system* it prints none and the stylesheet follows
   `prefers-color-scheme`.
+- Font: Atkinson Hyperlegible Next, served by the theme (the default), or the fonts of the operating system.
 
 ## HTMX navigation
 
@@ -263,7 +288,7 @@ LAUNCH_URL=https://example.ddev.site DRUPAL_PROJECT_DIR=/path/to/project npm tes
 ```
 
 The webship-js features cover the front end rendering, the offcanvas menu, forms and local tasks, color
-modes, HTMX navigation, theme settings, UI Skins design tokens, every component page of the library, the
+modes, fonts, HTMX navigation, theme settings, UI Skins design tokens, every component page of the library, the
 interactive components, Display Builder (component previews, builder, page layouts) and accessibility (WCAG 2.2
 AA and AAA, `@a11y` and `@aaa` tags). Enable the Twig debug (`drush theme:dev on`) to see the SDC component of
 every piece of markup in the HTML comments.

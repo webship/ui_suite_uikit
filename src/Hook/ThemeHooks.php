@@ -10,7 +10,9 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeSettingsProvider;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -43,10 +45,22 @@ class ThemeHooks {
    */
   public const string COLOR_MODE = 'light';
 
+  /**
+   * The font of a site that has not picked one: the font of the theme.
+   */
+  public const string FONT_FAMILY = 'atkinson';
+
+  /**
+   * The file of the font of the text, loaded before the stylesheets.
+   */
+  public const string FONT_PRELOAD = 'assets/fonts/atkinson-hyperlegible-next/atkinson-hyperlegible-next-latin-wght-normal.woff2';
+
   public function __construct(
     protected ThemeSettingsProvider $themeSettingsProvider,
     protected EntityTypeManagerInterface $entityTypeManager,
     protected HtmxNavigationHooks $htmxNavigationHooks,
+    protected ThemeExtensionList $themeExtensionList,
+    protected FileUrlGeneratorInterface $fileUrlGenerator,
   ) {}
 
   /**
@@ -123,6 +137,16 @@ class ThemeHooks {
         'dark' => $this->t('Dark'),
       ],
     ];
+    $form['ui_suite_uikit']['font_family'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Font'),
+      '#description' => $this->t('Atkinson Hyperlegible Next is served by the theme, with no request to another site: its letters and figures are easy to tell apart. The font family, the heading font and the code font can be changed in the CSS variables.'),
+      '#default_value' => $this->fontFamily(),
+      '#options' => [
+        'atkinson' => $this->t('Atkinson Hyperlegible Next'),
+        'system' => $this->t('The fonts of the operating system'),
+      ],
+    ];
     // UI Skins offers the color modes of this theme as well: a second control
     // for the same attribute. The setting above is the one control, and it is
     // stored for UI Skins too, so both agree. The theme settings form calls
@@ -195,18 +219,42 @@ class ThemeHooks {
   }
 
   /**
+   * The font of the theme settings: atkinson or system.
+   */
+  protected function fontFamily(): string {
+    $font = $this->themeSettingsProvider->getSetting('font_family', 'ui_suite_uikit');
+    return \in_array($font, ['atkinson', 'system'], TRUE) ? $font : static::FONT_FAMILY;
+  }
+
+  /**
    * Implements hook_preprocess_HOOK() for 'html'.
    *
    * The color mode reaches the stylesheet as the data-theme attribute of the
    * html element: none when the operating system decides. The dark values
    * saved in UI Skins are printed for that case too, at the top of the page,
-   * where UI Skins prints its own.
+   * where UI Skins prints its own. The font of the theme settings is the
+   * data-font attribute.
    */
   #[Hook('preprocess_html')]
   public function preprocessHtml(array &$variables): void {
     $mode = $this->colorMode();
     if ($mode !== 'auto') {
       $variables['html_attributes']->setAttribute('data-theme', $mode);
+    }
+    // The font reaches the stylesheet as the data-font attribute. The file of
+    // the text is loaded early, so the first paint uses it.
+    $font = $this->fontFamily();
+    $variables['html_attributes']->setAttribute('data-font', $font);
+    if ($font === 'atkinson') {
+      $variables['#attached']['html_head_link'][] = [
+        [
+          'rel' => 'preload',
+          'href' => $this->fileUrlGenerator->generateString($this->themeExtensionList->getPath('ui_suite_uikit') . '/' . static::FONT_PRELOAD),
+          'as' => 'font',
+          'type' => 'font/woff2',
+          'crossorigin' => 'anonymous',
+        ],
+      ];
     }
     $css = SystemDarkMode::css($this->themeSettingsProvider->getSetting(UiSkinsInterface::CSS_VARIABLES_THEME_SETTING_KEY, 'ui_suite_uikit'));
     if ($css !== '') {

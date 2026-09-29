@@ -26,11 +26,12 @@ htmx:
   dependencies:
     - core/drupal.htmx
 
-# Theme glue: design tokens (CSS custom properties consumed by UI Skins) and
-# Drupal specific adjustments.
+# Theme glue: the fonts served by the theme, the design tokens (CSS custom
+# properties consumed by UI Skins) and Drupal specific adjustments.
 base:
   css:
     theme:
+      assets/css/fonts.css: {}
       assets/css/tokens.css: {}
       assets/css/drupal.css: {}
       assets/css/accessibility.css: {}

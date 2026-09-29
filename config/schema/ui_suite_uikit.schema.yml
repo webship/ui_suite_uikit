@@ -20,3 +20,10 @@ ui_suite_uikit.settings:
           - auto
           - light
           - dark
+    font_family:
+      type: string
+      label: "Font: atkinson (Atkinson Hyperlegible Next, served by the theme) or system (the fonts of the operating system)"
+      constraints:
+        Choice:
+          - atkinson
+          - system

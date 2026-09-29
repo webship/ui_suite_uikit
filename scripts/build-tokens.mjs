@@ -4,7 +4,8 @@
  * Generates assets/css/tokens.css from the compiled UIkit CSS.
  *
  * Every declaration of uikit.css using one of the UIkit global colors, the
- * global font family, font size, line height, margins or box shadows is
+ * font of the text, the headings or the code, the font size, the line
+ * height, the margins or the box shadows is
  * re-emitted with the literal value replaced by a CSS custom property falling
  * back to the original value:
  *
@@ -72,6 +73,11 @@ const surfaceColors = {
   '#fff6ee': 'alert-warning-background',
   '#fef4f6': 'alert-danger-background',
 };
+
+const headingSelector = /(^|[\s,])(h1|\.uk-h1|\.uk-heading-small)(?=$|[\s,])/;
+
+// The font of the code, in the "font" and "font-family" declarations.
+const codeFont = 'Consolas, monaco, monospace';
 
 const linkSelector = /(^|[\s,>+~(])(a|\.uk-link)(?=$|[\s,:.[>+~)])/;
 
@@ -210,7 +216,19 @@ function tokenize(selector, property, value) {
   let result = value;
   if (property === 'font-family' && value.includes('-apple-system')) {
     tokens.set('global-font-family', value);
+    // The headings have a font of their own, the font of the text when it is
+    // not set.
+    if (headingSelector.test(selector)) {
+      tokens.set('base-heading-font-family', 'var(--uk-global-font-family)');
+      return `var(--uk-base-heading-font-family, var(--uk-global-font-family, ${value}))`;
+    }
     return `var(--uk-global-font-family, ${value})`;
+  }
+  // The "font" shorthand of "pre" is printed as a font family: the shorthand
+  // would reset the other font properties, like the ligatures.
+  if (['font', 'font-family'].includes(property) && value.includes(codeFont)) {
+    tokens.set('base-code-font-family', codeFont);
+    return `var(--uk-base-code-font-family, ${codeFont})`;
   }
   const important = value.endsWith(' !important') ? ' !important' : '';
   const bare = value.replace(/ !important$/, '');
@@ -355,7 +373,7 @@ function emit(nodes, indent, position, collect) {
       const rewritten = tokenize(node.selector, property, value);
       const group = family(property);
       if (rewritten) {
-        declarations.push(`${property}: ${rewritten};`);
+        declarations.push(`${property === 'font' ? 'font-family' : property}: ${rewritten};`);
         if (collect && group && !firstRewritten.has(group)) {
           firstRewritten.set(group, position.count);
         }

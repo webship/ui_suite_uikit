@@ -26,5 +26,5 @@ Feature: The front page is rendered with UIkit
   Scenario: The UIkit design tokens layer is applied
     Given I am an anonymous user
      When I go to the homepage
-     Then the computed style "font-family" of ".uk-navbar-nav > li > a" should contain "-apple-system"
+     Then the computed style "font-family" of ".uk-navbar-nav > li > a" should contain "Atkinson Hyperlegible Next"
       And the computed style "background-color" of "html" should be "rgb(255, 255, 255)"

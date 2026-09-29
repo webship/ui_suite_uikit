@@ -123,12 +123,21 @@ Then(
           .replace(/\s+/g, ' ')
           .replace(/\s*,\s*/g, ', ');
       const style = getComputedStyle(document.documentElement);
+      // A default like var(--uk-font-family-sans) is read as that variable:
+      // the page holds the value it points to.
+      const resolve = (value) => {
+        const reference = value.match(/^var\((--[a-z0-9-]+)\)$/);
+        return reference
+          ? resolve(style.getPropertyValue(reference[1]))
+          : value;
+      };
       return tokens
         .map(({ id, color, value }) => {
           const actual = style.getPropertyValue(`--${id}`);
+          const expected = resolve(value);
           const same = color
-            ? rgba(actual) === rgba(value)
-            : plain(actual) === plain(value);
+            ? rgba(actual) === rgba(expected)
+            : plain(actual) === plain(expected);
           return same ? null : `--${id}: "${plain(actual)}", not "${value}"`;
         })
         .filter(Boolean);

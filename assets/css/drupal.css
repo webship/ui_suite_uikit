@@ -71,9 +71,16 @@
   --ui-suite-uikit-target-size: 44px;
   --ui-suite-uikit-control-height: 44px;
 
-  /* Text size and spacing. */
+  /* Fonts, text size and line length. The stacks are in fonts.css: the fonts
+     of the theme, or of the operating system with the "Font" theme setting. */
+  --ui-suite-uikit-global-font-family: var(--uk-font-family-sans);
+  --ui-suite-uikit-heading-font-family: var(--uk-global-font-family);
+  --ui-suite-uikit-code-font-family: var(--uk-font-family-mono);
   --ui-suite-uikit-global-font-size: 16px;
   --ui-suite-uikit-global-line-height: 1.5;
+  --ui-suite-uikit-measure: 32em;
+
+  /* Spacing. */
   --ui-suite-uikit-global-small-margin: 10px;
   --ui-suite-uikit-global-margin: 20px;
   --ui-suite-uikit-global-medium-margin: 40px;
@@ -200,7 +207,10 @@
   --uk-alert-success-background: var(--ui-suite-uikit-alert-success-background);
   --uk-alert-warning-background: var(--ui-suite-uikit-alert-warning-background);
   --uk-alert-danger-background: var(--ui-suite-uikit-alert-danger-background);
-  --uk-global-font-family: var(--ui-suite-uikit-global-font-family);
+  --uk-global-font-family: var(--ui-suite-uikit-global-font-family, var(--uk-font-family-sans));
+  --uk-base-heading-font-family: var(--ui-suite-uikit-heading-font-family);
+  --uk-base-code-font-family: var(--ui-suite-uikit-code-font-family);
+  --uk-measure: var(--ui-suite-uikit-measure);
   --uk-global-font-size: var(--ui-suite-uikit-global-font-size);
   --uk-global-line-height: var(--ui-suite-uikit-global-line-height);
   --uk-global-small-margin: var(--ui-suite-uikit-global-small-margin);

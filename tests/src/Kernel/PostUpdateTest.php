@@ -72,4 +72,16 @@ final class PostUpdateTest extends KernelTestBase {
     $this->assertNull($this->config('ui_suite_uikit.settings')->get('third_party_settings.ui_skins.css_variables'));
   }
 
+  /**
+   * Tests the existing sites get the font of the theme.
+   */
+  public function testFontFamily(): void {
+    ui_suite_uikit_post_update_font_family();
+    $this->assertSame('atkinson', $this->config('ui_suite_uikit.settings')->get('font_family'));
+
+    $this->config('ui_suite_uikit.settings')->set('font_family', 'system')->save();
+    ui_suite_uikit_post_update_font_family();
+    $this->assertSame('system', $this->config('ui_suite_uikit.settings')->get('font_family'));
+  }
+
 }

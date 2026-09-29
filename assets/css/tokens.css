@@ -13,10 +13,12 @@
  *   --uk-global-color: #666
  *   --uk-global-link-color: #1e87f0
  *   --uk-global-link-hover-color: #0f6ecd
+ *   --uk-base-code-font-family: Consolas, monaco, monospace
  *   --uk-global-danger-background: #f0506e
  *   --uk-global-danger-color: var(--uk-global-danger-background)
  *   --uk-global-muted-background: #f8f8f8
  *   --uk-global-margin: 20px
+ *   --uk-base-heading-font-family: var(--uk-global-font-family)
  *   --uk-global-emphasis-color: #333
  *   --uk-global-medium-margin: 40px
  *   --uk-global-border: #e5e5e5
@@ -70,6 +72,7 @@ a:hover,
 :not(pre) > code,
 :not(pre) > kbd,
 :not(pre) > samp {
+  font-family: var(--uk-base-code-font-family, Consolas, monaco, monospace);
   color: var(--uk-global-danger-color, var(--uk-global-danger-background, #f0506e));
   background: var(--uk-global-muted-background, #f8f8f8);
 }
@@ -125,7 +128,7 @@ h6,
 .uk-heading-2xlarge,
 .uk-heading-3xlarge {
   margin: 0 0 var(--uk-global-margin, 20px) 0;
-  font-family: var(--uk-global-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+  font-family: var(--uk-base-heading-font-family, var(--uk-global-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"));
   color: var(--uk-global-emphasis-color, #333);
 }
 * + h1,
@@ -207,9 +210,13 @@ blockquote footer {
   color: var(--uk-global-color, #666);
 }
 pre {
+  font-family: var(--uk-base-code-font-family, Consolas, monaco, monospace);
   color: var(--uk-global-color, #666);
   border: 1px solid var(--uk-global-border, #e5e5e5);
   background: var(--uk-global-background, #fff);
+}
+pre code {
+  font-family: var(--uk-base-code-font-family, Consolas, monaco, monospace);
 }
 :focus-visible {
   outline: 2px dotted var(--uk-global-emphasis-color, #333);

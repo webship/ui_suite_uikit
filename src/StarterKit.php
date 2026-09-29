@@ -31,6 +31,13 @@ final class StarterKit implements StarterKitInterface {
   ];
 
   /**
+   * Folders of binary files, copied as they are: the fonts.
+   */
+  private const array BINARY_FOLDERS = [
+    'assets/fonts',
+  ];
+
+  /**
    * Development folders that are not part of a generated theme.
    */
   private const array DEVELOPMENT_FOLDERS = [
@@ -80,12 +87,12 @@ final class StarterKit implements StarterKitInterface {
   private static function findAndReplace(string $dir, string $find, string $replace): void {
     $filesystem = new Filesystem();
 
-    $finder = (new Finder())->files()->in($dir)->ignoreDotFiles(FALSE)->name('*' . $find . '*');
+    $finder = (new Finder())->files()->in($dir)->ignoreDotFiles(FALSE)->notPath(self::BINARY_FOLDERS)->name('*' . $find . '*');
     foreach ($finder as $file) {
       $filesystem->rename($file->getRealPath(), $file->getPath() . '/' . str_replace($find, $replace, $file->getFilename()));
     }
 
-    $finder = (new Finder())->files()->in($dir)->ignoreDotFiles(FALSE)->contains($find)
+    $finder = (new Finder())->files()->in($dir)->ignoreDotFiles(FALSE)->notPath(self::BINARY_FOLDERS)->contains($find)
       ->filter(static fn (\SplFileInfo $file): bool => !in_array(str_replace($dir . '/', '', $file->getPathname()), self::SKIP_CONTENT_EDIT, TRUE));
     foreach ($finder as $file) {
       file_put_contents($file->getRealPath(), str_replace($find, $replace, file_get_contents($file->getRealPath())));

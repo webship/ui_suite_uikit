@@ -6,14 +6,16 @@ ready for [Display Builder](https://www.drupal.org/project/display_builder).
 
 ## Customize
 
-- Colors and fonts: the CSS variables in `assets/css/tokens.css`, and the UI Skins settings in
-  `STARTERKIT_MACHINE_NAME.ui_skins.css_variables.yml` and `STARTERKIT_MACHINE_NAME.ui_skins.themes.yml`.
+- Colors, fonts, sizes and spacing: the design tokens in `assets/css/drupal.css`, with the same defaults in
+  `STARTERKIT_MACHINE_NAME.ui_skins.css_variables.yml`, and the color modes in
+  `STARTERKIT_MACHINE_NAME.ui_skins.themes.yml`.
+- Fonts: the files in `assets/fonts`, each family with its license, and `assets/css/fonts.css`.
 - Components: the `components` folder. Each component has its `*.component.yml`, Twig template and stories.
 - Utilities: `STARTERKIT_MACHINE_NAME.ui_styles.yml`.
 - Card view modes: the Display Builder templates of [Web View Modes Inventory](https://www.drupal.org/project/webvmi)
   in the `webvmi` folder.
 - Theme settings: Appearance > STARTERKIT_NAME (UIkit from the CDN or local libraries, sticky navbar, HTMX
-  navigation).
+  navigation, color mode, font).
 
 ## Update from UI Suite UIkit
 

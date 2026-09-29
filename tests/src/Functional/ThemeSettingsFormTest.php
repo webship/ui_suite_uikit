@@ -67,9 +67,12 @@ final class ThemeSettingsFormTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('UIkit library source');
     $this->assertSession()->checkboxChecked('navbar_sticky');
 
+    $this->assertSession()->fieldValueEquals('font_family', 'atkinson');
+
     $this->submitForm([
       'navbar_sticky' => FALSE,
       'htmx_navigation' => FALSE,
+      'font_family' => 'system',
     ], 'Save configuration');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
@@ -78,6 +81,7 @@ final class ThemeSettingsFormTest extends BrowserTestBase {
     $settings = $this->config('ui_suite_uikit.settings');
     $this->assertFalse((bool) $settings->get('navbar_sticky'));
     $this->assertFalse((bool) $settings->get('htmx_navigation'));
+    $this->assertSame('system', $settings->get('font_family'));
   }
 
 }
