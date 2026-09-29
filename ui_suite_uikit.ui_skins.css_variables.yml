@@ -1,14 +1,19 @@
-# UIkit design tokens, consumed by assets/css/tokens.css (generated from the
-# UIkit CSS by scripts/build-tokens.mjs). Default values are the ones the theme
-# applies (assets/css/drupal.css), chosen for WCAG 2.2 AAA: 7:1 for text,
-# 3:1 for the borders of the form controls. The ':root[data-theme="dark"]'
-# scope is the dark color mode. Check a new value against every background it
-# sits on, see the "Accessibility" section of README.md.
+# The design tokens of the theme, as CSS variables of UI Skins.
+#
+# Each default is the value the theme sets in assets/css/drupal.css: what the
+# form shows is what the page uses. Change both together. The colors are
+# chosen for WCAG 2.2 AAA: 7:1 for text, 3:1 for the borders of the form
+# controls and the focus ring. The ':root[data-theme="dark"]' scope is the
+# dark color mode. Check a new value against every background it sits on, see
+# the "Accessibility" section of README.md.
 #
 # The ids carry the theme name: the ids of UI Skins are shared by every theme
 # of the site, and another theme (the administration theme, a theme generated
 # from this one) declares the UIkit names too. drupal.css maps each one to its
 # UIkit name (ui-suite-uikit-global-color to --uk-global-color).
+#
+# Every variable has a description that says what it changes and which values
+# it takes, for the people and the assistants that set it.
 
 ################################################################################
 # Text colors.
@@ -17,13 +22,16 @@
 ui-suite-uikit-global-color:
   category: "Text colors"
   label: "Text color"
-  type: "color"
+  description: "The color of the body text. A color and its transparency (0 to 255). Keep 7:1 against the background and the muted background."
+  type: "ui_skins_alpha_color"
   default_values:
-    ":root": "#444444"
+    ":root": "#444444ff"
+    ':root[data-theme="dark"]': "#ffffffb3"
 
 ui-suite-uikit-global-emphasis-color:
   category: "Text colors"
-  label: "Emphasis color (headings, active items)"
+  label: "Emphasis color"
+  description: "The color of the headings, the active menu items and the strong text. A hex color. Keep 7:1 against the background."
   type: "color"
   default_values:
     ":root": "#333333"
@@ -32,20 +40,25 @@ ui-suite-uikit-global-emphasis-color:
 ui-suite-uikit-global-muted-color:
   category: "Text colors"
   label: "Muted color"
-  type: "color"
+  description: "The color of the secondary text: meta lines, descriptions, inactive menu items. A color and its transparency (0 to 255). Keep 7:1 against the background."
+  type: "ui_skins_alpha_color"
   default_values:
-    ":root": "#545454"
+    ":root": "#545454ff"
+    ':root[data-theme="dark"]': "#ffffffb8"
 
 ui-suite-uikit-global-inverse-color:
   category: "Text colors"
-  label: "Inverse color (text on colored backgrounds)"
-  type: "color"
+  label: "Inverse color"
+  description: "The color of the text on the primary, secondary, success, warning and danger backgrounds, like the label of a primary button. A color and its transparency (0 to 255). Keep 7:1 against each of these backgrounds."
+  type: "ui_skins_alpha_color"
   default_values:
-    ":root": "#ffffff"
+    ":root": "#ffffffff"
+    ':root[data-theme="dark"]': "#ffffffff"
 
 ui-suite-uikit-global-link-color:
   category: "Text colors"
   label: "Link color"
+  description: "The color of the links. A hex color. Usually the primary text color. Keep 7:1 against the background."
   type: "color"
   default_values:
     ":root": "#0f5695"
@@ -54,6 +67,7 @@ ui-suite-uikit-global-link-color:
 ui-suite-uikit-global-link-hover-color:
   category: "Text colors"
   label: "Link hover color"
+  description: "The color of a link under the pointer. A hex color, darker than the link color in the light mode and lighter in the dark mode."
   type: "color"
   default_values:
     ":root": "#093f6e"
@@ -61,7 +75,8 @@ ui-suite-uikit-global-link-hover-color:
 
 ui-suite-uikit-global-primary-color:
   category: "Text colors"
-  label: "Primary text color (unset: the primary background)"
+  label: "Primary text color"
+  description: "The color of the text and the lines printed in the primary color: primary text, the active tab, the checked boxes, the focused fields. A hex color. Set it with the primary background when the brand color changes. Keep 7:1 against the background."
   type: "color"
   default_values:
     ":root": "#0f5695"
@@ -69,7 +84,8 @@ ui-suite-uikit-global-primary-color:
 
 ui-suite-uikit-global-success-color:
   category: "Text colors"
-  label: "Success text color (unset: the success background)"
+  label: "Success text color"
+  description: "The color of the text printed in the success color. A hex color. Keep 7:1 against the background."
   type: "color"
   default_values:
     ":root": "#0f6047"
@@ -77,7 +93,8 @@ ui-suite-uikit-global-success-color:
 
 ui-suite-uikit-global-warning-color:
   category: "Text colors"
-  label: "Warning text color (unset: the warning background)"
+  label: "Warning text color"
+  description: "The color of the text printed in the warning color. A hex color. Keep 7:1 against the background."
   type: "color"
   default_values:
     ":root": "#754c0f"
@@ -85,11 +102,49 @@ ui-suite-uikit-global-warning-color:
 
 ui-suite-uikit-global-danger-color:
   category: "Text colors"
-  label: "Danger text color (unset: the danger background)"
+  label: "Danger text color"
+  description: "The color of the text printed in the danger color, and of the border of a field with an error. A hex color. Keep 7:1 against the background."
   type: "color"
   default_values:
     ":root": "#a71534"
     ':root[data-theme="dark"]': "#f7a5b4"
+
+ui-suite-uikit-code-color:
+  category: "Text colors"
+  label: "Code color"
+  description: "The color of the inline code and the keyboard keys. A hex color. Keep 7:1 against the muted background."
+  type: "color"
+  default_values:
+    ":root": "#9e1f3a"
+    ':root[data-theme="dark"]': "#f7a5b4"
+
+################################################################################
+# Inverse areas.
+################################################################################
+
+ui-suite-uikit-inverse-color:
+  category: "Inverse areas"
+  label: "Text color on inverse areas"
+  description: "The color of the text inside the primary and secondary sections, tiles, cards and overlays, and the offcanvas menu. A color and its transparency (0 to 255). Keep 7:1 against the primary and the secondary background."
+  type: "ui_skins_alpha_color"
+  default_values:
+    ":root": "#ffffffff"
+
+ui-suite-uikit-inverse-muted-color:
+  category: "Inverse areas"
+  label: "Muted color on inverse areas"
+  description: "The color of the secondary text inside the inverse areas. A color and its transparency (0 to 255). Keep 7:1 against the secondary background."
+  type: "ui_skins_alpha_color"
+  default_values:
+    ":root": "#ffffffd9"
+
+ui-suite-uikit-inverse-form-border-color:
+  category: "Inverse areas"
+  label: "Form control border color on inverse areas"
+  description: "The color of the border of the fields, checkboxes and slider dots inside the inverse areas. A color and its transparency (0 to 255). Keep 3:1 against the primary and the secondary background."
+  type: "ui_skins_alpha_color"
+  default_values:
+    ":root": "#ffffff99"
 
 ################################################################################
 # Backgrounds.
@@ -98,6 +153,7 @@ ui-suite-uikit-global-danger-color:
 ui-suite-uikit-global-background:
   category: "Backgrounds"
   label: "Background"
+  description: "The background of the page, the cards, the dropdowns and the fields. A hex color."
   type: "color"
   default_values:
     ":root": "#ffffff"
@@ -106,6 +162,7 @@ ui-suite-uikit-global-background:
 ui-suite-uikit-global-muted-background:
   category: "Backgrounds"
   label: "Muted background"
+  description: "The background of the navbar, the muted sections and cards, and the inline code. A hex color, close to the background."
   type: "color"
   default_values:
     ":root": "#f8f8f8"
@@ -114,6 +171,7 @@ ui-suite-uikit-global-muted-background:
 ui-suite-uikit-global-muted-background-hover:
   category: "Backgrounds"
   label: "Muted background (hover)"
+  description: "The muted background under the pointer. A hex color."
   type: "color"
   default_values:
     ":root": "#ebebeb"
@@ -122,6 +180,7 @@ ui-suite-uikit-global-muted-background-hover:
 ui-suite-uikit-global-primary-background:
   category: "Backgrounds"
   label: "Primary background"
+  description: "The brand color: the background of the primary buttons, sections, cards, labels and badges. A hex color, used in both color modes. Keep 7:1 with the inverse color. Set the hover background, the link color and the primary text color with it."
   type: "color"
   default_values:
     ":root": "#0f5695"
@@ -129,6 +188,7 @@ ui-suite-uikit-global-primary-background:
 ui-suite-uikit-global-primary-background-hover:
   category: "Backgrounds"
   label: "Primary background (hover)"
+  description: "The primary background under the pointer. A hex color, a little darker than the primary background."
   type: "color"
   default_values:
     ":root": "#093f6e"
@@ -136,6 +196,7 @@ ui-suite-uikit-global-primary-background-hover:
 ui-suite-uikit-global-secondary-background:
   category: "Backgrounds"
   label: "Secondary background"
+  description: "The background of the secondary buttons, sections and cards, the footer and the offcanvas menu. A hex color, dark. Keep 7:1 with the inverse color."
   type: "color"
   default_values:
     ":root": "#222222"
@@ -144,6 +205,7 @@ ui-suite-uikit-global-secondary-background:
 ui-suite-uikit-global-secondary-background-hover:
   category: "Backgrounds"
   label: "Secondary background (hover)"
+  description: "The secondary background under the pointer. A hex color."
   type: "color"
   default_values:
     ":root": "#151515"
@@ -152,6 +214,7 @@ ui-suite-uikit-global-secondary-background-hover:
 ui-suite-uikit-global-success-background:
   category: "Backgrounds"
   label: "Success background"
+  description: "The background of the success labels and notifications. A hex color, used in both color modes. Keep 7:1 with the inverse color."
   type: "color"
   default_values:
     ":root": "#0f6047"
@@ -159,6 +222,7 @@ ui-suite-uikit-global-success-background:
 ui-suite-uikit-global-warning-background:
   category: "Backgrounds"
   label: "Warning background"
+  description: "The background of the warning labels and notifications. A hex color, used in both color modes. Keep 7:1 with the inverse color."
   type: "color"
   default_values:
     ":root": "#754c0f"
@@ -166,6 +230,7 @@ ui-suite-uikit-global-warning-background:
 ui-suite-uikit-global-danger-background:
   category: "Backgrounds"
   label: "Danger background"
+  description: "The background of the danger buttons, labels and notifications, and the mark of a required field. A hex color, used in both color modes. Keep 7:1 with the inverse color."
   type: "color"
   default_values:
     ":root": "#a71534"
@@ -173,6 +238,7 @@ ui-suite-uikit-global-danger-background:
 ui-suite-uikit-global-danger-background-hover:
   category: "Backgrounds"
   label: "Danger background (hover)"
+  description: "The danger background under the pointer. A hex color, a little darker than the danger background."
   type: "color"
   default_values:
     ":root": "#861029"
@@ -180,31 +246,20 @@ ui-suite-uikit-global-danger-background-hover:
 ui-suite-uikit-global-border:
   category: "Backgrounds"
   label: "Border color"
-  type: "color"
+  description: "The color of the dividers and the borders of tables, cards and lists. A color and its transparency (0 to 255). Decoration only: it needs no contrast."
+  type: "ui_skins_alpha_color"
   default_values:
-    ":root": "#e5e5e5"
+    ":root": "#e5e5e5ff"
+    ':root[data-theme="dark"]': "#ffffff26"
 
 ui-suite-uikit-form-border-color:
   category: "Backgrounds"
   label: "Form control border color"
+  description: "The color of the border of the fields, checkboxes, default buttons and slider dots. A hex color. Keep 3:1 against the background (WCAG 1.4.11)."
   type: "color"
   default_values:
     ":root": "#767676"
     ':root[data-theme="dark"]': "#787878"
-
-################################################################################
-# Focus.
-################################################################################
-
-# Unset, the ring takes the emphasis color. Keep 3:1 against the page
-# background in both color modes (WCAG 2.4.13).
-ui-suite-uikit-focus-color:
-  category: "Focus"
-  label: "Focus ring"
-  type: "color"
-  default_values:
-    ":root": "#333333"
-    ':root[data-theme="dark"]': "#ffffff"
 
 ################################################################################
 # Alerts.
@@ -213,34 +268,127 @@ ui-suite-uikit-focus-color:
 ui-suite-uikit-alert-primary-background:
   category: "Alerts"
   label: "Primary alert background"
+  description: "The background of the primary alerts. A hex color, a light tint in the light mode and a dark one in the dark mode."
   type: "color"
   default_values:
     ":root": "#d8eafc"
     ':root[data-theme="dark"]': "#16324f"
 
+ui-suite-uikit-alert-primary-color:
+  category: "Alerts"
+  label: "Primary alert text color"
+  description: "The color of the text and the links of the primary alerts. A hex color. Keep 7:1 against the primary alert background."
+  type: "color"
+  default_values:
+    ":root": "#104e7d"
+    ':root[data-theme="dark"]': "#8dc3fa"
+
 ui-suite-uikit-alert-success-background:
   category: "Alerts"
   label: "Success alert background"
+  description: "The background of the success alerts, like the status messages of Drupal. A hex color."
   type: "color"
   default_values:
     ":root": "#edfbf6"
     ':root[data-theme="dark"]': "#103b2b"
 
+ui-suite-uikit-alert-success-color:
+  category: "Alerts"
+  label: "Success alert text color"
+  description: "The color of the text and the links of the success alerts. A hex color. Keep 7:1 against the success alert background."
+  type: "color"
+  default_values:
+    ":root": "#146047"
+    ':root[data-theme="dark"]': "#55daa8"
+
 ui-suite-uikit-alert-warning-background:
   category: "Alerts"
   label: "Warning alert background"
+  description: "The background of the warning alerts, like the warning messages of Drupal. A hex color."
   type: "color"
   default_values:
     ":root": "#fff6ee"
     ':root[data-theme="dark"]': "#4a2f19"
 
+ui-suite-uikit-alert-warning-color:
+  category: "Alerts"
+  label: "Warning alert text color"
+  description: "The color of the text and the links of the warning alerts. A hex color. Keep 7:1 against the warning alert background."
+  type: "color"
+  default_values:
+    ":root": "#804511"
+    ':root[data-theme="dark"]': "#fbb680"
+
 ui-suite-uikit-alert-danger-background:
   category: "Alerts"
   label: "Danger alert background"
+  description: "The background of the danger alerts, like the error messages of Drupal. A hex color."
   type: "color"
   default_values:
     ":root": "#fef4f6"
     ':root[data-theme="dark"]': "#4a1a24"
+
+ui-suite-uikit-alert-danger-color:
+  category: "Alerts"
+  label: "Danger alert text color"
+  description: "The color of the text and the links of the danger alerts. A hex color. Keep 7:1 against the danger alert background."
+  type: "color"
+  default_values:
+    ":root": "#a41433"
+    ':root[data-theme="dark"]': "#f79eae"
+
+################################################################################
+# Focus and targets.
+################################################################################
+
+ui-suite-uikit-focus-color:
+  category: "Focus and targets"
+  label: "Focus ring color"
+  description: "The color of the ring around the element the keyboard is on. A hex color. Keep 3:1 against the background in both color modes (WCAG 2.4.13)."
+  type: "color"
+  default_values:
+    ":root": "#333333"
+    ':root[data-theme="dark"]': "#ffffff"
+
+ui-suite-uikit-focus-width:
+  category: "Focus and targets"
+  label: "Focus ring width"
+  description: "The thickness of the focus ring. A length in pixels, from 2px to 6px. WCAG 2.4.13 asks for 2px or more."
+  type: "textfield"
+  default_values:
+    ":root": "2px"
+
+ui-suite-uikit-focus-offset:
+  category: "Focus and targets"
+  label: "Focus ring offset"
+  description: "The space between an element and its focus ring. A length in pixels, from 0px to 6px. With 2px the ring only touches the background of the page."
+  type: "textfield"
+  default_values:
+    ":root": "2px"
+
+ui-suite-uikit-focus-halo-width:
+  category: "Focus and targets"
+  label: "Focus halo width"
+  description: "The thickness of the dark edge around the white focus ring of the arrows placed over images. A length in pixels, from 2px to 8px."
+  type: "textfield"
+  default_values:
+    ":root": "4px"
+
+ui-suite-uikit-target-size:
+  category: "Focus and targets"
+  label: "Target size"
+  description: "The smallest width and height of what a visitor clicks or taps: menu links, tabs, pagination, icons, checkboxes with their label. A length in pixels, from 44px to 64px. WCAG 2.5.5 asks for 44px or more."
+  type: "textfield"
+  default_values:
+    ":root": "44px"
+
+ui-suite-uikit-control-height:
+  category: "Focus and targets"
+  label: "Control height"
+  description: "The height of the buttons, the fields and the select lists. A length in pixels, from 44px to 64px. Keep it at the target size or more."
+  type: "textfield"
+  default_values:
+    ":root": "44px"
 
 ################################################################################
 # Typography.
@@ -249,6 +397,111 @@ ui-suite-uikit-alert-danger-background:
 ui-suite-uikit-global-font-family:
   category: "Typography"
   label: "Font family"
+  description: "The font of the text. A CSS font family list that ends with a generic family, like: Georgia, serif. Empty: the fonts of the operating system."
   type: "textfield"
   default_values:
     ":root": ""
+
+ui-suite-uikit-global-font-size:
+  category: "Typography"
+  label: "Base font size"
+  description: "The size of the body text: headings and small text scale with it. A length in pixels, from 16px to 20px."
+  type: "textfield"
+  default_values:
+    ":root": "16px"
+
+ui-suite-uikit-global-line-height:
+  category: "Typography"
+  label: "Line height"
+  description: "The height of a line of text, as a number without a unit, from 1.5 to 2. WCAG 1.4.8 asks for 1.5 or more."
+  type: "textfield"
+  default_values:
+    ":root": "1.5"
+
+################################################################################
+# Spacing.
+################################################################################
+
+ui-suite-uikit-global-small-margin:
+  category: "Spacing"
+  label: "Small margin"
+  description: "The space between the items of a list, and of the small margin style. A length in pixels, from 4px to 20px."
+  type: "textfield"
+  default_values:
+    ":root": "10px"
+
+ui-suite-uikit-global-margin:
+  category: "Spacing"
+  label: "Margin"
+  description: "The space between two blocks of text: paragraphs, lists, tables, alerts. A length in pixels, from 10px to 40px."
+  type: "textfield"
+  default_values:
+    ":root": "20px"
+
+ui-suite-uikit-global-medium-margin:
+  category: "Spacing"
+  label: "Medium margin"
+  description: "The space above a heading that follows text, and of the medium margin style. A length in pixels, from 20px to 80px."
+  type: "textfield"
+  default_values:
+    ":root": "40px"
+
+ui-suite-uikit-global-large-margin:
+  category: "Spacing"
+  label: "Large margin"
+  description: "The space between two articles or two comments, and of the large margin style on wide screens. A length in pixels, from 40px to 140px."
+  type: "textfield"
+  default_values:
+    ":root": "70px"
+
+################################################################################
+# Corners and shadows.
+################################################################################
+
+ui-suite-uikit-global-border-radius:
+  category: "Corners and shadows"
+  label: "Corner radius"
+  description: "How round the corners of the buttons, fields, cards, alerts, dropdowns and dialogs are. A length in pixels, from 0 to 24px, or 500px for pill shaped buttons. 0 gives the square corners of UIkit."
+  type: "textfield"
+  default_values:
+    ":root": "0"
+
+ui-suite-uikit-global-small-box-shadow:
+  category: "Corners and shadows"
+  label: "Small shadow"
+  description: "The shadow of the small box shadow style. A CSS box shadow: horizontal offset, vertical offset, blur, color. Use none for a flat look."
+  type: "textfield"
+  default_values:
+    ":root": "0 2px 8px rgb(0, 0, 0, 0.08)"
+
+ui-suite-uikit-global-medium-box-shadow:
+  category: "Corners and shadows"
+  label: "Medium shadow"
+  description: "The shadow of the cards and of the medium box shadow style. A CSS box shadow. Use none for a flat look."
+  type: "textfield"
+  default_values:
+    ":root": "0 5px 15px rgb(0, 0, 0, 0.08)"
+
+ui-suite-uikit-global-large-box-shadow:
+  category: "Corners and shadows"
+  label: "Large shadow"
+  description: "The shadow of a card under the pointer and of the large box shadow style. A CSS box shadow. Use none for a flat look."
+  type: "textfield"
+  default_values:
+    ":root": "0 14px 25px rgb(0, 0, 0, 0.16)"
+
+ui-suite-uikit-global-xlarge-box-shadow:
+  category: "Corners and shadows"
+  label: "Extra large shadow"
+  description: "The shadow of the extra large box shadow style. A CSS box shadow. Use none for a flat look."
+  type: "textfield"
+  default_values:
+    ":root": "0 28px 50px rgb(0, 0, 0, 0.16)"
+
+ui-suite-uikit-dropdown-box-shadow:
+  category: "Corners and shadows"
+  label: "Dropdown shadow"
+  description: "The shadow of the dropdowns and of the menus that open from the navbar. A CSS box shadow. Use none for a flat look."
+  type: "textfield"
+  default_values:
+    ":root": "0 5px 12px rgb(0, 0, 0, 0.15)"

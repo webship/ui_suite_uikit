@@ -3,11 +3,15 @@
  * @file
  * Generates assets/css/tokens.css from the compiled UIkit CSS.
  *
- * Every declaration of uikit.css using one of the UIkit global colors (or the
- * global font family) is re-emitted with the literal value replaced by a CSS
- * custom property falling back to the original value:
+ * Every declaration of uikit.css using one of the UIkit global colors, the
+ * global font family, font size, line height, margins or box shadows is
+ * re-emitted with the literal value replaced by a CSS custom property falling
+ * back to the original value:
  *
  *   .uk-button-primary { background-color: var(--uk-global-primary-background, #1e87f0); }
+ *
+ * UIkit has no corner radius of its own: the script adds one rule giving the
+ * buttons, fields, cards and panels the radius token, which falls back to 0.
  *
  * Without any custom property set, the rendering is identical to UIkit. Setting
  * a property (from UI Skins, a sub-theme or the dark color mode) re-skins every
@@ -93,6 +97,43 @@ const inverseText = {
   0.5: 'inverse-muted-color',
 };
 
+// Literal value => token, for the box shadows.
+const shadows = {
+  '0 2px 8px rgba(0, 0, 0, 0.08)': 'global-small-box-shadow',
+  '0 5px 15px rgba(0, 0, 0, 0.08)': 'global-medium-box-shadow',
+  '0 14px 25px rgba(0, 0, 0, 0.16)': 'global-large-box-shadow',
+  '0 28px 50px rgba(0, 0, 0, 0.16)': 'global-xlarge-box-shadow',
+  '0 5px 12px rgba(0, 0, 0, 0.15)': 'dropdown-box-shadow',
+};
+
+// Literal value => token, for the margins between the blocks of a page.
+const margins = {
+  '10px': 'global-small-margin',
+  '20px': 'global-margin',
+  '40px': 'global-medium-margin',
+  '70px': 'global-large-margin',
+};
+
+// The same lengths are gutters or dividers in these components, not margins.
+const notMarginSelector = /uk-(grid|align|breadcrumb|subnav|dropcap)/;
+
+// The components that take the corner radius of the theme. UIkit prints them
+// with square corners, so the rule is added, not rewritten.
+const radiusSelectors = [
+  '.uk-button:not(.uk-button-text):not(.uk-button-link)',
+  '.uk-input',
+  '.uk-select',
+  '.uk-textarea',
+  '.uk-search-default .uk-search-input',
+  '.uk-card',
+  '.uk-alert',
+  '.uk-placeholder',
+  '.uk-modal-dialog',
+  '.uk-dropdown',
+  '.uk-navbar-dropdown',
+  '.uk-notification-message',
+];
+
 /**
  * Splits a string on a separator, ignoring separators in quotes/parentheses.
  */
@@ -171,6 +212,43 @@ function tokenize(selector, property, value) {
     tokens.set('global-font-family', value);
     return `var(--uk-global-font-family, ${value})`;
   }
+  const important = value.endsWith(' !important') ? ' !important' : '';
+  const bare = value.replace(/ !important$/, '');
+  if (property === 'box-shadow') {
+    const token = shadows[bare];
+    if (!token) {
+      return null;
+    }
+    tokens.set(token, bare);
+    return `var(--uk-${token}, ${bare})${important}`;
+  }
+  if (selector === 'html' && property === 'font-size') {
+    tokens.set('global-font-size', bare);
+    return `var(--uk-global-font-size, ${bare})`;
+  }
+  if (property === 'line-height' && bare === '1.5') {
+    tokens.set('global-line-height', bare);
+    return `var(--uk-global-line-height, ${bare})`;
+  }
+  if (property.startsWith('margin')) {
+    const vertical = !/-(left|right)$/.test(property);
+    if (notMarginSelector.test(selector) || !(vertical || selector.includes('.uk-margin'))) {
+      return null;
+    }
+    const lengths = bare.split(' ');
+    // A shorthand of four values: only the top and the bottom are margins
+    // between blocks.
+    const rewritten = lengths.map((length, index) => {
+      const token = margins[length];
+      if (!token || (lengths.length === 4 && index % 2 === 1)) {
+        return length;
+      }
+      changed = true;
+      tokens.set(token, length);
+      return `var(--uk-${token}, ${length})`;
+    });
+    return changed ? `${rewritten.join(' ')}${important}` : null;
+  }
   const isText = ['color', '-webkit-text-fill-color', 'outline-color'].includes(
     property,
   );
@@ -222,13 +300,41 @@ function tokenize(selector, property, value) {
 }
 
 /**
- * Serializes the tokenized declarations of a node list.
+ * The properties that keep their order in the generated file.
+ *
+ * A rewritten declaration moves after the whole UIkit CSS. A later UIkit
+ * declaration of the same property, left as it is, would lose against it
+ * (".uk-nav-medium" sets a line height after ".uk-nav-primary"): from the
+ * first rewritten declaration on, the declarations of these properties are
+ * all printed, rewritten or not.
  */
-function emit(nodes, indent = '') {
+function family(property) {
+  if (property.startsWith('margin')) {
+    return 'margin';
+  }
+  return ['box-shadow', 'line-height'].includes(property) ? property : null;
+}
+
+// The position of the first rewritten declaration of each family.
+const firstRewritten = new Map();
+
+/**
+ * Serializes the tokenized declarations of a node list.
+ *
+ * @param {Array} nodes
+ *   The rules and at-rule blocks.
+ * @param {string} indent
+ *   The indentation of the block.
+ * @param {object} position
+ *   The count of the declarations read so far.
+ * @param {boolean} collect
+ *   Whether this pass only looks for the first rewritten declarations.
+ */
+function emit(nodes, indent, position, collect) {
   let out = '';
   for (const node of nodes) {
     if (node.children) {
-      const inner = emit(node.children, `${indent}  `);
+      const inner = emit(node.children, `${indent}  `, position, collect);
       if (inner) {
         out += `${indent}${node.prelude} {\n${inner}${indent}}\n`;
       }
@@ -245,9 +351,17 @@ function emit(nodes, indent = '') {
       if (property.startsWith('--')) {
         continue;
       }
+      position.count++;
       const rewritten = tokenize(node.selector, property, value);
+      const group = family(property);
       if (rewritten) {
         declarations.push(`${property}: ${rewritten};`);
+        if (collect && group && !firstRewritten.has(group)) {
+          firstRewritten.set(group, position.count);
+        }
+      }
+      else if (!collect && group && firstRewritten.get(group) < position.count) {
+        declarations.push(`${property}: ${value};`);
       }
     }
     if (declarations.length) {
@@ -258,7 +372,49 @@ function emit(nodes, indent = '') {
   return out;
 }
 
-const body = emit(parse(css.replace(/\/\*[\s\S]*?\*\//g, '')));
+/**
+ * The rules of the corner radius, added to the ones rewritten from UIkit.
+ */
+function radius() {
+  tokens.set('global-border-radius', '0');
+  const value = 'var(--uk-global-border-radius, 0)';
+  return `${radiusSelectors.join(',\n')} {
+  border-radius: ${value};
+}
+.uk-button-group > .uk-button:not(:first-child),
+.uk-button-group > :not(:first-child) > .uk-button {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+.uk-button-group > .uk-button:not(:last-child),
+.uk-button-group > :not(:last-child) > .uk-button {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+.uk-card-media-top,
+.uk-card-media-top img {
+  border-radius: ${value} ${value} 0 0;
+}
+.uk-card-media-bottom,
+.uk-card-media-bottom img {
+  border-radius: 0 0 ${value} ${value};
+}
+.uk-card-media-left,
+.uk-card-media-left img {
+  border-start-start-radius: ${value};
+  border-end-start-radius: ${value};
+}
+.uk-card-media-right,
+.uk-card-media-right img {
+  border-start-end-radius: ${value};
+  border-end-end-radius: ${value};
+}
+`;
+}
+
+const rules = parse(css.replace(/\/\*[\s\S]*?\*\//g, ''));
+emit(rules, '', { count: 0 }, true);
+const body = emit(rules, '', { count: 0 }, false) + radius();
 const list = [...tokens.entries()].map(([name, value]) => ` *   --uk-${name}: ${value}`).join('\n');
 
 writeFileSync(target, `/**

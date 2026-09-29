@@ -3,9 +3,9 @@
  * WCAG 2.2 AAA adjustments of the UIkit components.
  *
  * UIkit's own CSS is loaded as is (from the CDN or web/libraries/uikit), the
- * colours come from the tokens (assets/css/drupal.css). This file changes
+ * colors come from the tokens (assets/css/drupal.css). This file changes
  * what the tokens can not: the focus ring, the target sizes, the text
- * layout, the motion and a few colours UIkit does not take from a token.
+ * layout, the motion and a few colors UIkit does not take from a token.
  * See the "Accessibility" section of README.md.
  */
 
@@ -14,14 +14,13 @@
  *
  * A solid 2px ring, 2px away from the element: it only touches the page
  * background, whatever the fill of the element. On inverse areas (.uk-light,
- * coloured sections, cards, the offcanvas) UIkit prints it in the inverse
- * colour. The "Focus ring" token of UI Skins (--ui-suite-uikit-focus-color)
- * changes the ring of the page; unset, it takes the emphasis colour.
+ * colored sections, cards, the offcanvas) UIkit prints it in the inverse
+ * color. The color, the width and the offset of the ring are tokens of UI
+ * Skins.
  */
 :focus-visible {
-  outline: 2px solid
-    var(--ui-suite-uikit-focus-color, var(--uk-global-emphasis-color, #333));
-  outline-offset: 2px;
+  outline: var(--ui-suite-uikit-focus-width, 2px) solid var(--ui-suite-uikit-focus-color, var(--uk-global-emphasis-color, #333));
+  outline-offset: var(--ui-suite-uikit-focus-offset, 2px);
 }
 
 /* Form controls only change their border on focus in UIkit. */
@@ -33,9 +32,8 @@
 .uk-range:focus-visible,
 .uk-search-input:focus-visible,
 .uk-form-danger:focus-visible {
-  outline: 2px solid
-    var(--ui-suite-uikit-focus-color, var(--uk-global-emphasis-color, #333));
-  outline-offset: 2px;
+  outline: var(--ui-suite-uikit-focus-width, 2px) solid var(--ui-suite-uikit-focus-color, var(--uk-global-emphasis-color, #333));
+  outline-offset: var(--ui-suite-uikit-focus-offset, 2px);
 }
 
 .uk-light .uk-input:focus-visible,
@@ -60,8 +58,8 @@ html:has([uk-sticky] > .uk-navbar-container) {
  * Non-text contrast (1.4.11).
  *
  * The borders of the form controls and of the default button use their own
- * token, 3:1 against the page. The error state uses the danger text colour,
- * which stays readable in the dark colour mode.
+ * token, 3:1 against the page. The error state uses the danger text color,
+ * which stays readable in the dark color mode.
  */
 .uk-button-default {
   border-color: var(--uk-form-border-color, #767676);
@@ -89,7 +87,7 @@ html:has([uk-sticky] > .uk-navbar-container) {
   color: inherit;
 }
 
-/* The focused control keeps a border readable in both colour modes. */
+/* The focused control keeps a border readable in both color modes. */
 .uk-input:focus,
 .uk-select:focus,
 .uk-textarea:focus,
@@ -121,7 +119,7 @@ html:has([uk-sticky] > .uk-navbar-container) {
   border: 1px solid var(--uk-form-border-color, #767676);
 }
 
-/* Icons printed at a reduced opacity or in a translucent grey. */
+/* Icons printed at a reduced opacity or in a translucent gray. */
 .uk-alert-close,
 .uk-alert-close:hover,
 .uk-alert-close:focus {
@@ -148,9 +146,9 @@ html:has([uk-sticky] > .uk-navbar-container) {
 }
 
 .uk-slidenav[class*="uk-position-center"]:focus-visible {
-  outline: 2px solid #fff;
+  outline: var(--ui-suite-uikit-focus-width, 2px) solid #fff;
   outline-offset: 0;
-  box-shadow: 0 0 0 4px #222;
+  box-shadow: 0 0 0 var(--ui-suite-uikit-focus-halo-width, 4px) #222;
 }
 
 /* Slider and slideshow navigation: a 44px target around a 12px dot. */
@@ -166,8 +164,8 @@ html:has([uk-sticky] > .uk-navbar-container) {
    the inverse (.uk-light) and hover states of UIkit. */
 .uk-dotnav > * > * {
   position: relative;
-  width: 44px;
-  height: 44px;
+  width: var(--ui-suite-uikit-target-size, 44px);
+  height: var(--ui-suite-uikit-target-size, 44px);
   border: 0 !important;
   border-radius: 0;
   background: none !important;
@@ -175,8 +173,8 @@ html:has([uk-sticky] > .uk-navbar-container) {
 
 .uk-dotnav > * > *::before {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: calc((var(--ui-suite-uikit-target-size, 44px) - 12px) / 2);
+  left: calc((var(--ui-suite-uikit-target-size, 44px) - 12px) / 2);
   box-sizing: border-box;
   width: 12px;
   height: 12px;
@@ -208,9 +206,9 @@ html:has([uk-sticky] > .uk-navbar-container) {
 }
 
 /**
- * Use of colour (1.4.1).
+ * Use of color (1.4.1).
  *
- * With the text colours at 7:1, the muted and the emphasis colours are close:
+ * With the text colors at 7:1, the muted and the emphasis colors are close:
  * the current item of a menu is also underlined.
  */
 .uk-navbar-nav > li.uk-active > a,
@@ -252,10 +250,11 @@ html:has([uk-sticky] > .uk-navbar-container) {
  *
  * Buttons and inputs grow from 40px to 44px, the small variants to 44px too.
  * Navigation links keep their look with a taller box. Icon-only controls
- * get a 44px box around the icon.
+ * get a 44px box around the icon. The two sizes are tokens of UI Skins: the
+ * height of the buttons and fields, and the smallest target.
  */
 .uk-button {
-  min-height: 44px;
+  min-height: var(--ui-suite-uikit-control-height, 44px);
 }
 
 .uk-button-default,
@@ -263,7 +262,7 @@ html:has([uk-sticky] > .uk-navbar-container) {
 .uk-button-secondary,
 .uk-button-danger,
 .uk-button-small {
-  line-height: 42px;
+  line-height: calc(var(--ui-suite-uikit-control-height, 44px) - 2px);
 }
 
 .uk-button-large {
@@ -288,7 +287,7 @@ html:has([uk-sticky] > .uk-navbar-container) {
 .uk-form-small:not(textarea):not([multiple]):not([size]),
 .uk-search-default .uk-search-input,
 .uk-search-navbar .uk-search-input {
-  height: 44px;
+  height: var(--ui-suite-uikit-control-height, 44px);
 }
 /* stylelint-enable selector-not-notation */
 
@@ -297,20 +296,20 @@ html:has([uk-sticky] > .uk-navbar-container) {
 .uk-nav li > a,
 .uk-iconnav > * > a,
 .uk-thumbnav > * > * {
-  min-height: 44px;
+  min-height: var(--ui-suite-uikit-target-size, 44px);
 }
 
 .uk-subnav > * > :first-child,
 .uk-iconnav > * > a,
 .uk-navbar-nav > li > a {
   justify-content: center;
-  min-width: 44px;
+  min-width: var(--ui-suite-uikit-target-size, 44px);
 }
 
 .uk-pagination > * > * {
   justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
+  min-width: var(--ui-suite-uikit-target-size, 44px);
+  min-height: var(--ui-suite-uikit-target-size, 44px);
 }
 
 .uk-breadcrumb {
@@ -321,19 +320,19 @@ html:has([uk-sticky] > .uk-navbar-container) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
+  min-width: var(--ui-suite-uikit-target-size, 44px);
+  min-height: var(--ui-suite-uikit-target-size, 44px);
 }
 
 .uk-accordion-title {
   box-sizing: border-box;
-  min-height: 44px;
+  min-height: var(--ui-suite-uikit-target-size, 44px);
   padding-top: 8px;
   padding-bottom: 8px;
 }
 
 .uk-navbar-toggle {
-  min-width: 44px;
+  min-width: var(--ui-suite-uikit-target-size, 44px);
 }
 
 .uk-totop,
@@ -345,13 +344,13 @@ html:has([uk-sticky] > .uk-navbar-container) {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  min-width: 44px;
-  min-height: 44px;
+  min-width: var(--ui-suite-uikit-target-size, 44px);
+  min-height: var(--ui-suite-uikit-target-size, 44px);
 }
 
 .uk-icon-button {
-  width: 44px;
-  height: 44px;
+  width: var(--ui-suite-uikit-target-size, 44px);
+  height: var(--ui-suite-uikit-target-size, 44px);
 }
 
 .uk-alert-close {
@@ -360,7 +359,7 @@ html:has([uk-sticky] > .uk-navbar-container) {
 }
 
 .uk-alert:has(> .uk-alert-close) {
-  padding-right: 54px;
+  padding-right: calc(var(--ui-suite-uikit-target-size, 44px) + 10px);
 }
 
 .uk-offcanvas-close,
@@ -373,18 +372,18 @@ html:has([uk-sticky] > .uk-navbar-container) {
 /* The content starts below or beside the 44px close button: the two targets
    and their focus rings do not overlap. */
 .uk-offcanvas-bar:has(> .uk-offcanvas-close) {
-  padding-top: 54px;
+  padding-top: calc(var(--ui-suite-uikit-target-size, 44px) + 10px);
 }
 
 .uk-modal-dialog > .uk-modal-close-default + :is(.uk-modal-header, .uk-modal-body) {
-  padding-right: 54px;
+  padding-right: calc(var(--ui-suite-uikit-target-size, 44px) + 10px);
 }
 
 /* The skip link: a 44px target, its focus ring inside the viewport. */
 .visually-hidden.focusable:focus {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: var(--ui-suite-uikit-target-size, 44px);
   margin: 4px;
   padding: 0 12px;
 }
@@ -397,7 +396,7 @@ a.feed-icon,
 :where(h1, h2, h3, h4, h5, h6) > a[rel="bookmark"] {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: var(--ui-suite-uikit-target-size, 44px);
 }
 
 /* Checkboxes and radios: the label is part of the target. */
@@ -406,7 +405,7 @@ a.feed-icon,
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  min-height: 44px;
+  min-height: var(--ui-suite-uikit-target-size, 44px);
   column-gap: 8px;
 }
 
@@ -414,7 +413,7 @@ a.feed-icon,
 .form-type-radio > label {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: var(--ui-suite-uikit-target-size, 44px);
 }
 
 .form-type-checkbox > .description,
@@ -444,7 +443,7 @@ a.feed-icon,
 .uk-legend,
 .uk-notification-message,
 .form-item .description {
-  line-height: 1.5;
+  line-height: var(--uk-global-line-height, 1.5);
 }
 
 .uk-text-justify {
@@ -472,7 +471,7 @@ a.feed-icon,
 }
 
 /**
- * Forced colours (Windows high contrast): alerts and error fields keep an
+ * Forced colors (Windows high contrast): alerts and error fields keep an
  * edge when backgrounds are removed.
  */
 @media (forced-colors: active) {

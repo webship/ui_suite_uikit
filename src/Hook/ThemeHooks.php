@@ -15,6 +15,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\ui_skins\UiSkinsInterface;
+use Drupal\ui_suite_uikit\SystemDarkMode;
 
 /**
  * Library, theme settings, page and block hooks for UI Suite UIkit.
@@ -196,14 +198,28 @@ class ThemeHooks {
    * Implements hook_preprocess_HOOK() for 'html'.
    *
    * The color mode reaches the stylesheet as the data-theme attribute of the
-   * html element, like in UIkit Admin: none when the operating system
-   * decides.
+   * html element: none when the operating system decides. The dark values
+   * saved in UI Skins are printed for that case too, at the top of the page,
+   * where UI Skins prints its own.
    */
   #[Hook('preprocess_html')]
   public function preprocessHtml(array &$variables): void {
     $mode = $this->colorMode();
     if ($mode !== 'auto') {
       $variables['html_attributes']->setAttribute('data-theme', $mode);
+    }
+    $css = SystemDarkMode::css($this->themeSettingsProvider->getSetting(UiSkinsInterface::CSS_VARIABLES_THEME_SETTING_KEY, 'ui_suite_uikit'));
+    if ($css !== '') {
+      if (!\is_array($variables['page_top'] ?? NULL)) {
+        $variables['page_top'] = [];
+      }
+      $variables['page_top']['ui_suite_uikit_system_dark_mode'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'style',
+        '#value' => $css,
+        // After the style element of UI Skins.
+        '#weight' => 100,
+      ];
     }
     $variables['#cache']['tags'][] = 'config:ui_suite_uikit.settings';
     $this->htmxNavigationHooks->preprocessHtml($variables);

@@ -4,9 +4,11 @@
 # src/StarterKit.php renames ui-suite-uikit and writes the README.
 # Paths are globs relative to the theme root; folders need "/**".
 ignore:
+  - '/.cspell-project-words.txt'
   - '/.gitlab-ci.yml'
   - '/.playwright-mcp/**'
   - '/AGENTS.md'
+  - '/CLAUDE.md'
   - '/README.md'
   - '/composer.json'
   - '/cucumber.js'

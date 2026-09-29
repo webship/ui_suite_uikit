@@ -4,58 +4,106 @@
  */
 
 /**
- * Colour tokens.
+ * Design tokens.
  *
- * UIkit's own colours fall below the WCAG minimum, so the theme sets every
- * colour UIkit prints as text, or as a background behind text, to meet
+ * Every token UI Skins can change is set here, with the value UI Skins shows
+ * as its default (ui_suite_uikit.ui_skins.css_variables.yml): what the form
+ * shows is what the page uses. Change both together.
+ *
+ * UIkit's own colors fall below the WCAG minimum, so the theme sets every
+ * color UIkit prints as text, or as a background behind text, to meet
  * WCAG 2.2 AAA (1.4.6, 7:1 for text) and the borders of the form controls to
- * 3:1 (1.4.11). The values saved in UI Skins are printed after this file on
- * ":root" and override the light mode only.
+ * 3:1 (1.4.11). The values saved in UI Skins are printed after this file.
  *
- * The tokens UI Skins can change carry the theme name
- * (--ui-suite-uikit-global-color, not --uk-global-color): the ids of UI
- * Skins are shared by every theme of the site. The UIkit names read them,
- * see the end of this section.
+ * The tokens carry the theme name (--ui-suite-uikit-global-color, not
+ * --uk-global-color): the ids of UI Skins are shared by every theme of the
+ * site. The UIkit names read them, see the end of this section.
  */
 :root {
+  /* Text colors. */
   --ui-suite-uikit-global-color: #444;
+  --ui-suite-uikit-global-emphasis-color: #333;
   --ui-suite-uikit-global-muted-color: #545454;
+  --ui-suite-uikit-global-inverse-color: #fff;
   --ui-suite-uikit-global-link-color: #0f5695;
   --ui-suite-uikit-global-link-hover-color: #093f6e;
+  --ui-suite-uikit-global-primary-color: #0f5695;
+  --ui-suite-uikit-global-success-color: #0f6047;
+  --ui-suite-uikit-global-warning-color: #754c0f;
+  --ui-suite-uikit-global-danger-color: #a71534;
+  --ui-suite-uikit-code-color: #9e1f3a;
+
+  /* Text on the inverse areas (.uk-light, primary and secondary sections). */
+  --ui-suite-uikit-inverse-color: #fff;
+  --ui-suite-uikit-inverse-muted-color: #ffffffd9;
+  --ui-suite-uikit-inverse-form-border-color: #fff9;
+
+  /* Backgrounds and borders. */
+  --ui-suite-uikit-global-background: #fff;
+  --ui-suite-uikit-global-muted-background: #f8f8f8;
+  --ui-suite-uikit-global-muted-background-hover: #ebebeb;
   --ui-suite-uikit-global-primary-background: #0f5695;
   --ui-suite-uikit-global-primary-background-hover: #093f6e;
-  --ui-suite-uikit-global-danger-background: #a71534;
-  --ui-suite-uikit-global-danger-background-hover: #861029;
+  --ui-suite-uikit-global-secondary-background: #222;
+  --ui-suite-uikit-global-secondary-background-hover: #151515;
   --ui-suite-uikit-global-success-background: #0f6047;
   --ui-suite-uikit-global-warning-background: #754c0f;
-  --ui-suite-uikit-global-inverse-color: #fff;
+  --ui-suite-uikit-global-danger-background: #a71534;
+  --ui-suite-uikit-global-danger-background-hover: #861029;
+  --ui-suite-uikit-global-border: #e5e5e5;
   --ui-suite-uikit-form-border-color: #767676;
-  --uk-inverse-color: #fff;
-  --uk-inverse-muted-color: rgb(255, 255, 255, 0.85);
-  --uk-inverse-form-border-color: rgb(255, 255, 255, 0.6);
+
+  /* Alerts. */
+  --ui-suite-uikit-alert-primary-background: #d8eafc;
+  --ui-suite-uikit-alert-success-background: #edfbf6;
+  --ui-suite-uikit-alert-warning-background: #fff6ee;
+  --ui-suite-uikit-alert-danger-background: #fef4f6;
   --ui-suite-uikit-alert-primary-color: #104e7d;
   --ui-suite-uikit-alert-success-color: #146047;
   --ui-suite-uikit-alert-warning-color: #804511;
   --ui-suite-uikit-alert-danger-color: #a41433;
-  --ui-suite-uikit-code-color: #9e1f3a;
+
+  /* Focus ring and target size (WCAG 2.4.13 and 2.5.5). */
+  --ui-suite-uikit-focus-color: #333;
+  --ui-suite-uikit-focus-width: 2px;
+  --ui-suite-uikit-focus-offset: 2px;
+  --ui-suite-uikit-focus-halo-width: 4px;
+  --ui-suite-uikit-target-size: 44px;
+  --ui-suite-uikit-control-height: 44px;
+
+  /* Text size and spacing. */
+  --ui-suite-uikit-global-font-size: 16px;
+  --ui-suite-uikit-global-line-height: 1.5;
+  --ui-suite-uikit-global-small-margin: 10px;
+  --ui-suite-uikit-global-margin: 20px;
+  --ui-suite-uikit-global-medium-margin: 40px;
+  --ui-suite-uikit-global-large-margin: 70px;
+
+  /* Corners and shadows. */
+  --ui-suite-uikit-global-border-radius: 0;
+  --ui-suite-uikit-global-small-box-shadow: 0 2px 8px rgb(0, 0, 0, 0.08);
+  --ui-suite-uikit-global-medium-box-shadow: 0 5px 15px rgb(0, 0, 0, 0.08);
+  --ui-suite-uikit-global-large-box-shadow: 0 14px 25px rgb(0, 0, 0, 0.16);
+  --ui-suite-uikit-global-xlarge-box-shadow: 0 28px 50px rgb(0, 0, 0, 0.16);
+  --ui-suite-uikit-dropdown-box-shadow: 0 5px 12px rgb(0, 0, 0, 0.15);
 }
 
 /**
- * Dark color mode: redefine the UIkit design tokens.
+ * Dark color mode: redefine the color tokens.
  *
  * The "Color mode" theme setting prints data-theme="dark" or "light" on the
  * html element; "Follow the operating system" prints none, and the media
- * query below picks the mode of the system.
+ * query below picks the mode of the system. The dark values saved in UI Skins
+ * are printed for both, see SystemDarkMode.
  *
  * ":root" in the selector keeps these values above the light ones printed by
- * UI Skins. The text colours of primary, success, warning and danger get
- * their own tokens: the backgrounds stay dark behind white text, the text is
- * light on the dark page.
+ * UI Skins. The backgrounds of primary, success, warning and danger stay dark
+ * behind white text, their text colors are light on the dark page.
  */
 :root[data-theme="dark"] {
-  --ui-suite-uikit-global-color: rgb(255, 255, 255, 0.7);
+  --ui-suite-uikit-global-color: #ffffffb3;
   --ui-suite-uikit-global-emphasis-color: #fff;
-  --ui-suite-uikit-global-muted-color: rgb(255, 255, 255, 0.72);
+  --ui-suite-uikit-global-muted-color: #ffffffb8;
   --ui-suite-uikit-global-inverse-color: #fff;
   --ui-suite-uikit-global-link-color: #85c0f9;
   --ui-suite-uikit-global-link-hover-color: #b5d8fc;
@@ -68,8 +116,9 @@
   --ui-suite-uikit-global-muted-background-hover: #2e2e2e;
   --ui-suite-uikit-global-secondary-background: #000;
   --ui-suite-uikit-global-secondary-background-hover: #0a0a0a;
-  --ui-suite-uikit-global-border: rgb(255, 255, 255, 0.15);
+  --ui-suite-uikit-global-border: #ffffff26;
   --ui-suite-uikit-form-border-color: #787878;
+  --ui-suite-uikit-focus-color: #fff;
   --ui-suite-uikit-alert-primary-background: #16324f;
   --ui-suite-uikit-alert-success-background: #103b2b;
   --ui-suite-uikit-alert-warning-background: #4a2f19;
@@ -85,9 +134,9 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ui-suite-uikit-global-color: rgb(255, 255, 255, 0.7);
+    --ui-suite-uikit-global-color: #ffffffb3;
     --ui-suite-uikit-global-emphasis-color: #fff;
-    --ui-suite-uikit-global-muted-color: rgb(255, 255, 255, 0.72);
+    --ui-suite-uikit-global-muted-color: #ffffffb8;
     --ui-suite-uikit-global-inverse-color: #fff;
     --ui-suite-uikit-global-link-color: #85c0f9;
     --ui-suite-uikit-global-link-hover-color: #b5d8fc;
@@ -100,8 +149,9 @@
     --ui-suite-uikit-global-muted-background-hover: #2e2e2e;
     --ui-suite-uikit-global-secondary-background: #000;
     --ui-suite-uikit-global-secondary-background-hover: #0a0a0a;
-    --ui-suite-uikit-global-border: rgb(255, 255, 255, 0.15);
+    --ui-suite-uikit-global-border: #ffffff26;
     --ui-suite-uikit-form-border-color: #787878;
+    --ui-suite-uikit-focus-color: #fff;
     --ui-suite-uikit-alert-primary-background: #16324f;
     --ui-suite-uikit-alert-success-background: #103b2b;
     --ui-suite-uikit-alert-warning-background: #4a2f19;
@@ -118,9 +168,6 @@
 
 /**
  * The UIkit names of the tokens UI Skins can change.
- *
- * A token the theme leaves unset makes its UIkit name invalid, so the uses
- * fall back to their UIkit default, as before.
  */
 :root {
   --uk-global-color: var(--ui-suite-uikit-global-color);
@@ -133,33 +180,20 @@
   --uk-global-success-color: var(--ui-suite-uikit-global-success-color);
   --uk-global-warning-color: var(--ui-suite-uikit-global-warning-color);
   --uk-global-danger-color: var(--ui-suite-uikit-global-danger-color);
+  --uk-inverse-color: var(--ui-suite-uikit-inverse-color);
+  --uk-inverse-muted-color: var(--ui-suite-uikit-inverse-muted-color);
+  --uk-inverse-form-border-color: var(--ui-suite-uikit-inverse-form-border-color);
   --uk-global-background: var(--ui-suite-uikit-global-background);
   --uk-global-muted-background: var(--ui-suite-uikit-global-muted-background);
-  --uk-global-muted-background-hover: var(
-    --ui-suite-uikit-global-muted-background-hover
-  );
-  --uk-global-primary-background: var(
-    --ui-suite-uikit-global-primary-background
-  );
-  --uk-global-primary-background-hover: var(
-    --ui-suite-uikit-global-primary-background-hover
-  );
-  --uk-global-secondary-background: var(
-    --ui-suite-uikit-global-secondary-background
-  );
-  --uk-global-secondary-background-hover: var(
-    --ui-suite-uikit-global-secondary-background-hover
-  );
-  --uk-global-success-background: var(
-    --ui-suite-uikit-global-success-background
-  );
-  --uk-global-warning-background: var(
-    --ui-suite-uikit-global-warning-background
-  );
+  --uk-global-muted-background-hover: var(--ui-suite-uikit-global-muted-background-hover);
+  --uk-global-primary-background: var(--ui-suite-uikit-global-primary-background);
+  --uk-global-primary-background-hover: var(--ui-suite-uikit-global-primary-background-hover);
+  --uk-global-secondary-background: var(--ui-suite-uikit-global-secondary-background);
+  --uk-global-secondary-background-hover: var(--ui-suite-uikit-global-secondary-background-hover);
+  --uk-global-success-background: var(--ui-suite-uikit-global-success-background);
+  --uk-global-warning-background: var(--ui-suite-uikit-global-warning-background);
   --uk-global-danger-background: var(--ui-suite-uikit-global-danger-background);
-  --uk-global-danger-background-hover: var(
-    --ui-suite-uikit-global-danger-background-hover
-  );
+  --uk-global-danger-background-hover: var(--ui-suite-uikit-global-danger-background-hover);
   --uk-global-border: var(--ui-suite-uikit-global-border);
   --uk-form-border-color: var(--ui-suite-uikit-form-border-color);
   --uk-alert-primary-background: var(--ui-suite-uikit-alert-primary-background);
@@ -167,6 +201,18 @@
   --uk-alert-warning-background: var(--ui-suite-uikit-alert-warning-background);
   --uk-alert-danger-background: var(--ui-suite-uikit-alert-danger-background);
   --uk-global-font-family: var(--ui-suite-uikit-global-font-family);
+  --uk-global-font-size: var(--ui-suite-uikit-global-font-size);
+  --uk-global-line-height: var(--ui-suite-uikit-global-line-height);
+  --uk-global-small-margin: var(--ui-suite-uikit-global-small-margin);
+  --uk-global-margin: var(--ui-suite-uikit-global-margin);
+  --uk-global-medium-margin: var(--ui-suite-uikit-global-medium-margin);
+  --uk-global-large-margin: var(--ui-suite-uikit-global-large-margin);
+  --uk-global-border-radius: var(--ui-suite-uikit-global-border-radius);
+  --uk-global-small-box-shadow: var(--ui-suite-uikit-global-small-box-shadow);
+  --uk-global-medium-box-shadow: var(--ui-suite-uikit-global-medium-box-shadow);
+  --uk-global-large-box-shadow: var(--ui-suite-uikit-global-large-box-shadow);
+  --uk-global-xlarge-box-shadow: var(--ui-suite-uikit-global-xlarge-box-shadow);
+  --uk-dropdown-box-shadow: var(--ui-suite-uikit-dropdown-box-shadow);
 }
 
 /* Skip link and visually hidden helpers from Drupal core. */
@@ -287,21 +333,24 @@
 /**
  * Links inside running text.
  *
- * Colour alone does not distinguish them, so the links of the content and
+ * Color alone does not distinguish them, so the links of the content and
  * the footer carry an underline. Buttons, icons, the logo and the menus
- * keep their own styling.
+ * keep their own styling. Chained :not() keeps the rule above the link rules
+ * of UIkit.
  */
+/* stylelint-disable selector-not-notation */
 main a:not(.uk-button):not(.uk-icon-link):not(.uk-icon-button):not(.uk-logo):not(.uk-totop):not([class*="uk-nav"]),
 footer a:not(.uk-button):not(.uk-icon-link):not(.uk-icon-button):not(.uk-logo):not(.uk-totop) {
   text-decoration: underline;
 }
+/* stylelint-enable selector-not-notation */
 
 /**
  * Alert text.
  *
- * UIkit prints the alert text in the colour of its own variant, which is
- * between 1.8:1 and 3.2:1 on the alert background. The theme colours reach
- * 7:1 in both colour modes. The links inside an alert follow the text of
+ * UIkit prints the alert text in the color of its own variant, which is
+ * between 1.8:1 and 3.2:1 on the alert background. The theme colors reach
+ * 7:1 in both color modes. The links inside an alert follow the text of
  * the alert.
  */
 .uk-alert-primary {
@@ -325,13 +374,15 @@ footer a:not(.uk-button):not(.uk-icon-link):not(.uk-icon-button):not(.uk-logo):n
   color: inherit;
 }
 
+/* stylelint-disable selector-not-notation */
 .uk-alert.uk-alert a:not(.uk-button):not(.uk-alert-close),
 .uk-alert.uk-alert a:not(.uk-button):not(.uk-alert-close):hover {
   text-decoration: underline;
   color: inherit;
 }
+/* stylelint-enable selector-not-notation */
 
-/* The muted text on a coloured section keeps the inverse colour. */
+/* The muted text on a colored section keeps the inverse color. */
 .uk-light .uk-text-muted,
 .uk-section-primary:not(.uk-preserve-color) .uk-text-muted,
 .uk-card-primary:not(.uk-preserve-color) .uk-text-muted,
@@ -340,7 +391,9 @@ footer a:not(.uk-button):not(.uk-icon-link):not(.uk-icon-button):not(.uk-logo):n
   color: var(--uk-inverse-muted-color);
 }
 
-/* UIkit prints emphasis and inline code in the danger colour. */
+/* UIkit prints emphasis and inline code in the danger color: the emphasis
+   keeps the color of its text, like the placeholders of Drupal messages and
+   descriptions. */
 em,
 .uk-text-emphasis {
   color: inherit;
