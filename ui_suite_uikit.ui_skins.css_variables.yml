@@ -4,19 +4,24 @@
 # 3:1 for the borders of the form controls. The ':root[data-theme="dark"]'
 # scope is the dark color mode. Check a new value against every background it
 # sits on, see the "Accessibility" section of README.md.
+#
+# The ids carry the theme name: the ids of UI Skins are shared by every theme
+# of the site, and another theme (the administration theme, a theme generated
+# from this one) declares the UIkit names too. drupal.css maps each one to its
+# UIkit name (ui-suite-uikit-global-color to --uk-global-color).
 
 ################################################################################
 # Text colors.
 ################################################################################
 
-uk-global-color:
+ui-suite-uikit-global-color:
   category: "Text colors"
   label: "Text color"
   type: "color"
   default_values:
     ":root": "#444444"
 
-uk-global-emphasis-color:
+ui-suite-uikit-global-emphasis-color:
   category: "Text colors"
   label: "Emphasis color (headings, active items)"
   type: "color"
@@ -24,21 +29,21 @@ uk-global-emphasis-color:
     ":root": "#333333"
     ':root[data-theme="dark"]': "#ffffff"
 
-uk-global-muted-color:
+ui-suite-uikit-global-muted-color:
   category: "Text colors"
   label: "Muted color"
   type: "color"
   default_values:
     ":root": "#545454"
 
-uk-global-inverse-color:
+ui-suite-uikit-global-inverse-color:
   category: "Text colors"
   label: "Inverse color (text on colored backgrounds)"
   type: "color"
   default_values:
     ":root": "#ffffff"
 
-uk-global-link-color:
+ui-suite-uikit-global-link-color:
   category: "Text colors"
   label: "Link color"
   type: "color"
@@ -46,7 +51,7 @@ uk-global-link-color:
     ":root": "#0f5695"
     ':root[data-theme="dark"]': "#85c0f9"
 
-uk-global-link-hover-color:
+ui-suite-uikit-global-link-hover-color:
   category: "Text colors"
   label: "Link hover color"
   type: "color"
@@ -54,7 +59,7 @@ uk-global-link-hover-color:
     ":root": "#093f6e"
     ':root[data-theme="dark"]': "#b5d8fc"
 
-uk-global-primary-color:
+ui-suite-uikit-global-primary-color:
   category: "Text colors"
   label: "Primary text color (unset: the primary background)"
   type: "color"
@@ -62,7 +67,7 @@ uk-global-primary-color:
     ":root": "#0f5695"
     ':root[data-theme="dark"]': "#85c0f9"
 
-uk-global-success-color:
+ui-suite-uikit-global-success-color:
   category: "Text colors"
   label: "Success text color (unset: the success background)"
   type: "color"
@@ -70,7 +75,7 @@ uk-global-success-color:
     ":root": "#0f6047"
     ':root[data-theme="dark"]': "#35d398"
 
-uk-global-warning-color:
+ui-suite-uikit-global-warning-color:
   category: "Text colors"
   label: "Warning text color (unset: the warning background)"
   type: "color"
@@ -78,7 +83,7 @@ uk-global-warning-color:
     ":root": "#754c0f"
     ':root[data-theme="dark"]': "#faa969"
 
-uk-global-danger-color:
+ui-suite-uikit-global-danger-color:
   category: "Text colors"
   label: "Danger text color (unset: the danger background)"
   type: "color"
@@ -90,7 +95,7 @@ uk-global-danger-color:
 # Backgrounds.
 ################################################################################
 
-uk-global-background:
+ui-suite-uikit-global-background:
   category: "Backgrounds"
   label: "Background"
   type: "color"
@@ -98,7 +103,7 @@ uk-global-background:
     ":root": "#ffffff"
     ':root[data-theme="dark"]': "#171717"
 
-uk-global-muted-background:
+ui-suite-uikit-global-muted-background:
   category: "Backgrounds"
   label: "Muted background"
   type: "color"
@@ -106,7 +111,7 @@ uk-global-muted-background:
     ":root": "#f8f8f8"
     ':root[data-theme="dark"]': "#242424"
 
-uk-global-muted-background-hover:
+ui-suite-uikit-global-muted-background-hover:
   category: "Backgrounds"
   label: "Muted background (hover)"
   type: "color"
@@ -114,21 +119,21 @@ uk-global-muted-background-hover:
     ":root": "#ebebeb"
     ':root[data-theme="dark"]': "#2e2e2e"
 
-uk-global-primary-background:
+ui-suite-uikit-global-primary-background:
   category: "Backgrounds"
   label: "Primary background"
   type: "color"
   default_values:
     ":root": "#0f5695"
 
-uk-global-primary-background-hover:
+ui-suite-uikit-global-primary-background-hover:
   category: "Backgrounds"
   label: "Primary background (hover)"
   type: "color"
   default_values:
     ":root": "#093f6e"
 
-uk-global-secondary-background:
+ui-suite-uikit-global-secondary-background:
   category: "Backgrounds"
   label: "Secondary background"
   type: "color"
@@ -136,7 +141,7 @@ uk-global-secondary-background:
     ":root": "#222222"
     ':root[data-theme="dark"]': "#000000"
 
-uk-global-secondary-background-hover:
+ui-suite-uikit-global-secondary-background-hover:
   category: "Backgrounds"
   label: "Secondary background (hover)"
   type: "color"
@@ -144,42 +149,42 @@ uk-global-secondary-background-hover:
     ":root": "#151515"
     ':root[data-theme="dark"]': "#0a0a0a"
 
-uk-global-success-background:
+ui-suite-uikit-global-success-background:
   category: "Backgrounds"
   label: "Success background"
   type: "color"
   default_values:
     ":root": "#0f6047"
 
-uk-global-warning-background:
+ui-suite-uikit-global-warning-background:
   category: "Backgrounds"
   label: "Warning background"
   type: "color"
   default_values:
     ":root": "#754c0f"
 
-uk-global-danger-background:
+ui-suite-uikit-global-danger-background:
   category: "Backgrounds"
   label: "Danger background"
   type: "color"
   default_values:
     ":root": "#a71534"
 
-uk-global-danger-background-hover:
+ui-suite-uikit-global-danger-background-hover:
   category: "Backgrounds"
   label: "Danger background (hover)"
   type: "color"
   default_values:
     ":root": "#861029"
 
-uk-global-border:
+ui-suite-uikit-global-border:
   category: "Backgrounds"
   label: "Border color"
   type: "color"
   default_values:
     ":root": "#e5e5e5"
 
-uk-form-border-color:
+ui-suite-uikit-form-border-color:
   category: "Backgrounds"
   label: "Form control border color"
   type: "color"
@@ -188,10 +193,24 @@ uk-form-border-color:
     ':root[data-theme="dark"]': "#787878"
 
 ################################################################################
+# Focus.
+################################################################################
+
+# Unset, the ring takes the emphasis color. Keep 3:1 against the page
+# background in both color modes (WCAG 2.4.13).
+ui-suite-uikit-focus-color:
+  category: "Focus"
+  label: "Focus ring"
+  type: "color"
+  default_values:
+    ":root": "#333333"
+    ':root[data-theme="dark"]': "#ffffff"
+
+################################################################################
 # Alerts.
 ################################################################################
 
-uk-alert-primary-background:
+ui-suite-uikit-alert-primary-background:
   category: "Alerts"
   label: "Primary alert background"
   type: "color"
@@ -199,7 +218,7 @@ uk-alert-primary-background:
     ":root": "#d8eafc"
     ':root[data-theme="dark"]': "#16324f"
 
-uk-alert-success-background:
+ui-suite-uikit-alert-success-background:
   category: "Alerts"
   label: "Success alert background"
   type: "color"
@@ -207,7 +226,7 @@ uk-alert-success-background:
     ":root": "#edfbf6"
     ':root[data-theme="dark"]': "#103b2b"
 
-uk-alert-warning-background:
+ui-suite-uikit-alert-warning-background:
   category: "Alerts"
   label: "Warning alert background"
   type: "color"
@@ -215,7 +234,7 @@ uk-alert-warning-background:
     ":root": "#fff6ee"
     ':root[data-theme="dark"]': "#4a2f19"
 
-uk-alert-danger-background:
+ui-suite-uikit-alert-danger-background:
   category: "Alerts"
   label: "Danger alert background"
   type: "color"
@@ -227,7 +246,7 @@ uk-alert-danger-background:
 # Typography.
 ################################################################################
 
-uk-global-font-family:
+ui-suite-uikit-global-font-family:
   category: "Typography"
   label: "Font family"
   type: "textfield"

@@ -112,15 +112,21 @@ templates with their own components.
 - `ui_suite_uikit.ui_styles.yml`: UIkit utilities (text, typography, colors, inverse, margin, padding, width,
   height, flex, position, visibility, box shadow, border radius, animation…) available in UI Styles and in the
   Display Builder *Styles* panel.
-- `ui_suite_uikit.ui_skins.css_variables.yml`: the UIkit global colors and font family as CSS variables,
-  editable in *Appearance > CSS variables* and in the Display Builder *Design tokens* panel.
+- `ui_suite_uikit.ui_skins.css_variables.yml`: the UIkit global colors, the focus ring and the font family as
+  CSS variables, editable in *Appearance > CSS variables* and in the Display Builder *Design tokens* panel.
+  Their ids carry the theme name (`ui-suite-uikit-global-color`, not `uk-global-color`): UI Skins ids are
+  shared by every theme of the site, so the administration theme, or a theme generated from this one, never
+  replaces them. `assets/css/drupal.css` maps each one to its UIkit name (`--uk-global-color`).
 - `assets/css/tokens.css` is generated from the UIkit CSS (`npm run build:tokens`): every declaration using a
   UIkit global color falls back to the UIkit value. `assets/css/drupal.css` sets the values of the theme, for
-  the light mode on `:root` and for the dark mode on `:root[data-theme="dark"]`.
+  the light mode on `:root` and for the dark mode on `:root[data-theme="dark"]` (and in a
+  `prefers-color-scheme: dark` media query when the color mode follows the operating system).
 - Text printed in the primary, success, warning or danger colour uses `--uk-global-{primary,success,warning,danger}-color`,
   which falls back to the background of the same name. The form controls use `--uk-form-border-color`, the
   inverse areas (`.uk-light`) `--uk-inverse-color` and `--uk-inverse-muted-color`.
-- `ui_suite_uikit.ui_skins.themes.yml`: *Light* and *Dark* color modes (`data-theme` attribute on `html`).
+- `ui_suite_uikit.ui_skins.themes.yml`: *Light* and *Dark* color modes (`ui_suite_uikit_light` and
+  `ui_suite_uikit_dark`, printing `data-theme="light"` or `"dark"` on `html`). The *Color mode* theme setting
+  picks one, and stores it for UI Skins too: UI Skins does not show a second control for it.
   The CSS variables form has a `:root[data-theme="dark"]` scope for the dark values.
 
 ## Accessibility
@@ -171,14 +177,19 @@ A theme can not decide everything. Check these on each site, they depend on the 
 
 ## Icons
 
-The 162 UIkit icons are shipped in `icons/uikit` and declared as the `uikit` icon pack
-(`ui_suite_uikit.icons.yml`), rendered as inline SVG with a `ratio` setting.
+The 162 UIkit icons are shipped in `icons/uikit` and declared as the `ui_suite_uikit` icon pack
+(`ui_suite_uikit.icons.yml`), rendered as inline SVG with a `ratio` setting. The pack id carries the theme
+name, like the UI Skins ids: a theme generated from this one ships its own pack. The earlier `uikit` id
+is kept, so content and layouts saved with it keep their icons.
 
 ## Theme settings
 
 - UIkit library source: CDN or local.
 - Sticky navbar.
 - HTMX navigation (enabled by default).
+- Color mode: light (the default), dark, or follow the operating system, as in UIkit Admin. The setting prints
+  `data-theme` on `html`; with *Follow the operating system* it prints none and the stylesheet follows
+  `prefers-color-scheme`.
 
 ## HTMX navigation
 
@@ -195,6 +206,10 @@ There is no custom JavaScript: the rest is rendered on the server by `src/Hook/H
   navigation.
 - On boosted requests the main content anchor gets `autofocus`, which HTMX focuses after the swap, and the
   new page title is announced in a polite live region updated with `hx-select-oob`.
+- A boosted request sends the theme of the current page, and Drupal core would render the next page in it.
+  When the page belongs to another theme on a full load (the sign-in screens that Web Admin shows in UIkit
+  Admin, a dashboard in the administration theme), the response is an `HX-Redirect`: HTMX loads that page in
+  full, so a URL always shows the same theme.
 
 ## Mapping with the UIkit design system
 

@@ -8,6 +8,7 @@ use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Form\FormStateInterface;
@@ -31,6 +32,14 @@ class ThemeHooks {
    * The ID of the offcanvas printing the "Offcanvas" region.
    */
   public const string OFFCANVAS_ID = 'ui-suite-uikit-offcanvas';
+
+  /**
+   * The color mode of a site that has not picked one.
+   *
+   * The front end stays light until the site picks another mode: the
+   * operating system of a visitor does not change the brand by surprise.
+   */
+  public const string COLOR_MODE = 'light';
 
   public function __construct(
     protected ThemeSettingsProvider $themeSettingsProvider,
@@ -70,8 +79,9 @@ class ThemeHooks {
   public function formSystemThemeSettingsAlter(array &$form, FormStateInterface $form_state): void {
     // The theme settings form calls theme alters directly, without a form ID,
     // and the form alter runs again when this theme is also the active theme:
-    // add the settings only once. See issue #943212.
-    if (isset($form['ui_suite_uikit'])) {
+    // add the settings only once, and only to the form of this theme, never
+    // to the form of another theme. See issue #943212.
+    if (isset($form['ui_suite_uikit']) || ($form['config_key']['#value'] ?? NULL) !== 'ui_suite_uikit.settings') {
       return;
     }
 
@@ -100,6 +110,23 @@ class ThemeHooks {
       '#description' => $this->t('Links are loaded with HTMX: only the page content is swapped, without full page reloads. Forms, administration pages and files keep the normal navigation.'),
       '#default_value' => $this->themeSettingsProvider->getSetting('htmx_navigation', 'ui_suite_uikit') ?? TRUE,
     ];
+    $form['ui_suite_uikit']['color_mode'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Color mode'),
+      '#description' => $this->t('Both modes meet WCAG 2.2 AAA. "Follow the operating system" shows the dark mode to the visitors whose system asks for it.'),
+      '#default_value' => $this->colorMode(),
+      '#options' => [
+        'auto' => $this->t('Follow the operating system'),
+        'light' => $this->t('Light'),
+        'dark' => $this->t('Dark'),
+      ],
+    ];
+    // UI Skins offers the color modes of this theme as well: a second control
+    // for the same attribute. The setting above is the one control, and it is
+    // stored for UI Skins too, so both agree. The theme settings form calls
+    // this alter before the form alter of UI Skins: hide its control once the
+    // form is built.
+    $form['#after_build'][] = [static::class, 'hideUiSkinsColorMode'];
     $form['#submit'][] = [static::class, 'themeSettingsSubmit'];
   }
 
@@ -108,6 +135,78 @@ class ThemeHooks {
    */
   public static function themeSettingsSubmit(array &$form, FormStateInterface $form_state): void {
     Cache::invalidateTags(['library_info']);
+  }
+
+  /**
+   * Submit callback: stores the color mode for UI Skins too.
+   */
+  public static function colorModeSubmit(array &$form, FormStateInterface $form_state): void {
+    static::syncUiSkinsColorMode(\Drupal::configFactory()->getEditable('ui_suite_uikit.settings'));
+  }
+
+  /**
+   * After build callback: one color mode control.
+   *
+   * Hides the color mode control of UI Skins, and stores the color mode for
+   * UI Skins once the settings are saved. Both are done here, once the form
+   * is built: the theme settings form calls the alter of the theme it shows
+   * before the form alter of UI Skins, and before it adds its own submit
+   * handler, which saves the settings.
+   */
+  public static function hideUiSkinsColorMode(array $form, FormStateInterface $form_state): array {
+    if (isset($form['third_party_settings']['ui_skins']['theme'])) {
+      $form['third_party_settings']['ui_skins']['theme']['#access'] = FALSE;
+    }
+    $submit = [static::class, 'colorModeSubmit'];
+    if (!\in_array($submit, $form['#submit'] ?? [], TRUE)) {
+      $form['#submit'][] = $submit;
+    }
+    return $form;
+  }
+
+  /**
+   * Stores the color mode of the theme settings as the UI Skins theme.
+   *
+   * "Follow the operating system" clears it: the stylesheet follows the
+   * system when the html element has no data-theme.
+   *
+   * @param \Drupal\Core\Config\Config $config
+   *   The editable settings of the theme.
+   */
+  public static function syncUiSkinsColorMode(Config $config): void {
+    $mode = $config->get('color_mode') ?: static::COLOR_MODE;
+    if (\in_array($mode, ['light', 'dark'], TRUE)) {
+      $config->set('third_party_settings.ui_skins.theme', 'ui_suite_uikit_' . $mode);
+    }
+    else {
+      $config->clear('third_party_settings.ui_skins.theme');
+    }
+    $config->save();
+  }
+
+  /**
+   * The color mode of the theme settings: auto, light or dark.
+   */
+  protected function colorMode(): string {
+    $mode = $this->themeSettingsProvider->getSetting('color_mode', 'ui_suite_uikit');
+    return \in_array($mode, ['auto', 'light', 'dark'], TRUE) ? $mode : static::COLOR_MODE;
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for 'html'.
+   *
+   * The color mode reaches the stylesheet as the data-theme attribute of the
+   * html element, like in UIkit Admin: none when the operating system
+   * decides.
+   */
+  #[Hook('preprocess_html')]
+  public function preprocessHtml(array &$variables): void {
+    $mode = $this->colorMode();
+    if ($mode !== 'auto') {
+      $variables['html_attributes']->setAttribute('data-theme', $mode);
+    }
+    $variables['#cache']['tags'][] = 'config:ui_suite_uikit.settings';
+    $this->htmxNavigationHooks->preprocessHtml($variables);
   }
 
   /**

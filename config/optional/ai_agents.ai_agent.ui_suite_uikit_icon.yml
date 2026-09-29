@@ -41,7 +41,7 @@ system_prompt: |
       standalone action, typically a row of social links or a card footer.
   - Props (exactly three declared, plus the standard attributes):
     - `icon` (type `ui-patterns://icon`) — the glyph, a MAPPING
-      `{pack_id, icon_id}`. The theme ships the `uikit` pack; take `icon_id`
+      `{pack_id, icon_id}`. The theme ships the `ui_suite_uikit` pack; take `icon_id`
       from the icon catalogue and never invent one. The pack also accepts
       `settings`: `ratio` (number, 0.5–10, step 0.5, default 1 — 1 = 20px,
       2 = 40px) and `alt` (string; leave empty for a decorative icon).

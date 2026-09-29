@@ -249,29 +249,64 @@ When(/^I set the UI Skins CSS variable "([^"]*)" of the UIkit theme to "([^"]*)"
 });
 
 /**
- * Skips the scenario when the theme settings do not offer the color modes.
+ * Reads the theme that rendered an HTML page, from its drupalSettings.
  *
- * UI Skins lists the color modes of the theme and of the modules: another
- * theme declaring color modes with the same machine names hides them.
+ * @param {string} html
+ *   The HTML of the page.
  *
- * Example: Given the theme settings of the UIkit theme offer the UI Skins color modes
+ * @return {string|undefined}
+ *   The machine name of the theme.
  */
-Given(/^the theme settings of the UIkit theme offer the UI Skins color modes$/, async function () {
-  await this.page.goto(`${this.launchUrl}/admin/appearance/settings/ui_suite_uikit`);
-  return await this.page.locator('select[name="theme"]').count() ? undefined : 'skipped';
+function renderingTheme(html) {
+  const match = html.match(/<script[^>]*data-drupal-selector="drupal-settings-json"[^>]*>([\s\S]*?)<\/script>/);
+  return match ? JSON.parse(match[1]).ajaxPageState?.theme : undefined;
+}
+
+/**
+ * Skips the scenario unless another theme renders the page on a full load.
+ *
+ * Example: Given the "/user/login" page is rendered by another theme than the UIkit theme
+ */
+Given(/^the "([^"]*)" page is rendered by another theme than the UIkit theme$/, async function (pagePath) {
+  const response = await this.page.request.get(`${this.launchUrl}${pagePath}`);
+  const theme = renderingTheme(await response.text());
+  return theme && theme !== 'ui_suite_uikit' ? undefined : 'skipped';
 });
 
 /**
- * Selects a UI Skins theme (color mode) in the theme settings.
- *
- * Example: When I select the UI Skins theme "Dark" for the UIkit theme
+ * Example: Then the current page should not be rendered by the UIkit theme
  */
-When(/^I select the UI Skins theme "([^"]*)" for the UIkit theme$/, async function (label) {
+Then(/^the current page should (not )?be rendered by the UIkit theme$/, async function (not) {
+  await this.page.waitForLoadState('load');
+  const theme = await this.page.evaluate(() => window.drupalSettings?.ajaxPageState?.theme);
+  if (not) {
+    assert.notStrictEqual(theme, 'ui_suite_uikit', 'The page is rendered by the UIkit theme.');
+  }
+  else {
+    assert.strictEqual(theme, 'ui_suite_uikit', `The page is rendered by ${theme}.`);
+  }
+});
+
+/**
+ * Sets the "Color mode" theme setting of the theme.
+ *
+ * Example: When I set the color mode of the UIkit theme to "Follow the operating system"
+ */
+When(/^I set the color mode of the UIkit theme to "([^"]*)"$/, async function (label) {
   await this.page.goto(`${this.launchUrl}/admin/appearance/settings/ui_suite_uikit`);
-  await this.page.locator('select[name="theme"]').selectOption({ label });
+  await this.page.getByRole('radio', { name: label, exact: true }).check();
   await this.page.getByRole('button', { name: 'Save configuration' }).click();
   await this.page.waitForLoadState('load');
   drush('cache:rebuild');
+});
+
+/**
+ * Emulates the color scheme the operating system of the visitor asks for.
+ *
+ * Example: Given the operating system asks for the dark color scheme
+ */
+Given(/^the operating system asks for the (dark|light) color scheme$/, async function (scheme) {
+  await this.page.emulateMedia({ colorScheme: scheme });
 });
 
 /**

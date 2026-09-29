@@ -12,3 +12,11 @@ ui_suite_uikit.settings:
     htmx_navigation:
       type: boolean
       label: "HTMX navigation"
+    color_mode:
+      type: string
+      label: "Color mode"
+      constraints:
+        Choice:
+          - auto
+          - light
+          - dark

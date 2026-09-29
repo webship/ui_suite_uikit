@@ -4,7 +4,8 @@ Feature: HTMX navigation
   So that the navigation is fast and the UIkit components keep working
 
   Scenario: The links of the page are boosted by HTMX
-    Given I am an anonymous user
+    Given the "/user/login" page is rendered by the UIkit theme
+      And I am an anonymous user
      When I go to the homepage
      Then "[data-off-canvas-main-canvas]" should have attribute "hx-boost" with value "true"
       And the HTMX library should be loaded
@@ -28,6 +29,17 @@ Feature: HTMX navigation
       And the element "#main-content" should have the focus
       And "#ui-suite-uikit-htmx-announcer" should contain text "Log in"
       And "#ui-suite-uikit-htmx-announcer" should have attribute "aria-live" with value "polite"
+
+  Scenario: A page another theme renders is loaded in full
+    Given the "/user/login" page is rendered by another theme than the UIkit theme
+      And I am an anonymous user
+     When I go to the homepage
+      And I mark the current page
+      And I click on the element ".uk-navbar-right .uk-navbar-nav a[href*='/user/login']"
+     Then I wait until the URL contains "/user/login"
+      And the page should have been reloaded
+      And the current page should not be rendered by the UIkit theme
+      And there should be no JavaScript errors
 
   Scenario: Drupal forms keep their normal submission
     Given I am an anonymous user

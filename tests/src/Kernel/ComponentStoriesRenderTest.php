@@ -130,7 +130,7 @@ final class ComponentStoriesRenderTest extends KernelTestBase {
     $icon = $render([
       '#type' => 'component',
       '#component' => 'ui_suite_uikit:icon',
-      '#props' => ['icon' => ['pack_id' => 'uikit', 'icon_id' => 'heart', 'settings' => ['ratio' => 2]]],
+      '#props' => ['icon' => ['pack_id' => 'ui_suite_uikit', 'icon_id' => 'heart', 'settings' => ['ratio' => 2]]],
     ]);
     $this->assertStringContainsString('<svg', $icon);
     $this->assertStringContainsString('width="40"', $icon);

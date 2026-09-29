@@ -21,6 +21,9 @@ ignore:
   - '/tests/**'
   - '/tsconfig.json'
   - '/ui_suite_uikit.starterkit.yml'
+  # A generated theme starts with its settings as they are now: it has no
+  # older settings to update.
+  - '/ui_suite_uikit.post_update.php'
 no_edit:
   - '/starterkit.md'
 no_rename: []

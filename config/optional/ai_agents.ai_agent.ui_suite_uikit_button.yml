@@ -60,8 +60,8 @@ system_prompt: |
   - `disabled` (boolean) — non-interactive state. Use only when a real condition
     blocks the action, never as decoration.
   - `icon` (ui-patterns://icon) — an object `{pack_id, icon_id}`, taken from the
-    icon catalogue (the theme ships the `uikit` pack, e.g.
-    `{pack_id: uikit, icon_id: download}`). Only for icons that add meaning.
+    icon catalogue (the theme ships the `ui_suite_uikit` pack, e.g.
+    `{pack_id: ui_suite_uikit, icon_id: download}`). Only for icons that add meaning.
   - `icon_position` (enum, one of: `left`, `right`) — MATTERS ONLY when `icon`
     is set; the template defaults to `left`. Use `right` for forward or external
     movement (arrow, chevron), `left` for the type of the action (download,

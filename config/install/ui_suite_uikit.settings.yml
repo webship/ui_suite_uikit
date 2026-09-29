@@ -10,3 +10,4 @@ favicon:
 uikit_source: cdn
 navbar_sticky: true
 htmx_navigation: true
+color_mode: light

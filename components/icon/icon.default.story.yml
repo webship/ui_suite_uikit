@@ -1,7 +1,7 @@
 name: Default
 props:
   icon:
-    pack_id: uikit
+    pack_id: ui_suite_uikit
     icon_id: heart
     settings:
       ratio: 2
