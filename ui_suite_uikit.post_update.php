@@ -7,6 +7,8 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Config\MemoryStorage;
 use Drupal\ui_suite_uikit\Hook\ThemeHooks;
 
 /**
@@ -127,4 +129,32 @@ function ui_suite_uikit_post_update_sign_in_options(): void {
     }
   }
   $config->save();
+}
+
+/**
+ * Install the Display Builder profiles and the page part agents.
+ *
+ * A site that has Display Builder gets the profiles of the theme, the
+ * sign-in page layout (disabled) and the agents of the Page, Header, Footer
+ * and Sign in components. Configuration that exists is kept.
+ */
+function ui_suite_uikit_post_update_display_builder_config(): void {
+  $path = \Drupal::service('extension.list.theme')->getPath('ui_suite_uikit') . '/config/optional';
+  $names = [
+    'display_builder.profile.ui_suite_uikit',
+    'display_builder.profile.ui_suite_uikit_sign_in',
+    'display_builder_page_layout.page_layout.ui_suite_uikit_sign_in',
+    'ai_agents.ai_agent.ui_suite_uikit_page',
+    'ai_agents.ai_agent.ui_suite_uikit_header',
+    'ai_agents.ai_agent.ui_suite_uikit_footer',
+    'ai_agents.ai_agent.ui_suite_uikit_sign_in',
+  ];
+  $source = new FileStorage($path);
+  $storage = new MemoryStorage();
+  foreach ($names as $name) {
+    if ($source->exists($name) && \Drupal::configFactory()->get($name)->isNew()) {
+      $storage->write($name, $source->read($name));
+    }
+  }
+  \Drupal::service('config.installer')->installOptionalConfig($storage);
 }

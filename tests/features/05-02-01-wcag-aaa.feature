@@ -24,12 +24,12 @@ Feature: WCAG 2.2 AAA
 
   # A lone switcher tab or description list item is a list item without its
   # list: they are checked in the Switcher and Description list components.
-  # The sign-in component is a whole page, with its own main landmark: it is
-  # checked on the sign-in screens (01-04-03-sign-in-states.feature).
+  # The sign-in and page components are whole pages, with their own main
+  # landmark: they are checked on the pages that use them.
   Scenario Outline: Every component of the library passes the WCAG AAA audit in the <mode> color mode
     Given the "ui_patterns_library" module is enabled
       And I am logged in as the Drupal administrator
-     Then every UIkit component page of the library should pass the WCAG AAA audit in the "<mode>" color mode except "switcher_tab, description_list_item, sign_in"
+     Then every UIkit component page of the library should pass the WCAG AAA audit in the "<mode>" color mode except "switcher_tab, description_list_item, sign_in, page"
 
     Examples:
       | mode  |

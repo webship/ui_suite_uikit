@@ -479,3 +479,33 @@ input[type="file"]::file-selector-button {
   background: transparent;
   font: inherit;
 }
+
+/* A navbar toggle whose offcanvas menu has no link is not printed: the menu
+   of the region can be empty. */
+body:has(.uk-offcanvas-bar:not(:has(a:not(.uk-offcanvas-close), input))) .uk-navbar-toggle[aria-controls] {
+  display: none;
+}
+
+/**
+ * The layers of Drupal over the sticky navbar (980): the bar of a content
+ * preview and the top bar of the Navigation module, with their dropdowns.
+ */
+.node-preview-container {
+  z-index: 1010;
+}
+
+.top-bar {
+  z-index: 1010;
+}
+
+/* The footer of a Display Builder page layout stays at the bottom of short
+   pages too. */
+[data-off-canvas-main-canvas]:has(> :is(footer, .uk-section-secondary):last-child) {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - var(--drupal-displace-offset-top, 0px));
+}
+
+[data-off-canvas-main-canvas] > :is(footer, .uk-section-secondary):last-child:not(:first-child) {
+  margin-block-start: auto;
+}

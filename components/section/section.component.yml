@@ -22,12 +22,16 @@ props:
   properties:
     landmark:
       title: "Page landmark"
-      description: "Mark this section as the main content of the page, so the skip link and the screen readers reach it."
+      description: "The landmark this section is for screen readers. main: the main content, the target of the skip link (one per page). header: the banner at the top of the page, with the navbar (one per page). footer: the contentinfo at the end of the page (one per page). Empty: a plain band."
       type: string
       enum:
         - main
+        - header
+        - footer
       "meta:enum":
         main: "Main content"
+        header: "Header (banner)"
+        footer: "Footer (contentinfo)"
     size:
       title: "Vertical padding"
       type: string

@@ -186,6 +186,25 @@
   gap: 0 24px;
 }
 
+/* The local tasks block of a page layout, as plain links. */
+.ui-suite-uikit-sign-in__links .uk-tab {
+  margin: 0;
+}
+
+.ui-suite-uikit-sign-in__links .uk-tab::before,
+.ui-suite-uikit-sign-in__links h2,
+.ui-suite-uikit-sign-in__links li.uk-active {
+  display: none;
+}
+
+.ui-suite-uikit-sign-in__links .uk-tab > * > a {
+  padding: 0;
+  text-transform: none;
+  color: var(--uk-global-link-color, #0f5695);
+  border: 0;
+  font-size: 1rem;
+}
+
 .ui-suite-uikit-sign-in__links a {
   display: inline-flex;
   align-items: center;

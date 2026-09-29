@@ -69,7 +69,7 @@ With [Asset Packagist](https://asset-packagist.org):
 | Interactive | Accordion, Dropdown, Modal, Offcanvas, Switcher |
 | Media | Cover, Overlay, Slider, Slideshow, Lightbox |
 | Forms | Search |
-| Page | Sign in |
+| Page | Page, Header, Footer, Sign in |
 
 Internal sub-components, used in the slots of their parent, are named between parentheses: Accordion item,
 Description list item, Lightbox item, Slideshow item, Switcher tab, Switcher panel, Table row, Table cell.
@@ -86,6 +86,26 @@ Browse them in the component library: *Appearance > UI libraries* (`/admin/appea
 - Components linked by an ID (Button or Navbar toggle → Modal or Offcanvas) use the *Toggle target* prop.
 - UIkit JavaScript initializes the components added to the page at any time, so previews and AJAX updates
   work without Drupal behaviors.
+
+### Page parts
+
+`page.html.twig` draws the page with the *Page*, *Header* and *Footer* components, and so can a Display Builder
+page layout: the header is the banner landmark with the navbar and the offcanvas menu, the footer the
+contentinfo landmark, and the page keeps the footer at the bottom of short pages. The *Section* component
+can also be the `main`, `header` or `footer` landmark of a page layout. The site branding block uses the *Logo*
+component.
+
+With Display Builder installed, the theme ships:
+
+- `display_builder.profile.ui_suite_uikit`: a profile for the front end, without the components of the
+  administration themes and the dashboards;
+- `display_builder.profile.ui_suite_uikit_sign_in` and the `ui_suite_uikit_sign_in` page layout: the sign-in
+  screens drawn with the *Sign in* component, for `/user/login`, `/user/register`, `/user/password`,
+  `/user/reset/*` and `/user/logout/confirm`. The layout ships disabled: pick it in the *Sign-in screens*
+  theme settings to enable it.
+
+A recipe imports them with `config: import: ui_suite_uikit: [...]`: a recipe does not install optional
+configuration. Existing sites get them from a post update.
 
 ### Web View Modes Inventory
 

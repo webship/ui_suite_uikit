@@ -7,6 +7,8 @@
  * Drawn with the sign_in component. The theme settings pick the layout, the
  * logo, the message, the image and whether the site header and footer show.
  *
+ * It extends page.html.twig, for its header and footer.
+ *
  * Available variables (in addition to the ones of page.html.twig):
  * - sign_in: The props of the component, and its title, messages, content,
  *   links and help.
@@ -14,51 +16,8 @@
  * @see \Drupal\ui_suite_uikit\Hook\SignInHooks::preprocessPage()
  */
 #}
-{% set header = null %}
-{% if sign_in.show_header %}
-  {% set navbar_toggle = page.offcanvas ? {
-    '#type': 'component',
-    '#component': 'ui_suite_uikit:navbar_toggle',
-    '#props': {
-      'target': offcanvas_id,
-      'attributes': {
-        'class': ['uk-hidden@m'],
-      },
-    },
-  } %}
-  {% set header %}
-    <header class="ui-suite-uikit-header">
-      {{ include('ui_suite_uikit:navbar', {
-        left: page.navbar_left,
-        center: page.navbar_center,
-        right: [page.navbar_right, navbar_toggle],
-        sticky: false,
-      }, with_context: false) }}
-    </header>
-    {% if page.offcanvas %}
-      {{ include('ui_suite_uikit:offcanvas', {
-        content: page.offcanvas,
-        offcanvas_id: offcanvas_id,
-        mode: 'push',
-        flip: true,
-        overlay: true,
-        close: true,
-      }, with_context: false) }}
-    {% endif %}
-  {% endset %}
-{% endif %}
-
-{% set footer = null %}
-{% if sign_in.show_footer and page.footer %}
-  {% set footer %}
-    <footer role="contentinfo" class="uk-section uk-section-secondary uk-section-small">
-      <div class="uk-container">
-        {{ page.footer }}
-      </div>
-    </footer>
-  {% endset %}
-{% endif %}
-
+{% extends 'page.html.twig' %}
+{% block page %}
 {{ include('ui_suite_uikit:sign_in', {
   layout: sign_in.layout,
   screen: sign_in.screen,
@@ -71,8 +30,8 @@
   image_credit: sign_in.image_credit,
   show_header: sign_in.show_header,
   show_footer: sign_in.show_footer,
-  header: header,
-  footer: footer,
+  header: sign_in.show_header ? site_header,
+  footer: sign_in.show_footer ? site_footer,
   title: {
     '#type': 'page_title',
     '#title': sign_in.title,
@@ -82,3 +41,4 @@
   links: sign_in.links,
   help: sign_in.help,
 }, with_context: false) }}
+{% endblock %}

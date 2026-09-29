@@ -6,9 +6,10 @@
   preserve_color ? 'uk-preserve-color',
 ]) %}
 {% set container = container|default('default') %}
-{# A page layout marks one section as the main content: it prints the main
-   landmark with the target of the skip link. #}
-{% set section_tag = landmark == 'main' ? 'main' : 'div' %}
+{# A page layout marks one section as the main content, the header or the
+   footer: it prints the landmark, and the main content is the target of the
+   skip link. #}
+{% set section_tag = landmark in ['main', 'header', 'footer'] ? landmark : 'div' %}
 {% if landmark == 'main' %}
   {% set attributes = attributes.setAttribute('id', 'main-content').setAttribute('tabindex', '-1') %}
 {% endif %}

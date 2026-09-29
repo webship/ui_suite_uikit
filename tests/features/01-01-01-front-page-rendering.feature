@@ -28,3 +28,14 @@ Feature: The front page is rendered with UIkit
      When I go to the homepage
      Then the computed style "font-family" of ".uk-navbar-nav > li > a" should contain "Atkinson Hyperlegible Next"
       And the computed style "background-color" of "html" should be "rgb(255, 255, 255)"
+
+  Scenario: The footer stays at the bottom of a short page
+    Given I am an anonymous user
+      And I set the viewport to 1440 by 1400
+     When I go to "/ui-suite-uikit-test-page-not-found"
+     Then the footer should reach the bottom of the window
+
+  Scenario: The bar of a content preview sits above the sticky navbar
+    Given I am an anonymous user
+     When I go to the homepage
+     Then a ".node-preview-container" bar added to the page should be above the sticky navbar
