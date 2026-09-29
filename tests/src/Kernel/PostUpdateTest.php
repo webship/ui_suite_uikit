@@ -84,4 +84,18 @@ final class PostUpdateTest extends KernelTestBase {
     $this->assertSame('system', $this->config('ui_suite_uikit.settings')->get('font_family'));
   }
 
+  /**
+   * Tests the existing sites get the options of the sign-in screens.
+   */
+  public function testSignInOptions(): void {
+    $this->config('ui_suite_uikit.settings')->set('sign_in_layout', 'end')->save();
+    ui_suite_uikit_post_update_sign_in_options();
+    $settings = $this->config('ui_suite_uikit.settings');
+    $this->assertSame('end', $settings->get('sign_in_layout'));
+    $this->assertFalse($settings->get('sign_in_header'));
+    $this->assertSame('site', $settings->get('sign_in_logo'));
+    $this->assertSame('', $settings->get('sign_in_page_layout'));
+    $this->assertSame('en', $settings->get('langcode'));
+  }
+
 }

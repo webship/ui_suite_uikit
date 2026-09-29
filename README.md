@@ -69,6 +69,7 @@ With [Asset Packagist](https://asset-packagist.org):
 | Interactive | Accordion, Dropdown, Modal, Offcanvas, Switcher |
 | Media | Cover, Overlay, Slider, Slideshow, Lightbox |
 | Forms | Search |
+| Page | Sign in |
 
 Internal sub-components, used in the slots of their parent, are named between parentheses: Accordion item,
 Description list item, Lightbox item, Slideshow item, Switcher tab, Switcher panel, Table row, Table cell.
@@ -229,6 +230,32 @@ The 162 UIkit icons are shipped in `icons/uikit` and declared as the `ui_suite_u
 name, like the UI Skins ids: a theme generated from this one ships its own pack. The earlier `uikit` id
 is kept, so content and layouts saved with it keep their icons.
 
+## Sign-in screens
+
+The log in, create account, password reset, new password and log out screens have a page of their own
+(`templates/layout/page--sign-in.html.twig`), drawn with the *Sign in* component: the form in a narrow card,
+and a brand panel with the site name, a message and an image. The page of an error on these paths, like
+`/user/register` when only administrators create accounts, is a sign-in screen too, and says so. After too
+many failed attempts, core shows a bare page: the theme draws it as the *blocked* screen
+(`maintenance-page--flood.html.twig`).
+
+The *Sign-in screens* theme settings pick:
+
+- the layout: centered, form first, brand first, brand band above or under, or spotlight;
+- whether the site header and footer show;
+- the logo (the site logo, the theme logo or none), a message, an image and its credit, and a help line;
+- a Display Builder page layout that draws the screens instead, when Display Builder page layouts are
+  installed. The chosen layout is enabled and the one chosen before is disabled.
+
+The forms work with password managers (`autocomplete`), the keyboard starts at the skip link, the fields and
+buttons use 16px text and 44px targets, the show-password control of View Password sits inside the field in
+both directions, and the password reset request comes back to the log in screen. Without a messages block,
+the screens print the messages themselves.
+
+A Display Builder page layout that matches every page (a *default* page layout) also takes the sign-in paths,
+before this page: pick a sign-in page layout in the settings, or give the default one conditions. A module
+can show the sign-in screens in another theme, like Web Admin does with UIkit Admin.
+
 ## Theme settings
 
 - UIkit library source: CDN or local.
@@ -238,6 +265,7 @@ is kept, so content and layouts saved with it keep their icons.
   `data-theme` on `html`; with *Follow the operating system* it prints none and the stylesheet follows
   `prefers-color-scheme`.
 - Font: Atkinson Hyperlegible Next, served by the theme (the default), or the fonts of the operating system.
+- Sign-in screens: see above.
 
 ## HTMX navigation
 

@@ -31,15 +31,15 @@ Feature: The UIkit components with Display Builder
       And ".uk-navbar-right .uk-navbar-nav" should contain text "Log in"
       And "#ui-suite-uikit-offcanvas .uk-nav-primary" should be attached
 
-  Scenario: Without page layout, the page is rendered by the block layout again
+  Scenario: Without page layout, the sign-in screen is the page of the theme again
     Given the "display_builder_page_layout" module is enabled
       And the "/user/login" page is rendered by the UIkit theme
       And I am logged in as the Drupal administrator
       And there is no default page layout
       And I am an anonymous user
      When I go to "/user/login"
-     Then ".uk-navbar-container" should be visible
-      And ".uk-navbar-center .uk-navbar-nav > li > a" should be visible
+     Then ".ui-suite-uikit-sign-in" should be visible
+      And "#edit-name" should be visible
 
   # The scenarios above replace the default page layout of the site: put it
   # back for the next features.

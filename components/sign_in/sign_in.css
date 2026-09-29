@@ -1,0 +1,377 @@
+/**
+ * @file
+ * The sign-in screens.
+ *
+ * The colors come from the design tokens of the theme, so the screens follow
+ * UI Skins and both color modes. Logical properties only: the layouts mirror
+ * in right-to-left languages.
+ */
+
+.ui-suite-uikit-sign-in {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--uk-global-muted-background, #f8f8f8);
+}
+
+.ui-suite-uikit-sign-in__body {
+  display: grid;
+  flex: 1 0 auto;
+}
+
+/* The brand panel. */
+.ui-suite-uikit-sign-in__brand {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  padding: 40px;
+  color: var(--uk-global-inverse-color, #fff);
+  background: linear-gradient(150deg, var(--uk-global-primary-background, #0f5695), var(--uk-global-secondary-background, #222));
+}
+
+.ui-suite-uikit-sign-in__image {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.35;
+}
+
+.ui-suite-uikit-sign-in__brand-inner,
+.ui-suite-uikit-sign-in__credit {
+  position: relative;
+  z-index: 1;
+}
+
+.ui-suite-uikit-sign-in__brand-inner {
+  max-width: 28rem;
+}
+
+.ui-suite-uikit-sign-in__site {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ui-suite-uikit-target-size, 44px);
+  text-decoration: none;
+  color: inherit;
+  font-size: 1.375rem;
+  font-weight: 700;
+  gap: 12px;
+}
+
+.ui-suite-uikit-sign-in__site:hover,
+.ui-suite-uikit-sign-in__site:focus {
+  text-decoration: underline;
+  color: inherit;
+}
+
+.ui-suite-uikit-sign-in__name {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow-wrap: anywhere;
+}
+
+.ui-suite-uikit-sign-in__logo {
+  flex: none;
+  max-width: 160px;
+  max-height: 48px;
+}
+
+.ui-suite-uikit-sign-in__message {
+  max-width: 28rem;
+  margin: 12px 0 0;
+  font-size: 1.125rem;
+}
+
+.ui-suite-uikit-sign-in__credit {
+  margin: 16px 0 0;
+  font-size: 0.875rem;
+}
+
+/* The card. */
+.ui-suite-uikit-sign-in__main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 32px 16px;
+}
+
+.ui-suite-uikit-sign-in__main:focus {
+  outline: none;
+}
+
+.ui-suite-uikit-sign-in__card {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 26rem;
+  padding: 32px;
+  color: var(--uk-global-color, #444);
+  border: 1px solid var(--uk-global-border, #e5e5e5);
+  border-radius: var(--uk-global-border-radius, 0);
+  background: var(--uk-global-background, #fff);
+  box-shadow: var(--uk-global-medium-box-shadow, 0 5px 15px rgb(0, 0, 0, 0.08));
+}
+
+.ui-suite-uikit-sign-in__title {
+  margin-block-end: 24px;
+}
+
+.ui-suite-uikit-sign-in__title > * {
+  margin: 0;
+  font-size: 1.75rem;
+  line-height: 1.3;
+}
+
+.ui-suite-uikit-sign-in__messages .uk-alert {
+  max-width: none;
+}
+
+/* Fields, labels and buttons: 16px text, the whole width of the card. */
+.ui-suite-uikit-sign-in__form .form-item {
+  margin-bottom: 20px;
+}
+
+.ui-suite-uikit-sign-in__form label,
+.ui-suite-uikit-sign-in__form .uk-input,
+.ui-suite-uikit-sign-in__form .uk-button {
+  font-size: 1rem;
+}
+
+.ui-suite-uikit-sign-in__form .uk-input,
+.ui-suite-uikit-sign-in__form .form-actions .uk-button {
+  width: 100%;
+  max-width: none;
+}
+
+.ui-suite-uikit-sign-in__form .form-actions {
+  margin: 24px 0 0;
+}
+
+.ui-suite-uikit-sign-in__form .form-actions .uk-button + .uk-button {
+  margin-block-start: 12px;
+  margin-inline-start: 0;
+}
+
+.ui-suite-uikit-sign-in__forgot {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-start: -12px;
+}
+
+.ui-suite-uikit-sign-in__forgot a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ui-suite-uikit-target-size, 44px);
+}
+
+.ui-suite-uikit-sign-in__links {
+  margin-block-start: 24px;
+  padding-block-start: 16px;
+  border-block-start: 1px solid var(--uk-global-border, #e5e5e5);
+}
+
+.ui-suite-uikit-sign-in__links ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0 24px;
+}
+
+.ui-suite-uikit-sign-in__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ui-suite-uikit-target-size, 44px);
+  text-decoration: underline;
+}
+
+.ui-suite-uikit-sign-in__help {
+  margin-block-start: 12px;
+  color: var(--uk-global-muted-color, #545454);
+  font-size: 0.875rem;
+}
+
+.ui-suite-uikit-sign-in__help > :last-child {
+  margin-block-end: 0;
+}
+
+/* The show-password control of the View Password module: a 44px target
+   inside the field, at the end in both directions. */
+.ui-suite-uikit-sign-in__form .form-type-password {
+  position: relative;
+}
+
+.ui-suite-uikit-sign-in__form .form-type-password .uk-input {
+  padding-inline-end: calc(var(--ui-suite-uikit-target-size, 44px) + 4px);
+}
+
+.ui-suite-uikit-sign-in__form button.shwpd {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-end: 0;
+  width: var(--ui-suite-uikit-target-size, 44px);
+  height: var(--ui-suite-uikit-target-size, 44px);
+  margin: 0;
+  background-position: center;
+  background-size: 24px 16px;
+}
+
+/* The header and the footer of the site. */
+.ui-suite-uikit-sign-in__footer > footer {
+  margin: 0;
+}
+
+/* Centered: the site name above the card. */
+.ui-suite-uikit-sign-in--center .ui-suite-uikit-sign-in__body,
+.ui-suite-uikit-sign-in--spotlight .ui-suite-uikit-sign-in__body {
+  align-content: center;
+  justify-items: center;
+}
+
+.ui-suite-uikit-sign-in--center .ui-suite-uikit-sign-in__brand {
+  align-items: center;
+  padding: 32px 16px 0;
+  text-align: center;
+  color: var(--uk-global-emphasis-color, #333);
+  background: none;
+}
+
+.ui-suite-uikit-sign-in--center .ui-suite-uikit-sign-in__main,
+.ui-suite-uikit-sign-in--spotlight .ui-suite-uikit-sign-in__main {
+  width: 100%;
+  padding-block-start: 16px;
+}
+
+.ui-suite-uikit-sign-in--center .ui-suite-uikit-sign-in__message {
+  color: var(--uk-global-muted-color, #545454);
+}
+
+.ui-suite-uikit-sign-in--center .ui-suite-uikit-sign-in__image {
+  display: none;
+}
+
+/* Start and end: the card on one side, the brand panel on the other. On a
+   phone the panel keeps only the site name. */
+@media (min-width: 960px) {
+  .ui-suite-uikit-sign-in--start .ui-suite-uikit-sign-in__body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  }
+
+  .ui-suite-uikit-sign-in--start .ui-suite-uikit-sign-in__main {
+    order: -1;
+  }
+
+  .ui-suite-uikit-sign-in--end .ui-suite-uikit-sign-in__body {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  }
+
+  .ui-suite-uikit-sign-in--start .ui-suite-uikit-sign-in__brand,
+  .ui-suite-uikit-sign-in--end .ui-suite-uikit-sign-in__brand {
+    padding: 64px;
+  }
+}
+
+@media (max-width: 959px) {
+  .ui-suite-uikit-sign-in--start .ui-suite-uikit-sign-in__brand,
+  .ui-suite-uikit-sign-in--end .ui-suite-uikit-sign-in__brand {
+    padding: 16px;
+  }
+
+  .ui-suite-uikit-sign-in--start .ui-suite-uikit-sign-in__message,
+  .ui-suite-uikit-sign-in--end .ui-suite-uikit-sign-in__message,
+  .ui-suite-uikit-sign-in--start .ui-suite-uikit-sign-in__credit,
+  .ui-suite-uikit-sign-in--end .ui-suite-uikit-sign-in__credit {
+    display: none;
+  }
+}
+
+/* Top and bottom: a brand band above or under the card. */
+.ui-suite-uikit-sign-in--top .ui-suite-uikit-sign-in__body,
+.ui-suite-uikit-sign-in--bottom .ui-suite-uikit-sign-in__body {
+  grid-template-rows: auto 1fr;
+}
+
+.ui-suite-uikit-sign-in--top .ui-suite-uikit-sign-in__brand,
+.ui-suite-uikit-sign-in--bottom .ui-suite-uikit-sign-in__brand {
+  align-items: center;
+  justify-content: center;
+  min-height: 30vh;
+  text-align: center;
+}
+
+.ui-suite-uikit-sign-in--top .ui-suite-uikit-sign-in__main {
+  align-items: flex-start;
+}
+
+.ui-suite-uikit-sign-in--bottom .ui-suite-uikit-sign-in__main {
+  align-items: flex-end;
+  order: -1;
+}
+
+/* Spotlight: the card floating over the brand color. */
+.ui-suite-uikit-sign-in--spotlight .ui-suite-uikit-sign-in__body {
+  background: radial-gradient(circle at 18% 22%, rgb(255, 255, 255, 0.18), transparent 38%), linear-gradient(135deg, var(--uk-global-primary-background, #0f5695), var(--uk-global-secondary-background, #222) 75%);
+}
+
+.ui-suite-uikit-sign-in--spotlight .ui-suite-uikit-sign-in__brand {
+  align-items: center;
+  padding: 32px 16px 0;
+  text-align: center;
+  background: none;
+}
+
+.ui-suite-uikit-sign-in--spotlight .ui-suite-uikit-sign-in__card {
+  border-color: transparent;
+  box-shadow: var(--uk-global-xlarge-box-shadow, 0 28px 50px rgb(0, 0, 0, 0.16));
+}
+
+/* Dark mode: a dark brand panel. */
+:root[data-theme="dark"] .ui-suite-uikit-sign-in__brand:not(.ui-suite-uikit-sign-in--center *) {
+  background: linear-gradient(150deg, #16324f, #000);
+}
+
+:root[data-theme="dark"] .ui-suite-uikit-sign-in--spotlight .ui-suite-uikit-sign-in__body {
+  background: linear-gradient(135deg, #16324f, #000 75%);
+}
+
+/* The dark logo of the theme turns light on the brand panel. */
+.ui-suite-uikit-sign-in:not(.ui-suite-uikit-sign-in--center) .ui-suite-uikit-sign-in__logo[src$="/ui_suite_uikit/logo.svg"] {
+  filter: invert(1);
+}
+
+:root[data-theme="dark"] .ui-suite-uikit-sign-in__form button.shwpd {
+  filter: invert(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ui-suite-uikit-sign-in__brand:not(.ui-suite-uikit-sign-in--center *) {
+    background: linear-gradient(150deg, #16324f, #000);
+  }
+
+  :root:not([data-theme="light"]) .ui-suite-uikit-sign-in--spotlight .ui-suite-uikit-sign-in__body {
+    background: linear-gradient(135deg, #16324f, #000 75%);
+  }
+
+  :root:not([data-theme="light"]) .ui-suite-uikit-sign-in__form button.shwpd {
+    filter: invert(1);
+  }
+}
+
+/* Small screens: the card takes the width. */
+@media (max-width: 639px) {
+  .ui-suite-uikit-sign-in__card {
+    padding: 24px 16px;
+  }
+
+  .ui-suite-uikit-sign-in__brand {
+    padding: 16px;
+  }
+}

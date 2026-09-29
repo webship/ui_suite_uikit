@@ -300,7 +300,7 @@
 
 .form-required::after {
   content: " *";
-  color: var(--uk-global-danger-background, #f0506e);
+  color: var(--uk-global-danger-color, #a71534);
 }
 
 .form-checkboxes .form-item,
@@ -412,4 +412,70 @@ em,
 body code,
 body kbd {
   color: var(--ui-suite-uikit-code-color);
+}
+
+/* The logo of the theme is dark: it turns light in the dark color mode. A
+   logo uploaded in the theme settings keeps its colors. */
+:root[data-theme="dark"] img[src$="/ui_suite_uikit/logo.svg"] {
+  filter: invert(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) img[src$="/ui_suite_uikit/logo.svg"] {
+    filter: invert(1);
+  }
+}
+
+/**
+ * The strength of a new password: the bar has the width of the field, and a
+ * color with the text that says it.
+ */
+.password-strength,
+.password-confirm {
+  max-width: 100%;
+  margin-block-start: 8px;
+  font-size: 0.875rem;
+}
+
+.password-strength__meter {
+  overflow: hidden;
+  height: 8px;
+  border: 1px solid var(--uk-form-border-color, #767676);
+  border-radius: 4px;
+  background: var(--uk-global-muted-background, #f8f8f8);
+}
+
+.password-strength__indicator {
+  height: 100%;
+  background: var(--uk-global-danger-color, #a71534);
+}
+
+.password-strength__indicator.is-fair {
+  background: var(--uk-global-warning-color, #754c0f);
+}
+
+.password-strength__indicator.is-good,
+.password-strength__indicator.is-strong {
+  background: var(--uk-global-success-color, #0f6047);
+}
+
+.password-confirm .ok {
+  color: var(--uk-global-success-color, #0f6047);
+}
+
+.password-confirm .error {
+  color: var(--uk-global-danger-color, #a71534);
+}
+
+/* The file fields get the look of a default button. */
+input[type="file"]::file-selector-button {
+  min-height: var(--ui-suite-uikit-control-height, 44px);
+  margin-inline-end: 12px;
+  padding: 0 20px;
+  cursor: pointer;
+  color: var(--uk-global-emphasis-color, #333);
+  border: 1px solid var(--uk-form-border-color, #767676);
+  border-radius: var(--uk-global-border-radius, 0);
+  background: transparent;
+  font: inherit;
 }

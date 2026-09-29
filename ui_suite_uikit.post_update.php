@@ -95,3 +95,36 @@ function ui_suite_uikit_post_update_font_family(): void {
   }
   $config->set('font_family', ThemeHooks::FONT_FAMILY)->save();
 }
+
+/**
+ * Add the options of the sign-in screens, with their defaults.
+ *
+ * Their texts are translatable: the settings get a language code, or the
+ * theme settings form can not save them.
+ */
+function ui_suite_uikit_post_update_sign_in_options(): void {
+  $config = \Drupal::configFactory()->getEditable('ui_suite_uikit.settings');
+  if ($config->isNew()) {
+    return;
+  }
+  if (!$config->get('langcode')) {
+    $config->set('langcode', \Drupal::languageManager()->getDefaultLanguage()->getId());
+  }
+  $defaults = [
+    'sign_in_layout' => 'center',
+    'sign_in_message' => '',
+    'sign_in_header' => FALSE,
+    'sign_in_footer' => FALSE,
+    'sign_in_page_layout' => '',
+    'sign_in_logo' => 'site',
+    'sign_in_image' => '',
+    'sign_in_image_credit' => '',
+    'sign_in_help' => '',
+  ];
+  foreach ($defaults as $key => $value) {
+    if ($config->get($key) === NULL) {
+      $config->set($key, $value);
+    }
+  }
+  $config->save();
+}

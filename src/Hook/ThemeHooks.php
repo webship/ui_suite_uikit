@@ -61,6 +61,7 @@ class ThemeHooks {
     protected HtmxNavigationHooks $htmxNavigationHooks,
     protected ThemeExtensionList $themeExtensionList,
     protected FileUrlGeneratorInterface $fileUrlGenerator,
+    protected SignInHooks $signInHooks,
   ) {}
 
   /**
@@ -147,6 +148,7 @@ class ThemeHooks {
         'system' => $this->t('The fonts of the operating system'),
       ],
     ];
+    $this->signInSettings($form);
     // UI Skins offers the color modes of this theme as well: a second control
     // for the same attribute. The setting above is the one control, and it is
     // stored for UI Skins too, so both agree. The theme settings form calls
@@ -154,6 +156,135 @@ class ThemeHooks {
     // form is built.
     $form['#after_build'][] = [static::class, 'hideUiSkinsColorMode'];
     $form['#submit'][] = [static::class, 'themeSettingsSubmit'];
+  }
+
+  /**
+   * Adds the settings of the sign-in screens to the theme settings form.
+   *
+   * @param array $form
+   *   The theme settings form.
+   */
+  protected function signInSettings(array &$form): void {
+    $setting = fn (string $name, mixed $default): mixed => $this->themeSettingsProvider->getSetting($name, 'ui_suite_uikit') ?? $default;
+    $form['ui_suite_uikit_sign_in'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Sign-in screens'),
+      '#description' => $this->t('The log in, create account, password reset and log out screens, when this theme shows them.'),
+      '#open' => TRUE,
+    ];
+    $group = &$form['ui_suite_uikit_sign_in'];
+    $group['sign_in_layout'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Layout'),
+      '#default_value' => $setting('sign_in_layout', 'center'),
+      '#options' => [
+        'center' => $this->t('Centered: the form alone, the site name above it'),
+        'start' => $this->t('Form first: the form at the start, the brand panel next to it'),
+        'end' => $this->t('Brand first: the brand panel, then the form'),
+        'top' => $this->t('Brand band above the form'),
+        'bottom' => $this->t('Brand band under the form'),
+        'spotlight' => $this->t('Spotlight: the form floating over the brand color'),
+      ],
+    ];
+    $group['sign_in_header'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show the site header'),
+      '#description' => $this->t('The navbar of the site above the screen. The site name then leaves the brand panel.'),
+      '#default_value' => (bool) $setting('sign_in_header', FALSE),
+    ];
+    $group['sign_in_footer'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show the site footer'),
+      '#default_value' => (bool) $setting('sign_in_footer', FALSE),
+    ];
+    $group['sign_in_logo'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Logo'),
+      '#default_value' => $setting('sign_in_logo', 'site'),
+      '#options' => [
+        'site' => $this->t('The logo of the site (see Logo image above)'),
+        'theme' => $this->t('The logo of the theme'),
+        'none' => $this->t('No logo, the site name only'),
+      ],
+    ];
+    $group['sign_in_message'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Message'),
+      '#description' => $this->t('One sentence under the site name, like "Sign in to write, review and publish."'),
+      '#maxlength' => 160,
+      '#default_value' => $setting('sign_in_message', ''),
+    ];
+    $group['sign_in_image'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Image'),
+      '#description' => $this->t('The URL or the path of an image for the brand panel, like /sites/default/files/sign-in.jpg. It is decorative. The centered layout shows no image.'),
+      '#maxlength' => 2048,
+      '#default_value' => $setting('sign_in_image', ''),
+    ];
+    $group['sign_in_image_credit'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Image credit'),
+      '#description' => $this->t('The author and the license of the image.'),
+      '#maxlength' => 160,
+      '#default_value' => $setting('sign_in_image_credit', ''),
+    ];
+    $group['sign_in_help'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Help'),
+      '#description' => $this->t('A support line under the form, like "Trouble signing in? Write to the site team."'),
+      '#maxlength' => 255,
+      '#default_value' => $setting('sign_in_help', ''),
+    ];
+    $options = $this->pageLayoutOptions();
+    if ($options !== NULL) {
+      $group['sign_in_page_layout'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Page layout'),
+        '#description' => $this->t('A Display Builder page layout that draws the sign-in screens instead of the page of the theme. The chosen layout is enabled, the one chosen before is disabled.'),
+        '#options' => ['' => $this->t('- The page of the theme -')] + $options,
+        '#default_value' => $setting('sign_in_page_layout', ''),
+      ];
+      $form['#submit'][] = [static::class, 'signInPageLayoutSubmit'];
+    }
+  }
+
+  /**
+   * The page layouts of Display Builder, or NULL without the module.
+   *
+   * @return array<string, string>|null
+   *   The labels of the page layouts, keyed by id.
+   */
+  protected function pageLayoutOptions(): ?array {
+    if (!$this->entityTypeManager->hasDefinition('page_layout')) {
+      return NULL;
+    }
+    $options = [];
+    foreach ($this->entityTypeManager->getStorage('page_layout')->loadMultiple() as $id => $page_layout) {
+      $options[(string) $id] = (string) $page_layout->label();
+    }
+    \asort($options);
+    return $options;
+  }
+
+  /**
+   * Submit callback: enables the sign-in page layout, disables the old one.
+   *
+   * The theme settings are saved by then: the form value holds the new one,
+   * the element its default value the old one.
+   */
+  public static function signInPageLayoutSubmit(array &$form, FormStateInterface $form_state): void {
+    $new = (string) $form_state->getValue('sign_in_page_layout');
+    $old = (string) ($form['ui_suite_uikit_sign_in']['sign_in_page_layout']['#default_value'] ?? '');
+    if ($new === $old) {
+      return;
+    }
+    $storage = \Drupal::entityTypeManager()->getStorage('page_layout');
+    if ($old !== '' && ($layout = $storage->load($old))) {
+      $layout->disable()->save();
+    }
+    if ($new !== '' && ($layout = $storage->load($new))) {
+      $layout->enable()->save();
+    }
   }
 
   /**
@@ -280,6 +411,7 @@ class ThemeHooks {
   public function preprocessPage(array &$variables): void {
     $variables['navbar_sticky'] = (bool) ($this->themeSettingsProvider->getSetting('navbar_sticky', 'ui_suite_uikit') ?? TRUE);
     $variables['offcanvas_id'] = static::OFFCANVAS_ID;
+    $this->signInHooks->preprocessPage($variables);
 
     // Display Builder page layouts render the blocks without block entities
     // and block templates: tag the menus with their region here, and render

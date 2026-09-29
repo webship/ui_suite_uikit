@@ -19,6 +19,7 @@ networkidle
 norepeat
 noto
 penpot
+shwpd
 slidenav
 thumbnav
 totop
