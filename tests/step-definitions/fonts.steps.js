@@ -36,8 +36,14 @@ When(
       `${this.launchUrl}/admin/appearance/settings/ui_suite_uikit`,
     );
     const control = this.page
-      .getByRole('radio', { name: label, exact: true })
-      .or(this.page.getByRole('checkbox', { name: label, exact: true }))
+      .getByRole('radio', { name: label, exact: true, includeHidden: true })
+      .or(
+        this.page.getByRole('checkbox', {
+          name: label,
+          exact: true,
+          includeHidden: true,
+        }),
+      )
       .first();
     await control.waitFor({ state: 'attached', timeout: 15000 });
     // A control can sit in a closed group: set it without a click.

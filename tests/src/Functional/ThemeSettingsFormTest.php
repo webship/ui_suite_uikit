@@ -73,6 +73,8 @@ final class ThemeSettingsFormTest extends BrowserTestBase {
       'navbar_sticky' => FALSE,
       'htmx_navigation' => FALSE,
       'font_family' => 'system',
+      'ui_suite_uikit_skin_brand' => '#7a1f5c',
+      'ui_suite_uikit_skin_radius' => '8px',
     ], 'Save configuration');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
@@ -82,6 +84,16 @@ final class ThemeSettingsFormTest extends BrowserTestBase {
     $this->assertFalse((bool) $settings->get('navbar_sticky'));
     $this->assertFalse((bool) $settings->get('htmx_navigation'));
     $this->assertSame('system', $settings->get('font_family'));
+    // The design tokens are stored for UI Skins, not as theme settings.
+    $variables = $settings->get('third_party_settings.ui_skins.css_variables');
+    $this->assertSame('#7a1f5c', $variables['ui-suite-uikit-global-primary-background'][':root']);
+    $this->assertSame('#7a1f5c', $variables['ui-suite-uikit-global-link-color'][':root']);
+    $this->assertSame('8px', $variables['ui-suite-uikit-global-border-radius'][':root']);
+    $this->assertNull($settings->get('ui_suite_uikit_skin_brand'));
+
+    // A brand color below 7:1 with white is refused.
+    $this->submitForm(['ui_suite_uikit_skin_brand' => '#66aaff'], 'Save configuration');
+    $this->assertSession()->pageTextContains('Pick a darker color.');
   }
 
 }

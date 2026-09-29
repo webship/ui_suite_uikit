@@ -278,6 +278,17 @@ can show the sign-in screens in another theme, like Web Admin does with UIkit Ad
 
 ## Theme settings
 
+*Appearance > Settings > UI Suite UIkit* groups the settings in sections: *Colors and color mode*,
+*Typography*, *Layout and navigation*, *Sign-in screens*, *Accessibility*, *Advanced*, and the page elements,
+logo and favicon of core. The choices are cards with a preview drawn in CSS (the color modes, the font with a
+specimen, the line length, the corners, the focus ring and the sign-in layouts), and the Save button stays at
+the bottom of the window. There is no JavaScript of the theme on the page, and it follows the light and dark
+modes of the administration theme.
+
+The brand color, the text size, the line length, the corners, the focus ring and the target size are stored as
+UI Skins design tokens, not as theme settings: the CSS variables page and this page show the same values. The
+brand color needs 7:1 with white and the focus ring 3:1, or the page refuses them.
+
 - UIkit library source: CDN or local.
 - Sticky navbar.
 - HTMX navigation (enabled by default).

@@ -112,9 +112,17 @@ When(
     await this.page.goto(
       `${this.launchUrl}/admin/appearance/settings/ui_suite_uikit`,
     );
-    await this.page
-      .locator('select[name="sign_in_page_layout"]')
-      .selectOption({ label });
+    // The field sits in a section of the page that can be closed.
+    await this.page.evaluate((text) => {
+      const select = document.querySelector(
+        'select[name="sign_in_page_layout"]',
+      );
+      const option = [...select.options].find(
+        (item) => item.textContent.trim() === text,
+      );
+      select.value = option.value;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    }, label);
     await this.page
       .locator('input[type="submit"][value="Save configuration"]')
       .first()

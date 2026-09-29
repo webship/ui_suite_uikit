@@ -46,3 +46,10 @@ autoplay:
     - core/drupal
     - core/once
     - ui_suite_uikit/uikit
+
+# The settings page of the theme, drawn by the administration theme: the
+# pickers with their previews, and the Save button in reach.
+settings:
+  css:
+    theme:
+      assets/css/settings.css: {}
