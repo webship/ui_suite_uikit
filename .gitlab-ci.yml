@@ -13,6 +13,9 @@ variables:
   # For now, build and test with PHP 8.4.
   _TARGET_PHP: "8.4"
   IGNORE_PROJECT_DRUPAL_CORE_VERSION: "1"
+  # Also test with the next major Drupal version and the newest PHP.
+  OPT_IN_TEST_NEXT_MAJOR: 1
+  OPT_IN_TEST_MAX_PHP: 1
   # assets/css/tokens.css is generated from the UIkit CSS.
   SKIP_STYLELINT: "1"
   SKIP_CSPELL: "1"

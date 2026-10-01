@@ -17,27 +17,30 @@ ui_suite_uikit.settings:
       label: "Color mode"
       constraints:
         Choice:
-          - auto
-          - light
-          - dark
+          choices:
+            - auto
+            - light
+            - dark
     font_family:
       type: string
       label: "Font: atkinson (Atkinson Hyperlegible Next, served by the theme) or system (the fonts of the operating system)"
       constraints:
         Choice:
-          - atkinson
-          - system
+          choices:
+            - atkinson
+            - system
     sign_in_layout:
       type: string
       label: "Sign-in layout: center, start, end, top, bottom or spotlight"
       constraints:
         Choice:
-          - center
-          - start
-          - end
-          - top
-          - bottom
-          - spotlight
+          choices:
+            - center
+            - start
+            - end
+            - top
+            - bottom
+            - spotlight
     sign_in_message:
       type: label
       label: "Sign-in message: one sentence under the site name, at most 160 characters"
@@ -61,9 +64,10 @@ ui_suite_uikit.settings:
       label: "Sign-in logo: site (the logo of the theme settings), theme (the logo of the theme) or none"
       constraints:
         Choice:
-          - site
-          - theme
-          - none
+          choices:
+            - site
+            - theme
+            - none
     sign_in_image:
       type: string
       label: "Sign-in image: the URL or path of a decorative image for the brand panel, empty for none"
