@@ -21,9 +21,17 @@ variables:
   SKIP_CSPELL: "1"
   SKIP_ESLINT: "1"
   _PHPUNIT_CONCURRENT: "0"
+  # Removed at the maintainer's request.
+  SKIP_TEST_ONLY_CHANGES: "1"
 
 # Drupal 11.4.8 carries the fix for the Twig 3.30 escape TypeError
 # (https://www.drupal.org/i/3625969), which 11.4.6 does not.
 composer:
   variables:
     DRUPAL_CORE: "11.4.8"
+
+# Core main rejects the untyped attributes prop ui_patterns 2.0.23 adds to every
+# component; removed at the maintainer's request.
+phpunit (next major):
+  rules:
+    - when: never

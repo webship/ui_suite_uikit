@@ -325,7 +325,7 @@ the Penpot design system and to the equivalent components of other UI Suite them
 
 ## Development
 
-The tooling uses Node.js 20+:
+The tooling uses Node.js 24 or 26:
 
 ```shell
 npm install

@@ -4,11 +4,11 @@
   "description": "Tooling for the UI Suite UIkit Drupal theme.",
   "license": "GPL-2.0-or-later",
   "engines": {
-    "node": ">= 20.0"
+    "node": ">= 24.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
-    "@cucumber/cucumber": "~12.9.0",
+    "@cucumber/cucumber": "^12.9.0",
     "uikit": "3.25.22",
     "webship-js": "^2.0.6"
   },
