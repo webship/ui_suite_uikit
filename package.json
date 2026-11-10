@@ -9,6 +9,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
     "@cucumber/cucumber": "^12.9.0",
+    "@webship-js/drupal-core-steps": "^2.1.0",
     "uikit": "3.25.22",
     "webship-js": "^2.0.6"
   },
@@ -22,6 +23,7 @@
     "test:chromium": "BROWSER=chromium cucumber-js --config cucumber.js",
     "test:firefox": "BROWSER=firefox cucumber-js --config cucumber.js",
     "test:webkit": "BROWSER=webkit cucumber-js --config cucumber.js",
-    "generate-reports": "generate-reports"
+    "generate-reports": "generate-reports",
+    "test:dry": "cucumber-js --config cucumber.js --dry-run"
   }
 }
