@@ -12,13 +12,16 @@ const { execSync } = require('node:child_process');
 const { readFileSync } = require('node:fs');
 const { homedir } = require('node:os');
 const path = require('node:path');
-const { Given, When, Then } = require('@cucumber/cucumber');
+const { After, Given, When, Then } = require('@cucumber/cucumber');
 
 const THEME_ROOT = path.resolve(__dirname, '..', '..');
 const PROJECT_DIR =
   process.env.DRUPAL_PROJECT_DIR ||
   path.join(homedir(), 'workspace/test/uikittest');
 const DRUSH = process.env.DRUSH || 'ddev drush';
+
+// The page layouts a scenario created from the fixtures.
+let fixtureLayouts = [];
 
 /**
  * Runs PHP on the test site, the code given in base64.
@@ -47,6 +50,24 @@ Then(/^the configuration "([^"]*)" should exist$/, function configExists(name) {
   );
   assert.strictEqual(found, 'yes', `The configuration ${name} is missing.`);
 });
+
+/**
+ * Checks an element of the page the builder draws. Display Builder draws the
+ * page in an iframe of its builder island, so the element is looked for in
+ * there.
+ *
+ * Example: Then the builder canvas should have the element ".uk-navbar-container"
+ */
+Then(
+  /^the builder canvas should have the element "([^"]*)"$/,
+  async function builderCanvasHas(selector) {
+    await this.page
+      .frameLocator('iframe[src*="/display-builder/builder/"]')
+      .locator(selector)
+      .first()
+      .waitFor({ state: 'attached', timeout: 15000 });
+  },
+);
 
 /**
  * Example: Then the page layout "ui_suite_uikit_sign_in" should be disabled
@@ -84,8 +105,29 @@ $storage = \\Drupal::entityTypeManager()->getStorage('page_layout');
 $storage->load($values['id'])?->delete();
 $storage->create($values)->save();
 drupal_flush_all_caches();`);
+    fixtureLayouts.push(id);
   },
 );
+
+/**
+ * Deletes a page layout and its builder instance.
+ *
+ * @param {string} id
+ *   The machine name of the page layout.
+ */
+function deleteLayout(id) {
+  php(`\\Drupal::entityTypeManager()->getStorage('page_layout')->load('${id}')?->delete();
+\\Drupal::entityTypeManager()->getStorage('display_builder_instance')->load('page_layout__${id}')?->delete();
+drupal_flush_all_caches();`);
+}
+
+// The fixture page layouts go after the scenario that made them, also when it
+// failed before its last step.
+After({ timeout: 180000 }, function deleteFixtureLayouts() {
+  const ids = fixtureLayouts;
+  fixtureLayouts = [];
+  ids.forEach((id) => deleteLayout(id));
+});
 
 /**
  * Example: Then the page layout "ui_suite_uikit_test_landmarks" is deleted
@@ -94,9 +136,8 @@ Then(
   /^the page layout "([^"]*)" is deleted$/,
   { timeout: 180000 },
   function deletePageLayout(id) {
-    php(`\\Drupal::entityTypeManager()->getStorage('page_layout')->load('${id}')?->delete();
-\\Drupal::entityTypeManager()->getStorage('display_builder_instance')->load('page_layout__${id}')?->delete();
-drupal_flush_all_caches();`);
+    deleteLayout(id);
+    fixtureLayouts = fixtureLayouts.filter((item) => item !== id);
   },
 );
 
@@ -123,10 +164,19 @@ When(
       select.value = option.value;
       select.dispatchEvent(new Event('change', { bubbles: true }));
     }, label);
-    await this.page
-      .locator('input[type="submit"][value="Save configuration"]')
-      .first()
-      .click();
+    // Saved when the server answers the POST of the form: only then are the
+    // caches flushed.
+    await Promise.all([
+      this.page.waitForResponse(
+        (response) =>
+          response.request().isNavigationRequest() &&
+          response.request().method() === 'POST',
+      ),
+      this.page
+        .locator('input[type="submit"][value="Save configuration"]')
+        .first()
+        .click(),
+    ]);
     await this.page.waitForLoadState('load');
     php('drupal_flush_all_caches();');
   },

@@ -27,8 +27,8 @@ Feature: WCAG 2.2 AAA
   # The sign-in and page components are whole pages, with their own main
   # landmark: they are checked on the pages that use them.
   Scenario Outline: Every component of the library passes the WCAG AAA audit in the <mode> color mode
-    Given the "ui_patterns_library" module is enabled
-      And I am logged in as the Drupal administrator
+    Given I am a logged in user with the "Webmaster" user
+      And the "ui_patterns_library" module is enabled
      Then every UIkit component page of the library should pass the WCAG AAA audit in the "<mode>" color mode except "switcher_tab, description_list_item, sign_in, page"
 
     Examples:
@@ -94,8 +94,8 @@ Feature: WCAG 2.2 AAA
       And no element should have a transition or an animation longer than 10 milliseconds
 
   Scenario: With reduced motion, the accordion opens without animation
-    Given the "ui_patterns_library" module is enabled
-      And I am logged in as the Drupal administrator
+    Given I am a logged in user with the "Webmaster" user
+      And the "ui_patterns_library" module is enabled
       And I prefer reduced motion
      When I go to "/admin/appearance/ui/components/ui_suite_uikit/accordion"
       And I click on the element ":nth-match(.uk-accordion > div, 2) > .uk-accordion-title"
@@ -117,8 +117,8 @@ Feature: WCAG 2.2 AAA
       | /ui-suite-uikit-test-page-not-found | The page not found      |
 
   Scenario Outline: The text of the <component> component is easy to read
-    Given the "ui_patterns_library" module is enabled
-      And I am logged in as the Drupal administrator
+    Given I am a logged in user with the "Webmaster" user
+      And the "ui_patterns_library" module is enabled
      When I go to "/admin/appearance/ui/components/ui_suite_uikit/<component>"
      Then the text blocks in ".ui_patterns_component" should have a line height of at least 1.5, at most 80 characters per line and no justified text
 

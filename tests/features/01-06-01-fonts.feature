@@ -1,7 +1,11 @@
+@theme-settings
 Feature: The fonts are served by the theme
   As a visitor
   I want one readable font on every device, loaded from the site itself
   So that I can tell the letters apart and no other site knows what I read
+
+  The settings of the theme are saved before each scenario and put back
+  after it, even when it fails.
 
   Scenario: The text, the headings and the code use the fonts of the theme
     Given I am an anonymous user
@@ -15,6 +19,7 @@ Feature: The fonts are served by the theme
 
   Scenario: The font files come from the theme, and from no other site
     Given I am an anonymous user
+      And the browser cache is empty
       And I record the requests of the page
      When I go to the homepage
       And the fonts of the page are loaded
@@ -35,32 +40,39 @@ Feature: The fonts are served by the theme
       | 1440  |
       | 960   |
 
+  # Role switch: the Webmaster changes a setting, a visitor sees the result,
+  # and the Webmaster puts the setting back.
+  @role-switch
   Scenario: The font of the operating system is a theme setting
-    Given I am logged in as the Drupal administrator
+    Given I am a logged in user with the "Webmaster" user
      When I pick "The fonts of the operating system" in the settings of the UIkit theme
       And I am an anonymous user
+      And the browser cache is empty
       And I record the requests of the page
       And I go to "/?font=system"
       And the fonts of the page are loaded
      Then "html" should have attribute "data-font" with value "system"
       And the computed style "font-family" of "body" should contain "system-ui"
       And no request should go to ".woff2"
-    Given I am logged in as the Drupal administrator
+    Given I am a logged in user with the "Webmaster" user
      When I pick "Atkinson Hyperlegible Next" in the settings of the UIkit theme
       And I am an anonymous user
       And I go to "/?font=atkinson"
      Then "html" should have attribute "data-font" with value "atkinson"
       And the computed style "font-family" of "body" should contain "Atkinson Hyperlegible Next"
 
+  # Role switch: the Webmaster changes a setting, a visitor sees the result,
+  # and the Webmaster puts the setting back.
+  @role-switch
   Scenario: A font family saved in UI Skins replaces the font of the theme
-    Given I am logged in as the Drupal administrator
+    Given I am a logged in user with the "Webmaster" user
      When I set the UI Skins CSS variable "ui-suite-uikit-global-font-family" of the UIkit theme to "Georgia, serif"
       And I set the UI Skins CSS variable "ui-suite-uikit-measure" of the UIkit theme to "24em"
       And I am an anonymous user
       And I go to "/?font=georgia"
      Then the computed style "font-family" of "body" should be "Georgia, serif"
       And the computed style "--uk-measure" of "html" should be "24em"
-    Given I am logged in as the Drupal administrator
+    Given I am a logged in user with the "Webmaster" user
      When I set the UI Skins CSS variable "ui-suite-uikit-global-font-family" of the UIkit theme to "var(--uk-font-family-sans)"
       And I set the UI Skins CSS variable "ui-suite-uikit-measure" of the UIkit theme to "32em"
       And I am an anonymous user

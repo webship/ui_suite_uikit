@@ -15,6 +15,27 @@ const PROJECT_DIR = process.env.DRUPAL_PROJECT_DIR || path.join(homedir(), 'work
 const DRUSH = process.env.DRUSH || 'ddev drush';
 
 /**
+ * The HTML a visitor gets for a path: a request without the session of the
+ * scenario, so the answer does not depend on who is logged in.
+ *
+ * @param {string} url
+ *   The address.
+ *
+ * @return {Promise<string>}
+ *   The HTML of the page.
+ */
+async function visitorHtml(url) {
+  // eslint-disable-next-line global-require
+  const { request } = require('playwright');
+  const context = await request.newContext({ ignoreHTTPSErrors: true });
+  try {
+    return await (await context.get(url)).text();
+  } finally {
+    await context.dispose();
+  }
+}
+
+/**
  * Runs a Drush command on the test site and returns its output.
  */
 function drush(command) {
@@ -57,20 +78,26 @@ function uikitComponents() {
 }
 
 /**
- * Logs in as user 1 with a one-time login link, without the login form.
+ * Clicks the submit button of a form and waits until the server has answered
+ * its POST, so that what the form saves is saved before the next step.
  *
- * Example: Given I am logged in as the Drupal administrator
+ * @param {import('playwright').Page} page
+ *   The page.
+ * @param {import('playwright').Locator} button
+ *   The submit button.
  */
-Given(/^I am logged in as the Drupal administrator$/, async function () {
-  const link = drush('user:login --no-browser').split('\n').pop();
-  await this.page.goto(`${this.launchUrl}${new URL(link).pathname}`);
-  await this.page.waitForURL((url) => /\/user\/\d+/.test(url.pathname));
-});
+async function submitAndWait(page, button) {
+  await Promise.all([
+    page.waitForResponse((response) => response.request().isNavigationRequest() && response.request().method() === 'POST'),
+    button.click(),
+  ]);
+  await page.waitForLoadState('load');
+}
 
 /**
- * Example: When the Drupal caches are rebuilt
+ * Example: When the caches are rebuilt
  */
-When(/^the Drupal caches are rebuilt$/, { timeout: 180000 }, function () {
+When(/^the caches are rebuilt$/, { timeout: 180000 }, function () {
   drush('cache:rebuild');
 });
 
@@ -179,11 +206,31 @@ When(/^I navigate with HTMX to "([^"]*)"$/, async function (target) {
 /**
  * Moves the mouse over the page, as a visitor does before a submission.
  *
+ * Antibot unlocks its forms on a mouse move after its behavior attached; after
+ * an HTMX swap the behavior can attach a moment after the form shows, so the
+ * mouse moves again until no form of the page is locked.
+ *
  * Example: When I move the mouse over the page
  */
 When(/^I move the mouse over the page$/, async function () {
-  await this.page.mouse.move(200, 200);
-  await this.page.mouse.move(400, 300, { steps: 5 });
+  const unlocked = () =>
+    [...document.querySelectorAll('form[data-action]')].every(
+      (form) => form.getAttribute('action') === form.getAttribute('data-action'),
+    );
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    await this.page.mouse.move(200, 200);
+    await this.page.mouse.move(400, 300, { steps: 5 });
+    const done = await this.page
+      .waitForFunction(unlocked, null, { timeout: 1000 })
+      .then(
+        () => true,
+        () => false,
+      );
+    if (done) {
+      return;
+    }
+  }
+  throw new Error('A form of the page is still locked by Antibot after the mouse moved.');
 });
 
 /**
@@ -197,6 +244,28 @@ When(/^I turn off the browser validation of "([^"]*)"$/, async function (selecto
   await form.evaluate((element) => {
     element.noValidate = true;
   });
+});
+
+/**
+ * Waits until the address of the page no longer contains a text, after a
+ * navigation that changes it without a full page load.
+ *
+ * Example: Then I wait until the URL does not contain "/page-not-found"
+ */
+Then(/^I wait until the URL does not contain "([^"]*)"$/, async function (fragment) {
+  await this.page.waitForFunction((text) => !window.location.href.includes(text), fragment, { timeout: 10000, polling: 100 });
+});
+
+/**
+ * Deletes the submissions of a webform sent from an email address, so a
+ * scenario that sends the form leaves no data on the site.
+ *
+ * Example: Then the submissions of the "contact" webform from "visitor@example.com" are deleted
+ */
+Then(/^the submissions of the "([^"]*)" webform from "([^"]*)" are deleted$/, { timeout: 60000 }, function (webform, email) {
+  const code = `$ids = \\Drupal::database()->select('webform_submission_data', 'd')->fields('d', ['sid'])->condition('webform_id', '${webform}')->condition('name', 'email')->condition('value', '${email}')->execute()->fetchCol(); $storage = \\Drupal::entityTypeManager()->getStorage('webform_submission'); $storage->delete($storage->loadMultiple($ids)); echo count($ids);`;
+  const deleted = drush(`php:eval '${code.replace(/'/g, "'\\''")}'`);
+  assert.ok(Number.parseInt(deleted.split('\n').pop(), 10) > 0, `No "${webform}" submission from ${email} was deleted.`);
 });
 
 /**
@@ -243,8 +312,7 @@ When(/^I set the UI Skins CSS variable "([^"]*)" of the UIkit theme to "([^"]*)"
     element.dispatchEvent(new Event('input', { bubbles: true }));
     element.dispatchEvent(new Event('change', { bubbles: true }));
   }, value);
-  await this.page.locator('#edit-submit, input[type="submit"][value="Save configuration"]').first().click();
-  await this.page.waitForLoadState('load');
+  await submitAndWait(this.page, this.page.locator('#edit-submit, input[type="submit"][value="Save configuration"]').first());
   drush('cache:rebuild');
 });
 
@@ -268,8 +336,7 @@ function renderingTheme(html) {
  * Example: Given the "/user/login" page is rendered by another theme than the UIkit theme
  */
 Given(/^the "([^"]*)" page is rendered by another theme than the UIkit theme$/, async function (pagePath) {
-  const response = await this.page.request.get(`${this.launchUrl}${pagePath}`);
-  const theme = renderingTheme(await response.text());
+  const theme = renderingTheme(await visitorHtml(`${this.launchUrl}${pagePath}`));
   return theme && theme !== 'ui_suite_uikit' ? undefined : 'skipped';
 });
 
@@ -295,8 +362,7 @@ Then(/^the current page should (not )?be rendered by the UIkit theme$/, async fu
 When(/^I set the color mode of the UIkit theme to "([^"]*)"$/, async function (label) {
   await this.page.goto(`${this.launchUrl}/admin/appearance/settings/ui_suite_uikit`);
   await this.page.getByRole('radio', { name: label, exact: true }).check();
-  await this.page.getByRole('button', { name: 'Save configuration' }).click();
-  await this.page.waitForLoadState('load');
+  await submitAndWait(this.page, this.page.getByRole('button', { name: 'Save configuration' }));
   drush('cache:rebuild');
 });
 

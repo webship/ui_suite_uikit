@@ -343,8 +343,11 @@ drush sdc-devel:validate ui_suite_uikit
 SIMPLETEST_DB=mysql://db:db@db/db vendor/bin/phpunit -c web/core web/themes/contrib/ui_suite_uikit/tests/src/Kernel
 
 # Functional tests (webship-js: Cucumber + Playwright) against a site running the theme.
-LAUNCH_URL=https://example.ddev.site DRUPAL_PROJECT_DIR=/path/to/project npm test
+LAUNCH_URL=https://example.ddev.site DRUPAL_PROJECT_DIR=/path/to/project DRUPAL_ADMIN_PASS='…' npm test
 ```
+
+`tests/README.md` has the full install of the functional tests, from a DDEV site to a green run, and the test
+accounts the site build creates (the suite only logs in).
 
 The webship-js features cover the front end rendering, the offcanvas menu, forms and local tasks, color
 modes, fonts, HTMX navigation, theme settings, UI Skins design tokens, every component page of the library, the
@@ -358,8 +361,9 @@ The suite runs on any site using the theme as the default theme:
   the scenarios needing a module the site does not have (Webform, Display Builder page layouts, UI Patterns
   Library) are skipped.
 - The UI Skins scenarios end with the default primary color and the *Light* color mode selected, and the
-  Display Builder scenarios put back the default page layout of the site. The contact webform scenarios store
-  submissions.
+  Display Builder scenarios put back the default page layout of the site. The contact webform scenario removes
+  its submission, and the sign-in scenarios give the sign-in screens, the blocks and the administration theme back
+  to the site.
 - Run only the accessibility checks with `npm test -- --tags @aaa`.
 
 ## Maintainers

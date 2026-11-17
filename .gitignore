@@ -4,6 +4,7 @@ node_modules
 screenshots
 tests/reports/*
 !tests/reports/README.md
+tests/screenshots
 tests/videos
 
 # JavaScript lockfiles are not committed: installs resolve from package.json

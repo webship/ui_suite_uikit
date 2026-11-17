@@ -15,7 +15,7 @@ const { execSync } = require('node:child_process');
 const { readFileSync } = require('node:fs');
 const { homedir } = require('node:os');
 const path = require('node:path');
-const { When, Then } = require('@cucumber/cucumber');
+const { After, Before, When, Then } = require('@cucumber/cucumber');
 
 const THEME_ROOT = path.resolve(__dirname, '..', '..');
 const PROJECT_DIR =
@@ -23,6 +23,51 @@ const PROJECT_DIR =
   path.join(homedir(), 'workspace/test/uikittest');
 const DRUSH = process.env.DRUSH || 'ddev drush';
 const DARK_SCOPE = ':root[data-theme="dark"]';
+
+/**
+ * Runs PHP on the test site, the code given in base64: no quoting problem in
+ * the shell of DDEV or of the CI.
+ *
+ * @param {string} code
+ *   PHP code, without the opening tag.
+ *
+ * @return {string}
+ *   The output.
+ */
+function php(code) {
+  const encoded = Buffer.from(code).toString('base64');
+  return execSync(
+    `${DRUSH} php:eval 'eval(base64_decode("${encoded}"));'`,
+    {
+      cwd: PROJECT_DIR,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    },
+  ).trim();
+}
+
+// The settings of the theme (UI Skins, the color mode, the fonts, the brand)
+// before a scenario tagged @theme-settings, put back after it, also when it
+// failed half way: the next scenario and the next run find the site as it was.
+let savedSettings = null;
+
+Before({ tags: '@theme-settings', timeout: 60000 }, function () {
+  savedSettings = php(
+    "echo base64_encode(json_encode(\\Drupal::config('ui_suite_uikit.settings')->getRawData()));",
+  )
+    .split('\n')
+    .pop();
+});
+
+After({ tags: '@theme-settings', timeout: 180000 }, function () {
+  if (savedSettings === null) {
+    return;
+  }
+  php(`$data = json_decode(base64_decode('${savedSettings}'), TRUE);
+$config = \\Drupal::configFactory()->getEditable('ui_suite_uikit.settings');
+if ($config->getRawData() != $data) { $config->setData($data)->save(); drupal_flush_all_caches(); }`);
+  savedSettings = null;
+});
 
 /**
  * Reads the design tokens of the theme.
@@ -169,10 +214,19 @@ When(
       element.dispatchEvent(new Event('input', { bubbles: true }));
       element.dispatchEvent(new Event('change', { bubbles: true }));
     }, value);
-    await this.page
-      .locator('#edit-submit, input[type="submit"][value="Save configuration"]')
-      .first()
-      .click();
+    // Saved when the server answers the POST of the form: only then are the
+    // caches rebuilt.
+    await Promise.all([
+      this.page.waitForResponse(
+        (response) =>
+          response.request().isNavigationRequest() &&
+          response.request().method() === 'POST',
+      ),
+      this.page
+        .locator('#edit-submit, input[type="submit"][value="Save configuration"]')
+        .first()
+        .click(),
+    ]);
     await this.page.waitForLoadState('load');
     execSync(`${DRUSH} cache:rebuild`, {
       cwd: PROJECT_DIR,

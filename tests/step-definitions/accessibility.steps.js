@@ -32,6 +32,63 @@ const WCAG_AAA_TAGS = [
 ];
 
 /**
+ * Waits until no finite animation or transition has run in the page for 300
+ * milliseconds, at most 5 seconds: an animation that starts a moment after
+ * the page loaded is waited for too.
+ *
+ * @param {import('playwright').Page} page
+ *   The page.
+ */
+async function settleAnimations(page) {
+  await page.evaluate(
+    () =>
+      new Promise((resolve) => {
+        const started = Date.now();
+        let quietSince = Date.now();
+        const tick = () => {
+          const running = document
+            .getAnimations()
+            .some(
+              (animation) =>
+                animation.playState === 'running' &&
+                animation.effect?.getTiming().iterations !== Infinity,
+            );
+          if (running) {
+            quietSince = Date.now();
+          }
+          if (Date.now() - quietSince >= 300 || Date.now() - started > 5000) {
+            resolve();
+          } else {
+            requestAnimationFrame(tick);
+          }
+        };
+        requestAnimationFrame(tick);
+      }),
+  );
+}
+
+/**
+ * The HTML a visitor gets for a path: a request without the session of the
+ * scenario, so the answer does not depend on who is logged in.
+ *
+ * @param {string} url
+ *   The address.
+ *
+ * @return {Promise<string>}
+ *   The HTML of the page.
+ */
+async function visitorHtml(url) {
+  // eslint-disable-next-line global-require
+  const { request } = require('playwright');
+  const context = await request.newContext({ ignoreHTTPSErrors: true });
+  try {
+    return await (await context.get(url)).text();
+  } finally {
+    await context.dispose();
+  }
+}
+
+/**
  * Lists the machine names of the UIkit components of the theme.
  *
  * @return {string[]}
@@ -186,10 +243,7 @@ async function injectColorHelpers(page) {
 Given(
   /^the "([^"]*)" page is rendered by the UIkit theme$/,
   async function (pagePath) {
-    const response = await this.page.request.get(
-      `${this.launchUrl}${pagePath}`,
-    );
-    const html = await response.text();
+    const html = await visitorHtml(`${this.launchUrl}${pagePath}`);
     const match = html.match(
       /<script[^>]*data-drupal-selector="drupal-settings-json"[^>]*>([\s\S]*?)<\/script>/,
     );
@@ -538,19 +592,22 @@ Then(
         (theme) => document.documentElement.setAttribute('data-theme', theme),
         mode,
       );
-      // Let the color transitions end.
-      await this.page.evaluate(() =>
-        Promise.allSettled(
-          document
-            .getAnimations()
-            .filter((animation) => animation instanceof window.CSSTransition)
-            .map((animation) => animation.finished),
-        ),
-      );
-      const result = await new AxeBuilder({ page: this.page })
+      // Audit the component as a person sees it: once the color transitions
+      // and the entrance animations (a switcher fades its panel in) are over.
+      // A violation that is gone when the page is still is the middle of an
+      // animation: the component is audited once more before it counts.
+      await settleAnimations(this.page);
+      let result = await new AxeBuilder({ page: this.page })
         .include('.ui_patterns_component')
         .withTags(WCAG_AAA_TAGS)
         .analyze();
+      if (result.violations.length) {
+        await settleAnimations(this.page);
+        result = await new AxeBuilder({ page: this.page })
+          .include('.ui_patterns_component')
+          .withTags(WCAG_AAA_TAGS)
+          .analyze();
+      }
       if (result.violations.length) {
         failures.push(`${id}:\n${formatViolations(result.violations)}`);
       }

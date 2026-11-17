@@ -63,9 +63,25 @@ sources:
         slots:
           content:
             sources:
+              # Display Builder prints the title text only: the Heading
+              # component makes it the h1 of the page.
               -
-                source_id: page_title
-                source: {  }
+                source_id: component
+                source:
+                  component:
+                    component_id: 'ui_suite_uikit:heading'
+                    variant_id: null
+                    props:
+                      heading_level:
+                        source_id: select
+                        source:
+                          value: 1
+                    slots:
+                      title:
+                        sources:
+                          -
+                            source_id: page_title
+                            source: {  }
               -
                 source_id: main_page_content
                 source: {  }

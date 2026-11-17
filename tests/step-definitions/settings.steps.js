@@ -49,10 +49,19 @@ When(
       },
       [name, value],
     );
-    await this.page
-      .locator('input[type="submit"][value="Save configuration"]')
-      .first()
-      .click();
+    // Saved when the server answers the POST of the form: only then are the
+    // caches rebuilt.
+    await Promise.all([
+      this.page.waitForResponse(
+        (response) =>
+          response.request().isNavigationRequest() &&
+          response.request().method() === 'POST',
+      ),
+      this.page
+        .locator('input[type="submit"][value="Save configuration"]')
+        .first()
+        .click(),
+    ]);
     await this.page.waitForLoadState('load');
     execSync(`${DRUSH} cache:rebuild`, {
       cwd: PROJECT_DIR,
@@ -92,6 +101,41 @@ Then(
 );
 
 /**
+ * Waits until no finite animation or transition has run in the page for 300
+ * milliseconds, at most 5 seconds.
+ *
+ * @param {import('playwright').Page} page
+ *   The page.
+ */
+async function settleAnimations(page) {
+  await page.evaluate(
+    () =>
+      new Promise((resolve) => {
+        const started = Date.now();
+        let quietSince = Date.now();
+        const tick = () => {
+          const running = document
+            .getAnimations()
+            .some(
+              (animation) =>
+                animation.playState === 'running' &&
+                animation.effect?.getTiming().iterations !== Infinity,
+            );
+          if (running) {
+            quietSince = Date.now();
+          }
+          if (Date.now() - quietSince >= 300 || Date.now() - started > 5000) {
+            resolve();
+          } else {
+            requestAnimationFrame(tick);
+          }
+        };
+        requestAnimationFrame(tick);
+      }),
+  );
+}
+
+/**
  * Runs an axe-core audit of a part of the page at a WCAG level.
  *
  * Example: Then the element ".ui-suite-uikit-settings" should pass an accessibility audit at level "AAA"
@@ -104,10 +148,21 @@ Then(
     if (level === 'AAA') {
       tags.push('wcag2aaa', 'wcag21aaa', 'wcag22aaa');
     }
-    const result = await new AxeBuilder({ page: this.page })
+    // Audit the page as a person sees it, once the transitions are over; a
+    // violation that is gone when the page is still is audited once more
+    // before it counts.
+    await settleAnimations(this.page);
+    let result = await new AxeBuilder({ page: this.page })
       .include(selector)
       .withTags(tags)
       .analyze();
+    if (result.violations.length) {
+      await settleAnimations(this.page);
+      result = await new AxeBuilder({ page: this.page })
+        .include(selector)
+        .withTags(tags)
+        .analyze();
+    }
     const found = result.violations.map(
       (violation) =>
         `${violation.id} (${violation.nodes.length}): ${violation.nodes

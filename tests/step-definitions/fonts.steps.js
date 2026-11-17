@@ -52,10 +52,19 @@ When(
       element.dispatchEvent(new Event('input', { bubbles: true }));
       element.dispatchEvent(new Event('change', { bubbles: true }));
     }, action === 'pick');
-    await this.page
-      .locator('input[type="submit"][value="Save configuration"]')
-      .first()
-      .click();
+    // The settings are saved when the server answers the POST of the form:
+    // only then are the caches rebuilt and the next page opened.
+    await Promise.all([
+      this.page.waitForResponse(
+        (response) =>
+          response.request().isNavigationRequest() &&
+          response.request().method() === 'POST',
+      ),
+      this.page
+        .locator('input[type="submit"][value="Save configuration"]')
+        .first()
+        .click(),
+    ]);
     await this.page.waitForLoadState('load');
     execSync(`${DRUSH} cache:rebuild`, {
       cwd: PROJECT_DIR,
@@ -65,16 +74,109 @@ When(
 );
 
 /**
- * Keeps the requests of the pages opened after this step.
+ * Empties the HTTP cache of the browser (Chromium), so that the next page
+ * asks for what a first visit asks for: Chromium asks again for the font
+ * files the earlier pages of the session loaded, also when the next page
+ * uses none of them. Another browser skips the scenario.
+ *
+ * Example: Given the browser cache is empty
+ */
+Given(/^the browser cache is empty$/, async function emptyBrowserCache() {
+  let cdp;
+  try {
+    cdp = await this.page.context().newCDPSession(this.page);
+  } catch {
+    return 'skipped';
+  }
+  await cdp.send('Network.clearBrowserCache');
+  await cdp.detach();
+  return undefined;
+});
+
+/**
+ * Keeps the requests of the page opened after this step: the requests that
+ * page makes once it is committed. A request the page open before made (a
+ * font file still on its way, for example) is not kept, even when its answer
+ * comes in after the next page started.
  *
  * Example: Given I record the requests of the page
  */
 Given(/^I record the requests of the page$/, async function recordRequests() {
   this.recordedRequests = [];
+  this.fontUsers = [];
+  // In Chromium, what started each font request (the parser, a script, a
+  // preload): the failure message gives it.
+  this.fontInitiators = {};
+  try {
+    const cdp = await this.page.context().newCDPSession(this.page);
+    await cdp.send('Network.enable');
+    cdp.on('Network.requestWillBeSent', ({ request, initiator }) => {
+      if (/\.woff2?(\?|$)/.test(request.url)) {
+        const frame = initiator.stack?.callFrames?.[0];
+        this.fontInitiators[request.url] = [
+          initiator.type,
+          initiator.url || (frame ? `${frame.url}:${frame.lineNumber}` : ''),
+        ]
+          .filter(Boolean)
+          .join(' ');
+      }
+    });
+  } catch {
+    // Another browser: the message names no initiator.
+  }
+  const ofTheNextPage = new WeakSet();
+  let navigating = false;
+  let committed = false;
+  this.page.on('request', (request) => {
+    if (
+      request.isNavigationRequest() &&
+      request.frame() === this.page.mainFrame()
+    ) {
+      navigating = true;
+      committed = false;
+    } else if (committed) {
+      ofTheNextPage.add(request);
+      if (request.resourceType() === 'font') {
+        // Which elements of the page use a font of the theme when the file
+        // is asked for: the failure message names them.
+        this.page
+          .evaluate(() =>
+            [...document.querySelectorAll('*')]
+              .map((element) => [element, getComputedStyle(element)])
+              .filter(([, style]) =>
+                /^"?(Atkinson|Noto Sans Arabic)/.test(style.fontFamily),
+              )
+              .map(
+                ([element, style]) =>
+                  `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''}.${String(element.className).trim().split(/\s+/).join('.')} (${style.fontFamily.split(',')[0]}, ${style.display})`,
+              )
+              .slice(0, 12),
+          )
+          .then((users) => {
+            this.fontUsers = [...new Set([...(this.fontUsers || []), ...users])];
+          })
+          .catch(() => {});
+      }
+    }
+  });
+  this.page.on('framenavigated', (frame) => {
+    if (navigating && frame === this.page.mainFrame()) {
+      navigating = false;
+      committed = true;
+      this.recordedRequests = [];
+    }
+  });
   this.page.on('response', (response) => {
+    const request = response.request();
+    if (!ofTheNextPage.has(request)) {
+      return;
+    }
     this.recordedRequests.push({
       url: response.url(),
       status: response.status(),
+      type: request.resourceType(),
+      from: request.headers().referer || '',
+      page: request.frame().url(),
     });
   });
 });
@@ -123,10 +225,23 @@ Then(
   /^no request should go to "([^"]*)"$/,
   async function noRequestGoesTo(text) {
     assert.ok(this.recordedRequests, 'The requests were not recorded.');
-    const found = this.recordedRequests
-      .map(({ url }) => url)
-      .filter((url) => url.includes(text));
-    assert.deepStrictEqual(found, []);
+    const found = this.recordedRequests.filter(({ url }) =>
+      url.includes(text),
+    );
+    assert.deepStrictEqual(
+      found.map(({ url }) => url),
+      [],
+      `Requests to "${text}" on ${this.page.url()}:\n${found
+        .map(
+          ({ url, type, from, page }) =>
+            `  ${url} (${type}, asked by ${from || '?'} on ${page}; started by ${
+              (this.fontInitiators || {})[url] || '?'
+            })`,
+        )
+        .join('\n')}\nElements using a font of the theme then: ${
+        (this.fontUsers || []).join('; ') || 'none found'
+      }`,
+    );
   },
 );
 

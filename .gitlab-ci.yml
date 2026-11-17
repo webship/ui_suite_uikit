@@ -35,3 +35,85 @@ composer:
 phpunit (next major):
   rules:
     - when: never
+
+# The webship-js suite (tests/README.md) on a Standard site with this theme as
+# the default theme. The site build creates the accounts of cucumber.js
+# (worldParameters.users) with drush, with passwords made for the job; the
+# suite only logs in. The scenarios that need a module this site does not have
+# (Webform, Display Builder and its page layouts) skip themselves.
+webship-js-test:
+  extends: .testing-job-base
+  needs: [composer]
+  # Playwright brings its own Chromium: only the database is needed.
+  services:
+    - name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:$_TARGET_DB_IMAGE_TAG
+      alias: database
+  variables:
+    DRUPAL_ADMIN_USER: "webmaster"
+    DRUPAL_ADMIN_MAIL: "webmaster@example.test"
+    DRUPAL_AUTHENTICATED_USER: "authenticated_user"
+    DRUPAL_AUTHENTICATED_MAIL: "authenticated_user@example.test"
+    # The Standard site of the job has no time limit on its login form.
+    DRUPAL_LOGIN_WAIT: "0"
+    SLOW_MO: "0"
+    LAUNCH_URL: "http://localhost"
+    DRUSH: "drush-www"
+    DRUPAL_PROJECT_DIR: $CI_PROJECT_DIR
+    FORCE_COLOR: "1"
+  before_script:
+    # Web server.
+    - mkdir -pv $CI_PROJECT_DIR/$_WEB_ROOT/sites/default/files
+    - chmod -R 777 $CI_PROJECT_DIR/$_WEB_ROOT/sites/default/files
+    - rm -rf /var/www/html && ln -s $CI_PROJECT_DIR/$_WEB_ROOT /var/www/html
+    - chown -R www-data:www-data $CI_PROJECT_DIR
+    - service apache2 start
+    # Test account passwords, for this job only.
+    - export DRUPAL_ADMIN_PASS=$(php -r "echo bin2hex(random_bytes(12));")
+    - export DRUPAL_AUTHENTICATED_PASS=$(php -r "echo bin2hex(random_bytes(12));")
+    # Drupal with this theme as the default theme, and the component library.
+    - export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+    - $CI_PROJECT_DIR/vendor/bin/drush --root=$CI_PROJECT_DIR/$_WEB_ROOT site:install standard
+        --db-url=$SIMPLETEST_DB
+        --account-name="$DRUPAL_ADMIN_USER"
+        --account-mail="$DRUPAL_ADMIN_MAIL"
+        --account-pass="$DRUPAL_ADMIN_PASS"
+        --site-name="UI Suite UIkit"
+        -y
+    - $CI_PROJECT_DIR/vendor/bin/drush --root=$CI_PROJECT_DIR/$_WEB_ROOT user:create "$DRUPAL_AUTHENTICATED_USER" --mail="$DRUPAL_AUTHENTICATED_MAIL" --password="$DRUPAL_AUTHENTICATED_PASS"
+    - $CI_PROJECT_DIR/vendor/bin/drush --root=$CI_PROJECT_DIR/$_WEB_ROOT pm:install ui_patterns_library -y
+    - $CI_PROJECT_DIR/vendor/bin/drush --root=$CI_PROJECT_DIR/$_WEB_ROOT theme:enable ui_suite_uikit -y
+    - $CI_PROJECT_DIR/vendor/bin/drush --root=$CI_PROJECT_DIR/$_WEB_ROOT config:set system.theme default ui_suite_uikit -y
+    - $CI_PROJECT_DIR/vendor/bin/drush --root=$CI_PROJECT_DIR/$_WEB_ROOT config:set system.mail interface.default test_mail_collector -y
+    - $CI_PROJECT_DIR/vendor/bin/drush --root=$CI_PROJECT_DIR/$_WEB_ROOT cache:rebuild
+    # Drush ran as root: give the files it created back to the web server.
+    - chown -R www-data:www-data $CI_PROJECT_DIR/$_WEB_ROOT/sites/default/files
+    - 'curl -s -o /dev/null -w "front page HTTP=%{http_code}\n" http://localhost/'
+    # Drush as the web server user, for the fixture steps. runuser runs the
+    # command itself, with no shell and no option parsing after "--", so every
+    # argument reaches Drush as it was given, PHP code included.
+    - |
+      cat > /usr/local/bin/drush-www <<EOF
+      #!/bin/sh
+      exec runuser -u www-data -- env HOME=/tmp $CI_PROJECT_DIR/vendor/bin/drush --root=$CI_PROJECT_DIR/$_WEB_ROOT --uri=http://localhost "\$@"
+      EOF
+    - chmod +x /usr/local/bin/drush-www
+    # Node.js 24 and the suite with its browser.
+    - curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
+    - apt-get install -y nodejs
+    - node --version && npm --version
+    # The webship-js install script may write a cucumber.js of its own: keep this one.
+    - cp cucumber.js .cucumber.js.bak
+    - npm install --no-audit --no-fund
+    - cp .cucumber.js.bak cucumber.js && rm .cucumber.js.bak
+    - ./node_modules/.bin/playwright install --with-deps chromium
+  script:
+    - ./node_modules/.bin/cucumber-js --config cucumber.js --dry-run
+    - ./node_modules/.bin/cucumber-js --config cucumber.js --tags "not @wip"
+  artifacts:
+    when: always
+    paths:
+      - tests/reports/
+      - tests/screenshots/
+      - tests/videos/
+    expire_in: 7 days
+  allow_failure: false

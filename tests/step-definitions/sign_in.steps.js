@@ -24,6 +24,27 @@ const PROJECT_DIR =
 const DRUSH = process.env.DRUSH || 'ddev drush';
 
 /**
+ * The HTML a visitor gets for a path: a request without the session of the
+ * scenario, so the answer does not depend on who is logged in.
+ *
+ * @param {string} url
+ *   The address.
+ *
+ * @return {Promise<string>}
+ *   The HTML of the page.
+ */
+async function visitorHtml(url) {
+  // eslint-disable-next-line global-require
+  const { request } = require('playwright');
+  const context = await request.newContext({ ignoreHTTPSErrors: true });
+  try {
+    return await (await context.get(url)).text();
+  } finally {
+    await context.dispose();
+  }
+}
+
+/**
  * Runs a Drush command on the test site and returns its output.
  *
  * @param {string} command
@@ -66,6 +87,7 @@ let placedBlocks = [];
  */
 function restore() {
   if (!saved) {
+    removePlacedBlocks();
     return;
   }
   const values = JSON.stringify(saved);
@@ -75,13 +97,31 @@ $config = \\Drupal::configFactory()->getEditable('ui_suite_uikit.settings');
 foreach ($saved['settings'] as $key => $value) { $config->set($key, $value); }
 $config->save();
 if (\\Drupal::database()->schema()->tableExists('flood')) { \\Drupal::database()->delete('flood')->execute(); }`);
-  if (placedBlocks.length) {
-    php(`$storage = \\Drupal::entityTypeManager()->getStorage('block');
-$storage->delete($storage->loadMultiple(${JSON.stringify(placedBlocks)}));`);
-    placedBlocks = [];
+  // Claro was installed for the scenarios only: the site gets it back as it was.
+  if (saved.claro === false && saved.admin !== 'claro') {
+    drush('theme:uninstall claro -y');
   }
+  removePlacedBlocks(false);
   drush('cache:rebuild');
   saved = null;
+}
+
+/**
+ * Deletes the blocks of the theme placed for the scenarios.
+ *
+ * @param {boolean} rebuild
+ *   Whether to rebuild the caches afterwards.
+ */
+function removePlacedBlocks(rebuild = true) {
+  if (!placedBlocks.length) {
+    return;
+  }
+  php(`$storage = \\Drupal::entityTypeManager()->getStorage('block');
+$storage->delete($storage->loadMultiple(${JSON.stringify(placedBlocks)}));`);
+  placedBlocks = [];
+  if (rebuild) {
+    drush('cache:rebuild');
+  }
 }
 
 /**
@@ -102,7 +142,7 @@ Given(
         php(`$settings = \\Drupal::config('ui_suite_uikit.settings')->get();
 $keep = [];
 foreach ($settings as $key => $value) { if (str_starts_with($key, 'sign_in_')) { $keep[$key] = $value; } }
-echo json_encode(['admin' => \\Drupal::config('system.theme')->get('admin'), 'settings' => $keep]);`),
+echo json_encode(['admin' => \\Drupal::config('system.theme')->get('admin'), 'settings' => $keep, 'claro' => \\Drupal::service('theme_handler')->themeExists('claro')]);`),
       );
       if (saved.admin === 'uikit_admin') {
         drush('theme:install claro');
@@ -158,6 +198,19 @@ echo json_encode($created);`);
 );
 
 /**
+ * Deletes the blocks "the blocks of the UIkit theme are placed" placed.
+ *
+ * Example: Then the blocks placed for the scenarios are removed
+ */
+Then(
+  /^the blocks placed for the scenarios are removed$/,
+  { timeout: 180000 },
+  function blocksRemoved() {
+    removePlacedBlocks();
+  },
+);
+
+/**
  * Skips the scenario unless the page is the sign-in page of the theme.
  *
  * Another theme, or a Display Builder page layout, can draw the sign-in
@@ -168,10 +221,7 @@ echo json_encode($created);`);
 Given(
   /^the "([^"]*)" page is the sign-in page of the UIkit theme$/,
   async function isSignInPage(pagePath) {
-    const response = await this.page.request.get(
-      `${this.launchUrl}${pagePath}`,
-    );
-    const html = await response.text();
+    const html = await visitorHtml(`${this.launchUrl}${pagePath}`);
     return html.includes('class="ui-suite-uikit-sign-in ')
       ? undefined
       : 'skipped';

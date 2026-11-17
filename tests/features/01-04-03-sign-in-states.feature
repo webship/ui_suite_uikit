@@ -29,7 +29,7 @@ Feature: Every state of the sign-in screens
      When I go to "/user/login"
       And I fill in "name" with "member"
       And I fill in "pass" with "not the password"
-      And I wait 3 seconds
+      And I wait out the form time limit
       And I press "Log in"
      Then ".ui-suite-uikit-sign-in__messages .uk-alert-danger" should be visible within 10 seconds
       And I should see "Unrecognized username or password"
@@ -41,14 +41,16 @@ Feature: Every state of the sign-in screens
      Then I should see "Log in" in the ".ui-suite-uikit-sign-in__links" element
      When I fill in "name" with "member"
       And I move the mouse over the page
-      And I wait 3 seconds
+      And I wait out the form time limit
       And I press "Send reset link"
      Then the url should match "/user/login"
       And ".ui-suite-uikit-sign-in__messages .uk-alert" should be visible within 10 seconds
 
+  # The first account of the site, which every site has, with a link that is
+  # not valid.
   Scenario: A used or expired reset link says so on the password screen
     Given I am an anonymous user
-     When I go to "/user/reset/3/1/not-a-valid-hash"
+     When I go to "/user/reset/1/1/not-a-valid-hash"
      Then the url should match "/user/password"
       And ".ui-suite-uikit-sign-in--password .ui-suite-uikit-sign-in__messages .uk-alert" should be visible within 10 seconds
 
@@ -112,9 +114,12 @@ Feature: Every state of the sign-in screens
      When I set the "dir" attribute of the document to "rtl"
      Then the element "button.shwpd" should sit inside the element ".form-item-pass"
 
+  # The failed attempts lock out an account of the site build (tests/README.md):
+  # the flood control counts the attempts of an account that exists. The next
+  # scenario clears them.
   Scenario: Too many failed attempts show the blocked screen
     Given I am an anonymous user
-     When I try to log in as "member" with a wrong password 9 times
+     When I try to log in as "authenticated_user" with a wrong password 9 times
      Then ".ui-suite-uikit-sign-in--blocked" should be visible
       And I should see "Login failed"
       And I should see "Reset your password" in the ".ui-suite-uikit-sign-in__links" element
