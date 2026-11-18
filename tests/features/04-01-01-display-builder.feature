@@ -55,6 +55,8 @@ Feature: The UIkit components with Display Builder
      Then the configuration "display_builder.profile.ui_suite_uikit" should exist
       And the configuration "display_builder.profile.ui_suite_uikit_sign_in" should exist
       And the page layout "ui_suite_uikit_sign_in" should be disabled
+      And the configuration "display_builder.profile.ui_suite_uikit" should match its schema
+      And the configuration "display_builder.profile.ui_suite_uikit_sign_in" should match its schema
 
   Scenario: The header and footer sections of a page layout are the banner and the contentinfo
     Given the "display_builder_page_layout" module is enabled

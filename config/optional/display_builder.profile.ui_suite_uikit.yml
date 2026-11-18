@@ -15,7 +15,8 @@ islands:
       navigation: navigation
       uikit_admin: uikit_admin
       webdashboard: webdashboard
-    exclude_id: 'ui_suite_uikit:sign_in'
+    exclude_id:
+      - 'ui_suite_uikit:sign_in'
     component_status:
       experimental: '0'
       deprecated: '0'
@@ -28,7 +29,10 @@ islands:
     exclude:
       htmx: htmx
       shortcut: shortcut
-    exclude_id: "system_menu_block:admin\r\nsystem_menu_block:devel\r\nsystem_clear_cache_block\r\n"
+    exclude_id:
+      - 'system_menu_block:admin'
+      - 'system_menu_block:devel'
+      - system_clear_cache_block
     preview: true
   preset_library:
     status: true

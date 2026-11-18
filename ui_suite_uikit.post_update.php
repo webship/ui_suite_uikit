@@ -7,6 +7,7 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\MemoryStorage;
 use Drupal\ui_suite_uikit\Hook\ThemeHooks;
@@ -157,4 +158,39 @@ function ui_suite_uikit_post_update_display_builder_config(): void {
     }
   }
   \Drupal::service('config.installer')->installOptionalConfig($storage);
+}
+
+/**
+ * Store the ids the Display Builder profiles leave out as lists.
+ *
+ * Display Builder 1.0.0-beta10 keeps the "Exclude by id" setting of its
+ * library islands as a list of ids. The profiles of the theme held them as one
+ * string, one id by line, which a site that installed them with Display
+ * Builder 1.0.0-beta10 or later still carries.
+ */
+function ui_suite_uikit_post_update_display_builder_exclude_id_list(): void {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  if (!$entity_type_manager->hasDefinition('display_builder_profile')) {
+    return;
+  }
+  $storage = $entity_type_manager->getStorage('display_builder_profile');
+  foreach ($storage->loadMultiple(['ui_suite_uikit', 'ui_suite_uikit_sign_in']) as $profile) {
+    if (!$profile instanceof ConfigEntityInterface) {
+      continue;
+    }
+    $islands = $profile->get('islands');
+    if (!\is_array($islands)) {
+      continue;
+    }
+    $updated = $islands;
+    foreach (['component_library', 'block_library'] as $island) {
+      $ids = $islands[$island]['exclude_id'] ?? NULL;
+      if (\is_string($ids)) {
+        $updated[$island]['exclude_id'] = \array_values(\array_filter(\preg_split('/\s+/', \trim($ids)) ?: []));
+      }
+    }
+    if ($updated !== $islands) {
+      $profile->set('islands', $updated)->save();
+    }
+  }
 }

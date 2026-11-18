@@ -52,6 +52,28 @@ Then(/^the configuration "([^"]*)" should exist$/, function configExists(name) {
 });
 
 /**
+ * Checks a configuration against its schema, the way Config Inspector and the
+ * strict schema check of the Drupal tests do.
+ *
+ * Example: Then the configuration "display_builder.profile.ui_suite_uikit" should match its schema
+ */
+Then(
+  /^the configuration "([a-z0-9_.]+)" should match its schema$/,
+  function configMatchesSchema(name) {
+    const result = JSON.parse(
+      php(`$check = new class { use \\Drupal\\Core\\Config\\Schema\\SchemaCheckTrait; public function run(string $n): array|bool { return $this->checkConfigSchema(\\Drupal::service('config.typed'), $n, \\Drupal::config($n)->getRawData()); } };
+echo json_encode($check->run('${name}'));`),
+    );
+    assert.notStrictEqual(result, false, `${name} has no schema.`);
+    assert.strictEqual(
+      result,
+      true,
+      `${name} does not match its schema: ${JSON.stringify(result)}`,
+    );
+  },
+);
+
+/**
  * Checks an element of the page the builder draws. Display Builder draws the
  * page in an iframe of its builder island, so the element is looked for in
  * there.

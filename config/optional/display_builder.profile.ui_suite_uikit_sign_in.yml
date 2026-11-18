@@ -15,7 +15,12 @@ islands:
       navigation: navigation
       uikit_admin: uikit_admin
       webdashboard: webdashboard
-    exclude_id: "ui_suite_uikit:slideshow\r\nui_suite_uikit:slideshow_item\r\nui_suite_uikit:slider\r\nui_suite_uikit:navbar\r\nui_suite_uikit:offcanvas"
+    exclude_id:
+      - 'ui_suite_uikit:slideshow'
+      - 'ui_suite_uikit:slideshow_item'
+      - 'ui_suite_uikit:slider'
+      - 'ui_suite_uikit:navbar'
+      - 'ui_suite_uikit:offcanvas'
     component_status:
       experimental: '0'
       deprecated: '0'
@@ -28,7 +33,10 @@ islands:
     exclude:
       htmx: htmx
       shortcut: shortcut
-    exclude_id: "system_menu_block:admin\r\nsystem_menu_block:devel\r\nsystem_clear_cache_block\r\n"
+    exclude_id:
+      - 'system_menu_block:admin'
+      - 'system_menu_block:devel'
+      - system_clear_cache_block
     preview: true
   preset_library:
     status: true
