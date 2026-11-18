@@ -91,6 +91,7 @@ Feature: The UIkit components with Display Builder
       And ".ui-suite-uikit-sign-in" should be visible
       And "#edit-name" should be visible
       And the page should have exactly one h1
+      And ".ui-suite-uikit-sign-in__title h1" should contain text "Log in"
     Given I am a logged in user with the "Webmaster" user
      When I pick the page layout "- The page of the theme -" for the sign-in screens of the UIkit theme
      Then the page layout "ui_suite_uikit_sign_in" should be disabled

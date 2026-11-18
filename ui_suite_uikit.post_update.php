@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\MemoryStorage;
 use Drupal\ui_suite_uikit\Hook\ThemeHooks;
+use Drupal\ui_suite_uikit\PageTitleHeading;
 
 /**
  * Give the UI Skins ids of the theme its name, and one color mode control.
@@ -193,4 +194,35 @@ function ui_suite_uikit_post_update_display_builder_exclude_id_list(): void {
       $profile->set('islands', $updated)->save();
     }
   }
+}
+
+/**
+ * Put the page title of the sign-in page layout in a level 1 heading.
+ *
+ * Display Builder 1.0.0-beta10 prints the page title source as text only: the
+ * sign-in screens a page layout draws lost their h1. A page title straight in
+ * the title slot of the Sign in component goes in the Heading component,
+ * level 1, as in the page layout the theme ships.
+ */
+function ui_suite_uikit_post_update_sign_in_page_title_heading(): void {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  if (!$entity_type_manager->hasDefinition('page_layout')) {
+    return;
+  }
+  $layout = $entity_type_manager->getStorage('page_layout')->load('ui_suite_uikit_sign_in');
+  if (!$layout instanceof ConfigEntityInterface) {
+    return;
+  }
+  $sources = $layout->get('sources');
+  if (!\is_array($sources)) {
+    return;
+  }
+  $updated = PageTitleHeading::inSlot($sources, 'ui_suite_uikit:sign_in', 'title');
+  if ($updated === $sources) {
+    return;
+  }
+  // Saved as a configuration import: Display Builder makes the new sources
+  // the present state of the builder too, so the old title does not stay as a
+  // draft that the next publish would bring back.
+  $layout->set('sources', $updated)->setSyncing(TRUE)->save();
 }

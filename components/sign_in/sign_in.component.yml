@@ -13,7 +13,7 @@ slots:
     description: "The site footer. Printed only when show_footer is true."
   title:
     title: Title
-    description: "The heading of the screen, like the page title: an h1 \"Log in\"."
+    description: "The heading of the screen, like \"Log in\", as the h1 of the page: the slot holds the heading itself. The page title block prints one. In a Display Builder page layout, put the page title source in the Heading component, level 1: the source prints the title text only."
   messages:
     title: Messages
     description: "The status messages, printed in the card above the form."

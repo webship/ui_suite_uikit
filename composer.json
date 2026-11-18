@@ -21,6 +21,9 @@
     "require-dev": {
         "drupal/sdc_devel": "^1.0.3"
     },
+    "conflict": {
+        "drupal/display_builder": "<1.0.0-beta10"
+    },
     "suggest": {
         "drupal/display_builder": "Build entity displays, page layouts and views with the theme components.",
         "drupal/ui_examples": "Allows to write example pages in YML format.",

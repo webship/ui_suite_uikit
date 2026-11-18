@@ -3,6 +3,10 @@
  * @file
  * The sign-in screens: the form in a card, a brand panel, the site header
  * and footer when asked.
+ *
+ * The title slot holds the h1 of the page itself. The component does not wrap
+ * it: the page title block prints its own h1, and a Display Builder page
+ * layout puts the page title source in the Heading component, level 1.
  */
 #}
 {% set layout = layout|default('center') %}

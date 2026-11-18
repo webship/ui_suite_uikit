@@ -107,6 +107,12 @@ With Display Builder installed, the theme ships:
 A recipe imports them with `config: import: ui_suite_uikit: [...]`: a recipe does not install optional
 configuration. Existing sites get them from a post update.
 
+The page title source of Display Builder prints the title text only (since 1.0.0-beta10): a page
+layout puts it in the *Heading* component, level 1, as `ui_suite_uikit_sign_in` does. Placed straight
+in a slot, the title is plain text and the page has no h1. A post update does it for the
+`ui_suite_uikit_sign_in` layout of an existing site, and the theme conflicts with the Display Builder
+releases before 1.0.0-beta10, which print an h1 of their own.
+
 ### Web View Modes Inventory
 
 The theme lays out the view modes of [Web View Modes Inventory](https://www.drupal.org/project/webvmi) with its
